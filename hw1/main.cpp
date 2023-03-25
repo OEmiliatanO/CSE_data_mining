@@ -1,10 +1,11 @@
 #include <iostream>
-#include "KNN.h"
-#include "Dataloader.h"
+#include "src/KNN.h"
+#include "src/Dataloader.h"
+#include "src/Data.h"
 
 int main()
 {
-    Dataloader_t dataloader{};
+    Dataloader_t dataloader;
     
     std::cout << "load train data..." << std::endl;
     dataloader.load_train("train.data");
@@ -13,7 +14,7 @@ int main()
     dataloader.load_test("test.data");
     
     KNN_t KNN{dataloader.train_data};
-    Data result = KNN.predict(dataloader.test_data);
+    dataset_t result = KNN.predict(dataloader.test_data);
 
     std::cout << result << std::endl;
 
