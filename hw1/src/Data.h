@@ -1,3 +1,5 @@
+#ifndef __DATA_H__
+#define __DATA_H__
 #include <vector>
 #include <iostream>
 #include <initializer_list>
@@ -26,7 +28,12 @@ struct point_t
     // index-access
     const double& operator[](std::size_t i) const { return this->x.at(i); }
           double& operator[](std::size_t i)       { return this->x.at(i); }
-
+	
+	// assignment
+	point_t& operator=(const point_t& other);
+	point_t& operator=(point_t&& other);
+	
+	// hyperplane-related
     bool on(const hyperplane_t& plane);
 };
 
@@ -93,6 +100,13 @@ struct data_t
     
     // cout
     friend std::ostream& operator<<(std::ostream& os, const data_t& a);
+	
+	// size
+	std::size_t size() const { return this->point.size(); }
+
+	// assignment
+	data_t& operator=(const data_t& other);
+	data_t& operator=(data_t&& other);
 };
 
 struct dataset_t
@@ -117,6 +131,15 @@ struct dataset_t
     // release
     void clear() { this->data.clear(); }
 
+	// size
+	std::size_t size() const { return this->data.size(); }
+
     // cout
     friend std::ostream& operator<<(std::ostream& os, const dataset_t& a);
+
+	// assignment
+	dataset_t& operator=(const dataset_t& other);
+	dataset_t& operator=(dataset_t&& other);
 };
+
+#endif

@@ -1,13 +1,22 @@
+#ifndef __BRUTE_H__
+#define __BRUTE_H__
+
 #include <iostream>
 #include <algorithm>
 #include <cstring>
 #include <utility>
+#include <map>
 #include "Data.h"
+#include "KNN_Method.h"
 
-struct brute_force
+class brute_force: public KNN_Method_t
 {
-    static dataset_t dataset;
-    static std::vector<data_t> knn(data_t data, std::size_t k);
-    static double predict(data_t data);
+public:
+	//brute_force(const brute_force& bf): KNN_Method_t::dataset{bf.dataset} {}
+	//brute_force(brute_force&& bf): KNN::Method_t::dataset{std::move(bf.dataset)} {}
+
+    std::vector<data_t> knn(const data_t& data, std::size_t k) override;
+    double predict(const data_t& data, std::size_t k) override;
 };
 
+#endif

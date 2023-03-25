@@ -131,6 +131,40 @@ std::ostream& operator<<(std::ostream& os, const dataset_t& dataset)
     return os;
 }
 
+
+point_t& point_t::operator=(const point_t& other)
+{
+	this->x = other.x;
+	return *this;
+}
+point_t& point_t::operator=(point_t&& other)
+{
+	this->x = std::move(other.x);
+	return *this;
+}
+
+data_t& data_t::operator=(const data_t& other)
+{
+	this->point = other.point;
+	return *this;
+}
+data_t& data_t::operator=(data_t&& other)
+{
+	this->point = std::move(other.point);
+	return *this;
+}
+
+dataset_t& dataset_t::operator=(const dataset_t& other)
+{
+	this->data = other.data;
+	return *this;
+}
+dataset_t& dataset_t::operator=(dataset_t&& other)
+{
+	this->data = std::move(other.data);
+	return *this;
+}
+
 // unit test
 #ifdef DATATEST
 int main()

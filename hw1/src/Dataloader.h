@@ -1,3 +1,5 @@
+#ifndef __DATALOADER_H__
+#define __DATALOADER_H__
 #include <vector>
 #include <utility>
 #include <string>
@@ -25,3 +27,4 @@ public:
     void load_train(std::string_view&& path);
     void load_train(std::string_view& path);
 };
+#endif

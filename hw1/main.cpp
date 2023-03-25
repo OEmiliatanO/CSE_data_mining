@@ -1,7 +1,6 @@
 #include <iostream>
 #include "src/KNN.h"
 #include "src/Dataloader.h"
-#include "src/Data.h"
 
 int main()
 {
@@ -10,7 +9,7 @@ int main()
     std::cout << "load train data..." << std::endl;
     dataloader.load_train("train.data");
 
-    std::cout << "load test data..." << setd::endl;
+    std::cout << "load test data..." << std::endl;
     dataloader.load_test("test.data");
     
     KNN_t KNN{dataloader.train_data};
