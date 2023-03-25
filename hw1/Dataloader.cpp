@@ -20,6 +20,12 @@ void Dataloader_t::load(std::string_view& path, dataset_t& dataset)
 
     std::fstream fs;
     fs.open(path.data());
+    if (fs.fail())
+    {
+        std::cerr << "fail to open the file: " << path << std::endl;
+        std::cerr << "stop the process ..." << std::endl;
+        exit(1);
+    }
     auto& tags = this->tags;
     std::string s; fs >> s;
     std::string_view rawlabels{s};
