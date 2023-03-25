@@ -1,7 +1,7 @@
 CC:=g++
 
-all: main.o Data.o Brute.o Dataloader.o KNN.o
-	$(CC) -o main.elf main.o Data.o
+all: main.o Data.o Brute.o Dataloader.o KNN.o 
+	$(CC) -o main.elf main.o Data.o Brute.o Dataloader.o KNN.o
 dep: main.cpp Data.cpp Brute.cpp Dataloader.cpp KNN.cpp
 	$(CC) -Wextra -Werror -Wall -O3 -c main.cpp
 	$(CC) -Wextra -Werror -Wall -O3 -c Data.cpp
