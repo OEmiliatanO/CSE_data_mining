@@ -13,8 +13,7 @@ public:
 	std::unique_ptr<KNN_Method_t> KNN_Method;
     KNN_t() = default;
     KNN_t(const dataset_t& dataset);
-    dataset_t predict(const dataset_t& test_data);
-	void set_knn_method(const KNN_Method_t& km);
-	void set_knn_method(KNN_Method_t&& km);
+    dataset_t predict(const dataset_t& test_data, size_t k);
+	void set_knn_method(std::unique_ptr<KNN_Method_t> km);
 };
 #endif
