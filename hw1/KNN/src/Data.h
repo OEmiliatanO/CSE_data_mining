@@ -4,6 +4,7 @@
 #include <iostream>
 #include <initializer_list>
 #include <cmath>
+#include <limits>
 #include <utility>
 
 struct hyperplane_t;
@@ -13,12 +14,12 @@ struct point_t
     std::vector<double> x;
 
     point_t() = default;
-    point_t(const point_t& other): x{other.x} { std::cerr << "point_t: copy constructor called" << std::endl; }
-    point_t(point_t&& other): x{std::move(other.x)} { std::cerr << "point_t: move constructor called" << std::endl; }
-    point_t(const std::vector<double>& vx): x{vx} { std::cerr << "point_t: calling vector& constructor." << std::endl; }
-    point_t(std::vector<double>&& vx): x{vx} { std::cerr << "point_t: calling vector& constructor." << std::endl; }
-    point_t(std::initializer_list<double>& list): x{list} { std::cerr << "point_t: calling initalizer_list& constructor." << std::endl; }
-    point_t(std::initializer_list<double>&& list): x{std::forward<decltype(list)>(list)} { std::cerr << "point_t: calling initalizer_list&& constructor." << std::endl; }
+    point_t(const point_t& other): x{other.x} { }
+    point_t(point_t&& other): x{std::move(other.x)} { }
+    point_t(const std::vector<double>& vx): x{vx} { }
+    point_t(std::vector<double>&& vx): x{vx} { }
+    point_t(std::initializer_list<double>& list): x{list} { }
+    point_t(std::initializer_list<double>&& list): x{list} { }
 
     std::size_t size() const { return this->x.size(); }
 
@@ -54,7 +55,7 @@ struct hyperplane_t
     friend std::ostream& operator<<(std::ostream& os, const hyperplane_t& a);
 };
 
-constexpr double minerr = 1e-8;
+constexpr double minerr = std::numeric_limits<double>::epsilon();
 
 // point utility
 //
@@ -89,14 +90,21 @@ std::ostream& operator<<(std::ostream& os, const hyperplane_t& a);
 struct data_t
 {
     point_t point;
-    double label;
+    int label;
+
     data_t() = default;
-    data_t(const data_t& other): point{other.point}, label{other.label} { std::cerr << "data_t: calling data_t& constructor." << std::endl; }
-    data_t(data_t&& other): point{std::move(other.point)}, label{std::move(other.label)} { std::cerr << "data_t: calling data&& constructor." << std::endl; }
-    data_t(const std::vector<double>& x, double y): point{x}, label{y} { std::cerr << "data_t calling vector& constructor." << std::endl; }
-    data_t(std::vector<double>&& x, double y): point{std::forward<decltype(x)>(x)}, label{y} { std::cerr << "data_t calling vector& constructor." << std::endl; }
-    data_t(std::initializer_list<double>& x, double y): point{x}, label{y} { std::cerr << "data_t calling initalizer_list& constructor." << std::endl; }
-    data_t(std::initializer_list<double>&& x, double y): point{std::forward<decltype(x)>(x)}, label{y} { std::cerr << "data_t calling initalizer_list&& constructor." << std::endl; }
+    
+    data_t(const data_t& other): point{other.point}, label{other.label} { }
+    data_t(data_t&& other): point{std::move(other.point)}, label{std::move(other.label)} { }
+
+    data_t(const std::vector<double>& x, int y): point{x}, label{y} { }
+    data_t(std::vector<double>&& x, int y): point{std::forward<decltype(x)>(x)}, label{y} { }
+    
+    data_t(const point_t& x, int y): point{x}, label{y} {}
+    data_t(point_t&& x, int y): point{std::forward<decltype(x)>(x)}, label{y} {}
+    
+    data_t(std::initializer_list<double>& x, int y): point{x}, label{y} { }
+    data_t(std::initializer_list<double>&& x, int y): point{std::forward<decltype(x)>(x)}, label{y} { }
     
     // cout
     friend std::ostream& operator<<(std::ostream& os, const data_t& a);
@@ -112,6 +120,7 @@ struct data_t
 struct dataset_t
 {
     std::vector<data_t> data;
+
     dataset_t() = default;
     dataset_t(const dataset_t& other): data{other.data} {}
     dataset_t(dataset_t&& other): data{std::move(other.data)} {}
@@ -123,16 +132,23 @@ struct dataset_t
     // allocate
     void emplace_back(const data_t& _data) { this->data.emplace_back(_data); }
     void emplace_back(data_t&& _data) { this->data.emplace_back(std::forward<decltype(_data)>(_data)); }
-    void emplace_back(const std::vector<double>& x, double y) { this->data.emplace_back(x, y); }
-    void emplace_back(std::vector<double>&& x, double y) { this->data.emplace_back(std::forward<decltype(x)>(x), y); }
-    void emplace_back(std::initializer_list<double>& x, double y) { this->data.emplace_back(x, y); }
-    void emplace_back(std::initializer_list<double>&& x, double y) { this->data.emplace_back(x, y); }
+
+    void emplace_back(const std::vector<double>& x, int y) { this->data.emplace_back(x, y); }
+    void emplace_back(std::vector<double>&& x, int y) { this->data.emplace_back(std::forward<decltype(x)>(x), y); }
+    
+    void emplace_back(std::initializer_list<double>& x, int y) { this->data.emplace_back(x, y); }
+    void emplace_back(std::initializer_list<double>&& x, int y) { this->data.emplace_back(std::forward<decltype(x)>(x), y); }
 
     // release
     void clear() { this->data.clear(); }
 
 	// size
 	std::size_t size() const { return this->data.size(); }
+    std::size_t column() const
+    { 
+        if (this->data.size()) return this->data.front().size(); 
+        else return 0; 
+    }
 
     // cout
     friend std::ostream& operator<<(std::ostream& os, const dataset_t& a);
@@ -140,6 +156,10 @@ struct dataset_t
 	// assignment
 	dataset_t& operator=(const dataset_t& other);
 	dataset_t& operator=(dataset_t&& other);
+
+    // utility
+    std::vector<double> extract(std::size_t column);
+    std::vector<data_t> extract_with_label(std::size_t column);
 };
 
 #endif
