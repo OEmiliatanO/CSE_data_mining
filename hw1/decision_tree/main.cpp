@@ -20,10 +20,11 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
     //std::cerr << "test data =\n" << dataloader.test_data << std::endl;
     
     decision_tree_t tree;
-    std::cout << "set criterion..." << std::endl;
+    std::cout << "set criterion(entropy)..." << std::endl;
     tree.set_criterion(std::unique_ptr<DT_criterion>(new entropy_crit()));
     std::cout << "build tree..." << std::endl;
     tree.build(dataloader.train_data);
+    //std::cout << "the decision tree is like:\n"<< tree << std::endl;
     std::cout << "valid the tree..." << std::endl;
     dataset_t validation = tree.predict(dataloader.train_data);
     std::cout << "predict test data..." << std::endl;
@@ -43,6 +44,31 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
     }
 
     std::cout << "the final accuracy is " << (double)correct/result.size()*100 << '%' << std::endl;
+    std::cout << std::endl;
+    std::cout << "set criterion(gini)..." << std::endl;
+    tree.set_criterion(std::unique_ptr<DT_criterion>(new gini_crit()));
+    std::cout << "build tree..." << std::endl;
+    tree.build(dataloader.train_data);
+    std::cout << "valid the tree..." << std::endl;
+    validation = tree.predict(dataloader.train_data);
+    std::cout << "predict test data..." << std::endl;
+    result = tree.predict(dataloader.test_data);
+    
+    error = 0;
+    for (std::size_t i = 0; i < validation.size(); ++i)
+    {
+        error += !(abs(validation[i].label - dataloader.train_data[i].label) < minerr);
+    }
+    std::cout << "error on train data: " << error << std::endl;
+
+    correct = 0;
+    for (std::size_t i = 0; i < result.size(); ++i)
+    {
+        correct += (abs(result[i].label - dataloader.test_data[i].label) < minerr);
+    }
+
+    std::cout << "the final accuracy is " << (double)correct/result.size()*100 << '%' << std::endl;
+
 
     return 0;
 }
