@@ -146,11 +146,13 @@ point_t& point_t::operator=(point_t&& other)
 data_t& data_t::operator=(const data_t& other)
 {
 	this->point = other.point;
+    this->label = other.label;
 	return *this;
 }
 data_t& data_t::operator=(data_t&& other)
 {
 	this->point = std::move(other.point);
+    this->label = other.label;
 	return *this;
 }
 
@@ -163,6 +165,27 @@ dataset_t& dataset_t::operator=(dataset_t&& other)
 {
 	this->data = std::move(other.data);
 	return *this;
+}
+
+std::vector<double> dataset_t::extract(std::size_t column)
+{
+    if (column >= this->size())
+    {
+        std::cerr << "dataset_t::extract: column >= size\n";
+        return std::vector<double>{};
+    }
+    std::vector<double> ret;
+    for (const auto& data_: this->data)
+        ret.emplace_back(data_.point[column]);
+    return ret;
+}
+
+std::vector<data_t> dataset_t::extract_with_label(std::size_t column)
+{
+    std::vector<data_t> ret;
+    for (const auto& data_: this->data)
+        ret.emplace_back(std::initializer_list<double>{data_.point[column]}, data_.label);
+    return ret;
 }
 
 // unit test
