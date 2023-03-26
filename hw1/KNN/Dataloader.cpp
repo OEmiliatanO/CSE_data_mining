@@ -46,7 +46,7 @@ void Dataloader_t::load(std::string_view& path, dataset_t& dataset)
             }
             data.emplace_back(x);
         }
-        double label = data.back();
+        int label = (std::abs(data.back() - 1) <= minerr);
         data.pop_back();
         dataset.emplace_back(data, label);
     }
