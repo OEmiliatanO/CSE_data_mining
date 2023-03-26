@@ -35,11 +35,11 @@ double entropy_crit::discrete_gain(const dataset_t& dataset, std::size_t attr, d
 
 double gini_crit::operator()(const dataset_t& dataset)
 {
-    int positive = 0, negative = 0;
+    double positive = 0, negative = 0;
     for (const data_t& data : dataset.data) positive += data.label;
     negative = dataset.size() - positive;
 
-    return 1-(positive/dataset.size())*(positive/dataset.size())-(negative/dataset.size())*(negative/dataset.size());
+    return 1-((positive/dataset.size())*(positive/dataset.size())+(negative/dataset.size())*(negative/dataset.size()));
 }
 
 /*
