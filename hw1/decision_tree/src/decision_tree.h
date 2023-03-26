@@ -7,6 +7,7 @@
 #include <limits>
 #include <tuple>
 #include "Data.h"
+#include "DT_criterion.h"
 
 struct node_t
 {
@@ -38,16 +39,18 @@ struct tree_t
     }
 };
 
-void dfs_build_tree(node_t *&now, dataset_t dataset);
 
 class decision_tree_t
 {
 public:
     dataset_t dataset;
     tree_t tree;
+    std::unique_ptr<DT_criterion> criterion;
     void build(const dataset_t& dataset_);
     dataset_t predict(const dataset_t& dataset_);
     data_t predict(const data_t& data_);
+    void dfs_build_tree(node_t *&now, dataset_t dataset);
+    void set_criterion(std::unique_ptr<DT_criterion> crit);
     friend std::ostream& operator<<(std::ostream& os, const decision_tree_t& tree);
 };
 #endif

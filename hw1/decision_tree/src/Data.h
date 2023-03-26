@@ -124,6 +124,8 @@ struct dataset_t
     dataset_t() = default;
     dataset_t(const dataset_t& other): data{other.data} {}
     dataset_t(dataset_t&& other): data{std::move(other.data)} {}
+    dataset_t(const std::vector<data_t>& other_data): data{other_data} {}
+    dataset_t(std::vector<data_t>&& other_data): data{other_data} {}
     
     // index-access
     const data_t& operator[](std::size_t i) const { return this->data.at(i); }

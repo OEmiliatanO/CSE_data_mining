@@ -3,6 +3,7 @@
 #include <cmath>
 #include "src/Dataloader.h"
 #include "src/decision_tree.h"
+#include "src/DT_criterion.h"
 
 int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 {
@@ -19,8 +20,13 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
     //std::cerr << "test data =\n" << dataloader.test_data << std::endl;
     
     decision_tree_t tree;
+    std::cout << "set criterion..." << std::endl;
+    tree.set_criterion(std::unique_ptr<DT_criterion>(new entropy_crit()));
+    std::cout << "build tree..." << std::endl;
     tree.build(dataloader.train_data);
+    std::cout << "valid the tree..." << std::endl;
     dataset_t validation = tree.predict(dataloader.train_data);
+    std::cout << "predict test data..." << std::endl;
     dataset_t result = tree.predict(dataloader.test_data);
     
     int error = 0;
