@@ -131,15 +131,6 @@ struct dataset_t
     const data_t& operator[](std::size_t i) const { return this->data.at(i); }
           data_t& operator[](std::size_t i)       { return this->data.at(i); }
 
-    // exprimental
-    std::vector<data_t> operator[](const std::vector<bool>& mask) const 
-    {
-        std::vector<data_t> ret;
-        for (std::size_t i = 0; i < this->data.size(); ++i)
-            if (mask.at(i)) ret.emplace_back(this->data.at(i));
-        return ret;
-    }
-
     // allocate
     void emplace_back(const data_t& _data) { this->data.emplace_back(_data); }
     void emplace_back(data_t&& _data) { this->data.emplace_back(std::forward<decltype(_data)>(_data)); }
