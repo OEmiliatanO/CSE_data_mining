@@ -77,6 +77,12 @@ void decision_tree_t::dfs_build_tree(node_t *&now, dataset_t dataset)
 
 void decision_tree_t::build(const dataset_t& dataset_)
 {
+    if (this->tree.root != nullptr)
+    {
+        delete this->tree.root;
+        this->tree.root = nullptr;
+    }
+
     this->dataset = dataset_;
 
     dfs_build_tree(this->tree.root, this->dataset);
@@ -114,9 +120,26 @@ void decision_tree_t::set_criterion(std::unique_ptr<DT_criterion> crit)
     this->criterion = std::move(crit);
 }
 
+std::ostream& print_tree(std::ostream& os, node_t *now, int depth)
+{
+    for (int i = 0; i < depth; ++i) os << " ";
+    if (now == nullptr) return os;
+    if (now->leaf)
+    {
+        os << "label: " << now->label << std::endl;
+        return os;
+    }
+    os << "left subtree: attr=" << now->attr << " < " << now->cutvalue << " , right subtree: attr=" << now->attr << " > " << now->cutvalue << std::endl;
+    for (int i = 0; i < depth; ++i) os << " ";
+    os << "left subtree:" << std::endl;
+    print_tree(os, now->l, depth + 1);
+    for (int i = 0; i < depth; ++i) os << " ";
+    os << "right subtree:" << std::endl;
+    print_tree(os, now->r, depth + 1);
+    return os;
+}
+
 std::ostream& operator<<(std::ostream& os, const decision_tree_t& tree)
 {
-    // todo
-    os << "dataset = \n" << tree.dataset << std::endl;
-    return os;
+    return print_tree(os, tree.tree.root, 0) << std::endl;
 }
