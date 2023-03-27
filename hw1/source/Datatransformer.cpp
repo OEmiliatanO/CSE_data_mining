@@ -55,3 +55,27 @@ dataset_t Datatransformer_t::normalize(const dataset_t& dataset_)
 	}
 	return dataset;
 }
+dataset_t Datatransformer_t::random_pick(const dataset_t& dataset_, std::size_t n)
+{
+	std::default_random_engine genator;
+	std::uniform_real_distribution<double> uniform_rd(0, dataset_.size()-1);
+    dataset_t dataset = dataset_;
+    std::shuffle(dataset.begin(), dataset.end(), uniform_rd);
+    dataset.data.earse(dataset.begin() + n, dataset.end());
+    return dataset;
+}
+
+std::vector<dataset_t> Datatransformer_t::split(const dataset_t& dataset_, std::size_t n)
+{
+    if (n > dataset_.size()) { std::cerr << "Datatransformer_t::split(): n > dataset_.size()" << std::endl; exit(1); }
+	std::default_random_engine genator;
+	std::uniform_real_distribution<double> uniform_rd(0, dataset_.size()-1);
+    dataset_t dataset = dataset_;
+    std::shuffle(dataset.begin(), dataset.end(), uniform_rd);
+    std::vector<dataset_t> ret;
+    ret.resize(n);
+    for (auto i : std::views::iota((std::size_t)0, n))
+        for (auto j : std::views::iota((std::size_t)0, dataset.size()/n))
+        ret[i].emplace_back(dataset[i*(dataset.size()/n)+j]);
+    return ret;
+}
