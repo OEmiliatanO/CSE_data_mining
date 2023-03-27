@@ -144,6 +144,9 @@ struct data_t
 struct dataset_t
 {
     std::vector<data_t> data;
+    // TODO
+    //std::vecotr<point_t> point_t;
+    //point_t label;
 
     dataset_t() = default;
     dataset_t(const dataset_t& other): data{other.data} {}
