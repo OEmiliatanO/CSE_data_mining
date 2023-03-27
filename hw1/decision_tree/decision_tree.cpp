@@ -104,15 +104,13 @@ dataset_t decision_tree_t::predict(const dataset_t& dataset_)
 {
     dataset_t ret{dataset_};
     for (std::size_t i = 0; i < dataset_.size(); ++i)
-       ret[i].label = decide_by(this->tree.root, dataset_[i]);
+       ret[i].label = this->predict(dataset_[i]);
     return ret;
 }
 
-data_t decision_tree_t::predict(const data_t& data_)
+int decision_tree_t::predict(const data_t& data_)
 {
-    data_t ret{data_};
-    ret.label = decide_by(this->tree.root, data_);
-    return ret;
+    return decide_by(this->tree.root, data_);
 }
 
 void decision_tree_t::set_criterion(std::unique_ptr<DT_criterion> crit)

@@ -3,6 +3,7 @@
 #include <cmath>
 #include "src/decision_tree.h"
 #include "src/DT_criterion.h"
+#include "src/random_forest.h"
 #include "../include/Dataloader.h"
 #include "../include/Datatransformer.h"
 
@@ -23,7 +24,59 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
     //std::cerr << "test data =\n" << dataloader.test_data << std::endl;
     std::cout << "Complete loading" << std::endl << std::endl;
 	std::cout << "===================================================================" << std::endl;
+ 
+    std::size_t n = 35;
+    if (argc >= 2) n = atoi(argv[1]);
+    std::cout << "Create random forest with " << n << " decision trees..." << std::endl;
+    random_forest_t forest{0, 0, n};
     
+    std::cout << "Set criterion(entropy)..." << std::endl;
+    forest.set_criterion(std::unique_ptr<DT_criterion>(new entropy_crit()));
+    
+    std::cout << "Build tree..." << std::endl;
+    forest.build(dataloader.train_data);
+    
+    std::cout << "Valid the tree..." << std::endl;
+    dataset_t result = forest.predict(dataloader.train_data);
+    
+    [[maybe_unused]]auto correct = [](int out, int y) { return (double)(out == y); };
+	[[maybe_unused]]auto acc = [&](int out, int y) { return (double)(out == y)*100/result.size(); };
+    auto correct_n = (int)score(result, dataloader.train_data, correct);
+    std::cout << std::endl << "The score is " << correct_n << "/" << result.size() << " on original train data." << std::endl;
+    std::cout << "The accuracy is " << (double)correct_n/result.size() << " on original train data." << std::endl << std::endl;
+    
+    std::cout << "Predict test data..." << std::endl;
+    result = forest.predict(dataloader.test_data);
+    
+    correct_n = (int)score(result, dataloader.test_data, correct);
+    std::cout << std::endl << "The socre is " << correct_n << "/" << result.size() << std::endl;
+    std::cout << "The accuracy is " << (double)correct_n/result.size() << std::endl;
+	std::cout << "===================================================================" << std::endl;
+	
+    std::cout << "Transform data: normalize..." << std::endl;
+	Datatransformer_t datatransformer;
+	Dataloader_t dataloader_normal;
+	dataloader_normal.load_train(datatransformer.normalize(dataloader.train_data));
+	dataloader_normal.load_test(datatransformer.normalize(dataloader.test_data));
+    
+    forest.build(dataloader_normal.train_data);
+
+    std::cout << "Valid the tree..." << std::endl;
+    result = forest.predict(dataloader_normal.train_data);
+    
+    correct_n = (int)score(result, dataloader_normal.train_data, correct);
+    std::cout << std::endl << "The score is " << correct_n << "/" << result.size() << " on original train data." << std::endl;
+    std::cout << "The accuracy is " << (double)correct_n/result.size() << " on original train data." << std::endl << std::endl;
+    
+    std::cout << "Predict test data..." << std::endl;
+    result = forest.predict(dataloader_normal.test_data);
+
+    correct_n = (int)score(result, dataloader_normal.test_data, correct);
+    std::cout << std::endl << "The socre is " << correct_n << "/" << result.size() << std::endl;
+    std::cout << "The accuracy is " << (double)correct_n/result.size() << std::endl;
+	std::cout << "===================================================================" << std::endl;
+    
+    /*
     decision_tree_t tree;
 
     std::cout << "Set criterion(entropy)..." << std::endl;
@@ -105,6 +158,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
     std::cout << std::endl << "The socre is " << correct_n << "/" << result.size() << std::endl;
     std::cout << "The accuracy is " << (double)correct_n/result.size() << std::endl;
 	std::cout << "===================================================================" << std::endl;
- 
+    */
+
     return 0;
 }

@@ -48,7 +48,7 @@ public:
     std::unique_ptr<DT_criterion> criterion;
     void build(const dataset_t& dataset_);
     dataset_t predict(const dataset_t& dataset_);
-    data_t predict(const data_t& data_);
+    int predict(const data_t& data_);
     void dfs_build_tree(node_t *&now, dataset_t dataset);
     void set_criterion(std::unique_ptr<DT_criterion> crit);
     friend std::ostream& operator<<(std::ostream& os, const decision_tree_t& tree);
