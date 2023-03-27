@@ -1,12 +1,14 @@
 CC:=g++
+FLAG:=-std=c++20 -Wextra -Werror -Wall -O3
+LINKPATH:=../lib
 
-all: main.o Data.o Brute.o Dataloader.o KNN.o 
-	$(CC) -o main.elf main.o Data.o Brute.o Dataloader.o KNN.o
-dep: main.cpp Data.cpp Brute.cpp Dataloader.cpp KNN.cpp
-	$(CC) -Wextra -Werror -Wall -O3 -c main.cpp
-	$(CC) -Wextra -Werror -Wall -O3 -c Data.cpp
-	$(CC) -Wextra -Werror -Wall -O3 -c Brute.cpp
-	$(CC) -Wextra -Werror -Wall -O3 -c Dataloader.cpp
-	$(CC) -Wextra -Werror -Wall -O3 -c KNN.cpp
+all: main.o $(LINKPATH)/Data.o $(LINKPATH)/Dataloader.o $(LINKPATH)/Datatransformer.o KNN.o Brute.o 
+	$(CC) -o main.elf main.o $(LINKPATH)/Data.o $(LINKPATH)/Dataloader.o $(LINKPATH)/Datatransformer.o KNN.o Brute.o
+
+dep: main.cpp KNN.cpp Brute.cpp
+	$(CC) $(FLAG) -c main.cpp
+	$(CC) $(FLAG) -c KNN.cpp
+	$(CC) $(FLAG) -c Brute.cpp
+
 clean:
 	-rm *.o
