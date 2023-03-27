@@ -1,6 +1,6 @@
 #ifndef __KNN_METHOD_H__
 #define __KNN_METHOD_H__
-#include "Data.h"
+#include "../../include/Data.h"
 
 class KNN_Method_t
 {

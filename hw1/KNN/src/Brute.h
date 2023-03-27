@@ -6,7 +6,7 @@
 #include <cstring>
 #include <utility>
 #include <map>
-#include "Data.h"
+#include "../../include/Data.h"
 #include "KNN_Method.h"
 
 class brute_force: public KNN_Method_t

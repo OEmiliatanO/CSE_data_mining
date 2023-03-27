@@ -1,6 +1,6 @@
 #ifndef __ANNOY_H__
 #define __ANNOY_H__
-#include "Data.h"
+#include "../../include/Data.h"
 
 struct annoy : public KNN_Method_t
 {
