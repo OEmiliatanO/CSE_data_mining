@@ -1,6 +1,6 @@
 #ifndef __DT_CRITERION_H__
 #define __DT_CRITERION_H__
-#include "Data.h"
+#include "../../include/Data.h"
 #include <map>
 
 

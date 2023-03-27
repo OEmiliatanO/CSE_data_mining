@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <limits>
 #include <tuple>
-#include "Data.h"
+#include "../../include/Data.h"
 #include "DT_criterion.h"
 
 struct node_t
