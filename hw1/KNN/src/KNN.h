@@ -3,7 +3,7 @@
 #include <vector>
 #include <memory>
 #include <utility>
-#include "Data.h"
+#include "../../include/Data.h"
 #include "KNN_Method.h"
 
 class KNN_t
@@ -13,7 +13,9 @@ public:
 	std::unique_ptr<KNN_Method_t> KNN_Method;
     KNN_t() = default;
     KNN_t(const dataset_t& dataset);
-    dataset_t predict(const dataset_t& test_data, size_t k);
+    void train(const dataset_t& dataset);
+    void train(dataset_t&& dataset);
+	dataset_t predict(const dataset_t& test_data, size_t k);
 	void set_knn_method(std::unique_ptr<KNN_Method_t> km);
 };
 #endif
