@@ -57,7 +57,6 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 	dataloader_normal.load_train(datatransformer.normalize(dataloader.train_data));
     std::cout << "Load the test data..." << std::endl;
 	dataloader_normal.load_test(datatransformer.normalize(dataloader.test_data));
-    std::cerr << "main.elf: dataloader_normal.test_data.label.size = " << dataloader_normal.test_data.label.size() << std::endl;
     KNN.train(dataloader_normal.train_data);
     std::cout << "Predict the test data..." << std::endl;
     result = KNN.predict(dataloader_normal.test_data, k);

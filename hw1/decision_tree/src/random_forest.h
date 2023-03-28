@@ -64,7 +64,7 @@ U random_forest_t<T, U>::predict(const point_t<T>& data_) // data_t shall be rep
     for (const auto& [kind, cnt] : vote)
     {
         maxvote = std::max(maxvote, std::pair<size_t, U>{cnt, kind});
-        std::cout << kind << ", " << cnt << std::endl;
+        //std::cout << kind << ", " << cnt << std::endl;
     }
     return maxvote.second;
 }
