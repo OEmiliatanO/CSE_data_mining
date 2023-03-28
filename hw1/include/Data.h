@@ -96,6 +96,8 @@ public:
 	/**** iterator-related ****/
 	auto begin() noexcept -> decltype(x.begin()) { return x.begin(); }
 	auto end()   noexcept -> decltype(x.end())   { return x.end(); }
+	auto begin() const noexcept -> decltype(x.begin()) { return x.begin(); }
+	auto end()   const noexcept -> decltype(x.end())   { return x.end(); }
 	/**** iterator-related ****/
 	
 	/**** assignment ****/
@@ -160,9 +162,10 @@ public:
 
     dataset_t() = default;
     dataset_t(const dataset_t<T, U>& other): data{other.data}, label{other.label} {}
-    dataset_t(dataset_t<T, U>&& other): data{std::move(other.data)}, label{other.label} {}
+    dataset_t(dataset_t<T, U>&& other): data{std::move(other.data)}, label{std::move(other.label)} {}
+
     dataset_t(const std::vector<point_t<T>>& other_data, const point_t<U>& other_label): data{other_data}, label{other_label} {}
-    dataset_t(std::vector<point_t<T>>&& other_data, point_t<U>&& other_label): data{other_data}, label{other_label} {}
+    dataset_t(std::vector<point_t<T>>&& other_data, point_t<U>&& other_label): data{std::move(other_data)}, label{std::move(other_label)} {}
     
     // index-access
     const point_t<T>& operator[](std::size_t i) const { return this->data.at(i); }
@@ -208,7 +211,7 @@ public:
     // utility
     point_t<T> extract(std::size_t column);
     auto extract_with_label(std::size_t column) -> decltype(auto);
-	U delta(const dataset_t<T, U>& other, const std::function<U(const U&, const U&)>& loss);
+	double delta(const dataset_t<T, U>& other, const std::function<double(const U&, const U&)>& loss);
 };
 
 
@@ -445,7 +448,7 @@ auto dataset_t<T, U>::extract_with_label(std::size_t column) -> decltype(auto)
 }
 
 template<typename U>
-U score(const point_t<U>& a, const point_t<U>& b, const std::function<U(const U&, const U&)>& loss)
+double score(const point_t<U>& a, const point_t<U>& b, const std::function<double(const U&, const U&)>& loss)
 {
 	U ret = 0;
 	if (a.size() != b.size()) { std::cerr << "score(): a.size() != b.size()" << std::endl; return 0; }
@@ -454,14 +457,14 @@ U score(const point_t<U>& a, const point_t<U>& b, const std::function<U(const U&
 	return ret;
 }
 template<typename T, typename U>
-U score(const dataset_t<T, U>& a, const dataset_t<T, U>& b, const std::function<U(const U&, const U&)>& loss)
+double score(const dataset_t<T, U>& a, const dataset_t<T, U>& b, const std::function<double(const U&, const U&)>& loss)
 {
 	return score(a.label, b.label, loss);
 }
 
 
 template<typename T, typename U>
-U dataset_t<T, U>::delta(const dataset_t<T, U>& other, const std::function<U(const U&, const U&)>& loss)
+double dataset_t<T, U>::delta(const dataset_t<T, U>& other, const std::function<double(const U&, const U&)>& loss)
 {
 	return score<T, U>(*this, other, loss);
 }

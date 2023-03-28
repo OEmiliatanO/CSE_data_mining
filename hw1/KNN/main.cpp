@@ -42,8 +42,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
     std::cout << "Predict the test data..." << std::endl;
     point_t<label_type> result = KNN.predict(dataloader.test_data, k);
 
-	[[maybe_unused]]auto correct = [](label_type out, label_type y) { return (label_type)(out == y); };
-	[[maybe_unused]]auto acc = [&](label_type out, label_type y) { return (label_type)(out == y)*100/result.size(); };
+	[[maybe_unused]]auto correct = [](label_type out, label_type y) { return (double)(out == y); };
 
     auto correct_n = (int)score<label_type>(result, dataloader.test_data.label, correct);
     std::cout << std::endl << "The socre is " << correct_n << "/" << result.size() << std::endl;
