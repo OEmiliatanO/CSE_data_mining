@@ -9,171 +9,181 @@
 #include <utility>
 #include <ranges>
 
-struct hyperplane_t;
+constexpr double minerr = std::numeric_limits<double>::epsilon();
 
-struct point_t
+template<typename T>
+class point_t;
+
+template<typename T>
+class hyperplane_t;
+
+template<typename T, typename U>
+class dataset_t;
+
+// add
+template<typename T> point_t<T>  operator+(const point_t<T>& a, const point_t<T>& b);
+// dot
+template<typename T> T operator*(const point_t<T>& a, const point_t<T>& b);
+// scale
+template<typename T> point_t<T> operator*(const point_t<T>& a, T scale);
+template<typename T> point_t<T> operator*(T scale, const point_t<T>& a);
+template<typename T> point_t<T> operator/(const point_t<T>& a, T scale);
+// minus
+template<typename T> point_t<T> operator-(const point_t<T>& a, const point_t<T>& b);
+// point_t cout
+template<typename T> std::ostream& operator<<(std::ostream& os, const point_t<T>& a);
+
+// distance
+template<typename T> point_t<T> midpoint(const point_t<T>& a, const point_t<T>& b);
+template<typename T> double euclidean_dist(const point_t<T>& a, const point_t<T>& b);
+template<typename T> double minkowski_dist(const point_t<T>& a, const point_t<T>& b, int p);
+
+// hyperplane utility
+template<typename T> bool operator<(const hyperplane_t<T>& plane, const point_t<T>& x);
+template<typename T> bool operator>(const hyperplane_t<T>& plane, const point_t<T>& x);
+template<typename T> bool operator<(const point_t<T>& x, const hyperplane_t<T>& plane);
+template<typename T> bool operator>(const point_t<T>& x, const hyperplane_t<T>& plane);
+template<typename T> bool onplane(const point_t<T>& x, const hyperplane_t<T>& plane);
+// hyperplane_t cout
+template<typename T> std::ostream& operator<<(std::ostream& os, const hyperplane_t<T>& a);
+
+
+template<typename T, typename U>
+class dataset_t;
+
+template<typename T>
+class point_t
 {
-    std::vector<double> x;
+public:
+    std::vector<T> x;
 
     point_t() = default;
     
-	point_t(const point_t& other): x{other.x} { }
-    point_t(point_t&& other): x{std::move(other.x)} { }
+	point_t(const point_t<T>& other): x{other.x} { }
+    point_t(point_t<T>&& other): x{std::move(other.x)} { }
     
-	point_t(const std::vector<double>& vx): x{vx} { }
-    point_t(std::vector<double>&& vx): x{vx} { }
+	point_t(const std::vector<T>& vx): x{vx} { }
+    point_t(std::vector<T>&& vx): x{vx} { }
     
-	point_t(std::initializer_list<double>& list): x{list} { }
-    point_t(std::initializer_list<double>&& list): x{list} { }
+	point_t(std::initializer_list<T>& list): x{list} { }
+    point_t(std::initializer_list<T>&& list): x{list} { }
 
-	point_t(std::size_t n, std::function<double(void)> rd) { x.resize(n); for (auto& it : x) it = rd(); }
+	point_t(std::size_t n, std::function<T(void)> rd) { x.resize(n); for (auto& it : x) it = rd(); }
 
 	// size
-    std::size_t size() const { return this->x.size(); }
+    std::size_t size() const noexcept { return this->x.size(); }
+    void resize(std::size_t n) { this->x.resize(n); }
+
+    // clear
+    void clear() { this->x.clear(); }
 
     // cout
-    friend std::ostream& operator<<(std::ostream& os, const point_t& a);
+    friend std::ostream& operator<< <>(std::ostream& os, const point_t<T>& a);
 
-    // index-access
-    const double& operator[](std::size_t i) const { return this->x.at(i); }
-          double& operator[](std::size_t i)       { return this->x.at(i); }
-    const double& at(std::size_t i) const { return this->x.at(i); }
-          double& at(std::size_t i)       { return this->x.at(i); }
+    // extend
+    void extend(const point_t<T>& other) { this->x.insert(this->x.end(), other.x.begin(), other.x.end()); }
+    void extend(point_t<T>&& other) { this->x.insert(this->x.end(), other.x.begin(), other.x.end()); }
+	void extend(const std::vector<T>& vx) { this->x.insert(this->x.end(), vx.begin(), vx.end()); }
+    void extend(std::vector<T>&& vx) { this->x.insert(this->x.end(), vx.begin(), vx.end()); }
+
+    /**** index-access ****/
+    const T& operator[](std::size_t i) const { return this->x.at(i); }
+          T& operator[](std::size_t i)       { return this->x.at(i); }
+    const T& at(std::size_t i) const { return this->x.at(i); }
+          T& at(std::size_t i)       { return this->x.at(i); }
+    /**** index-access ****/
 	
-	// iterator-related
+	/**** iterator-related ****/
 	auto begin() noexcept -> decltype(x.begin()) { return x.begin(); }
 	auto end()   noexcept -> decltype(x.end())   { return x.end(); }
+	/**** iterator-related ****/
 	
-	// assignment
-	point_t& operator=(const point_t& other);
-	point_t& operator=(point_t&& other);
-	
+	/**** assignment ****/
+	point_t<T>& operator=(const point_t<T>& other);
+	point_t<T>& operator=(point_t<T>&& other);
+	/**** assignment ****/
+
+    /**** operator ****/
+    point_t<T>& operator+=(const point_t<T>& b);
+    friend point_t<T>  operator+ <> (const point_t<T>& a, const point_t<T>& b);
+    // dot
+    friend T operator* <> (const point_t<T>& a, const point_t<T>& b);
+    // scale
+    friend point_t<T> operator* <> (const point_t<T>& a, T scale);
+    friend point_t<T> operator* <> (T scale, const point_t<T>& a);
+    friend point_t<T> operator/ <> (const point_t<T>& a, T scale);
+    point_t<T>& operator*=(T scale);
+    // minus
+    friend point_t<T> operator- <> (const point_t<T>& a, const point_t<T>& b);
+    /**** operator ****/
+
 	// hyperplane-related
-    bool on(const hyperplane_t& plane);
+    bool on(const hyperplane_t<T>& plane);
+    friend bool operator< <>(const hyperplane_t<T>& plane, const point_t<T>& x);
+    friend bool operator< <>(const point_t<T>& x, const hyperplane_t<T>& plane);
+    friend bool operator> <>(const hyperplane_t<T>& plane, const point_t<T>& x);
+    friend bool operator> <>(const point_t<T>& x, const hyperplane_t<T>& plane);
 };
 
-using vector_t = point_t;
-struct hyperplane_t
+template<typename T>
+using vector_t = point_t<T>;
+
+template<typename T>
+class hyperplane_t
 {
+public:
     // n^Tx = b
-    vector_t n;
-    double b;
+    vector_t<T> n;
+    T b;
 
     hyperplane_t() = default;
-    hyperplane_t(double b, vector_t n): n{n}, b{b} {}
-    hyperplane_t(std::initializer_list<double>& n, double b): n{n}, b{b} {}
-    hyperplane_t(std::initializer_list<double>&& n, double b): n{std::forward<decltype(n)>(n)}, b{b} {}
+    hyperplane_t(T b, vector_t<T> n): n{n}, b{b} {}
+    hyperplane_t(std::initializer_list<T>& n, T b): n{n}, b{b} {}
+    hyperplane_t(std::initializer_list<T>&& n, T b): n{std::forward<decltype(n)>(n)}, b{b} {}
     
     std::size_t size() const { return this->n.size(); }
     // cout
-    friend std::ostream& operator<<(std::ostream& os, const hyperplane_t& a);
+    friend std::ostream& operator<< <>(std::ostream& os, const hyperplane_t<T>& a);
+
+    friend bool operator< <>(const hyperplane_t<T>& plane, const point_t<T>& x);
+    friend bool operator< <>(const point_t<T>& x, const hyperplane_t<T>& plane);
+    friend bool operator> <>(const hyperplane_t<T>& plane, const point_t<T>& x);
+    friend bool operator> <>(const point_t<T>& x, const hyperplane_t<T>& plane);
 };
 
-constexpr double minerr = std::numeric_limits<double>::epsilon();
-
-// point utility
-//
-// add
-point_t operator+(const point_t& a, const point_t& b);
-point_t& operator+=(point_t& a, const point_t& b);
-//point_t operator+=(point_t& a, point_t&& b);
-// dot
-double operator*(const point_t& a, const point_t& b);
-// scale
-point_t operator*(const point_t& a, double scale);
-point_t operator*(double scale, const point_t& a);
-point_t operator/(const point_t& a, double scale);
-// minus
-point_t operator-(const point_t& a, const point_t& b);
-// cout
-std::ostream& operator<<(std::ostream& os, const point_t& a);
-
-// distance
-point_t midpoint(const point_t& a, const point_t& b);
-double euclidean_dist(const point_t& a, const point_t& b);
-double minkowski_dist(const point_t& a, const point_t& b, int p);
-
-// hyperplane utility
-bool operator<(const hyperplane_t& plane, const point_t& x);
-bool operator>(const hyperplane_t& plane, const point_t& x);
-bool operator<(const point_t& x, const hyperplane_t& plane);
-bool operator>(const point_t& x, const hyperplane_t& plane);
-bool onplane(const point_t& x, const hyperplane_t& plane);
-// cout
-std::ostream& operator<<(std::ostream& os, const hyperplane_t& a);
-
-
-struct data_t
+template<typename T, typename U>
+class dataset_t
 {
-    point_t point;
-    int label;
-
-    data_t() = default;
-    
-    data_t(const data_t& other): point{other.point}, label{other.label} { }
-    data_t(data_t&& other): point{std::move(other.point)}, label{std::move(other.label)} { }
-
-    data_t(const std::vector<double>& x, int y): point{x}, label{y} { }
-    data_t(std::vector<double>&& x, int y): point{std::forward<decltype(x)>(x)}, label{y} { }
-    
-    data_t(const point_t& x, int y): point{x}, label{y} {}
-    data_t(point_t&& x, int y): point{std::forward<decltype(x)>(x)}, label{y} {}
-    
-    data_t(std::initializer_list<double>& x, int y): point{x}, label{y} { }
-    data_t(std::initializer_list<double>&& x, int y): point{std::forward<decltype(x)>(x)}, label{y} { }
-    
-    // cout
-    friend std::ostream& operator<<(std::ostream& os, const data_t& a);
-	
-	// size
-	std::size_t size() const noexcept { return this->point.size(); }
-
-    // index-access
-    const double& operator[](std::size_t i) const { return this->point.at(i); }
-          double& operator[](std::size_t i)       { return this->point.at(i); }
-
-	// iterator-related
-	auto begin() noexcept -> decltype(point.begin()) { return this->point.begin(); }
-	auto end()   noexcept -> decltype(point.end())   { return this->point.end(); }
-	
-	// assignment
-	data_t& operator=(const data_t& other);
-	data_t& operator=(data_t&& other);
-};
-
-struct dataset_t
-{
-    std::vector<data_t> data;
-    // TODO
-    //std::vecotr<point_t> point_t;
-    //point_t label;
+public:
+    std::vector<point_t<T>> data;
+    point_t<U> label;
 
     dataset_t() = default;
-    dataset_t(const dataset_t& other): data{other.data} {}
-    dataset_t(dataset_t&& other): data{std::move(other.data)} {}
-    dataset_t(const std::vector<data_t>& other_data): data{other_data} {}
-    dataset_t(std::vector<data_t>&& other_data): data{other_data} {}
+    dataset_t(const dataset_t<T, U>& other): data{other.data} {}
+    dataset_t(dataset_t<T, U>&& other): data{std::move(other.data)} {}
+    dataset_t(const std::vector<point_t<T>>& other_data, const point_t<U>& other_label): data{other_data}, label{other_label} {}
+    dataset_t(std::vector<point_t<T>>&& other_data, point_t<U>&& other_label): data{other_data}, label{other_label} {}
     
     // index-access
-    const data_t& operator[](std::size_t i) const { return this->data.at(i); }
-          data_t& operator[](std::size_t i)       { return this->data.at(i); }
+    const point_t<T>& operator[](std::size_t i) const { return this->data.at(i); }
+          point_t<T>& operator[](std::size_t i)       { return this->data.at(i); }
 
 	// iterator-related
 	auto begin() noexcept -> decltype(data.begin()) { return data.begin(); }
 	auto end()   noexcept -> decltype(data.end())   { return data.end(); }
 
     // allocate
-    void emplace_back(const data_t& _data) { this->data.emplace_back(_data); }
-    void emplace_back(data_t&& _data) { this->data.emplace_back(std::forward<decltype(_data)>(_data)); }
+    void emplace_back(const point_t<T>& _data, const U& _label) { this->data.emplace_back(_data); this->label.emplace_back(_label); }
+    void emplace_back(point_t<T>&& _data, U&& _label) { this->data.emplace_back(std::forward<decltype(_data)>(_data)); this->label.emplace_back(std::forward<decltype(_label)>(_label)); }
 
-    void emplace_back(const std::vector<double>& x, int y) { this->data.emplace_back(x, y); }
-    void emplace_back(std::vector<double>&& x, int y) { this->data.emplace_back(std::forward<decltype(x)>(x), y); }
+    void emplace_back(const std::vector<T>& x, const U& y) { this->data.emplace_back(x, y); }
+    void emplace_back(std::vector<T>&& x, U&& y) { this->data.emplace_back(std::forward<decltype(x)>(x), std::forward<decltype(y)>(y)); }
     
-    void emplace_back(std::initializer_list<double>& x, int y) { this->data.emplace_back(x, y); }
-    void emplace_back(std::initializer_list<double>&& x, int y) { this->data.emplace_back(std::forward<decltype(x)>(x), y); }
+    void emplace_back(std::initializer_list<T>& x, const U& y) { this->data.emplace_back(x, y); }
+    void emplace_back(std::initializer_list<T>&& x, U&& y) { this->data.emplace_back(std::forward<decltype(x)>(x), std::forward<decltype(y)>(y)); }
 
     // release
-    void clear() { this->data.clear(); }
+    void clear() { this->data.clear(); label.clear(); }
 
 	// size
 	std::size_t size() const { return this->data.size(); }
@@ -184,19 +194,268 @@ struct dataset_t
     }
 
     // cout
-    friend std::ostream& operator<<(std::ostream& os, const dataset_t& a);
+    friend std::ostream& operator<< <> (std::ostream& os, const dataset_t<T, U>& a);
 
-	// assignment
-	dataset_t& operator=(const dataset_t& other);
-	dataset_t& operator=(dataset_t&& other);
+	/**** operator ****/
+	dataset_t& operator=(const dataset_t<T, U>& other);
+	dataset_t& operator=(dataset_t<T, U>&& other);
+    dataset_t& operator+=(const dataset_t<T, U>& other);
+    dataset_t& operator+=(dataset_t<T, U>&& other);
+	/**** operator ****/
 
     // utility
-    std::vector<double> extract(std::size_t column);
-    std::vector<data_t> extract_with_label(std::size_t column);
-	double delta(const dataset_t& other, const std::function<double(int,int)>& loss);
+    point_t<T> extract(std::size_t column);
+    auto extract_with_label(std::size_t column) -> decltype(auto);
+	U delta(const dataset_t<T, U>& other, const std::function<U(const U&, const U&)>& loss);
 };
 
-double score(const dataset_t& a, const dataset_t& b, const std::function<double(int, int)>& loss);
 
+/***** point_t ******/
+/**** assignment ****/
+template<typename T>
+point_t<T>& point_t<T>::operator=(const point_t<T>& other)
+{
+    this->x = other.x;
+    return *this;
+}
+
+template<typename T>
+point_t<T>& point_t<T>::operator=(point_t<T>&& other)
+{
+    this->x = std::move(other.x);
+    return *this;
+}
+/**** assignment ****/
+
+/**** operator ****/
+template<typename T>
+point_t<T>& point_t<T>::operator+=(const point_t<T>& other)
+{
+    if (this->size() != other.size()) { std::cerr << "a+=b: a.size() != b.size(), return originally left point." << std::endl; return *this; }
+    for (size_t i = 0; i <= this->size(); ++i) { (*this)[i] += other[i]; }
+    return *this;
+}
+template<typename T>
+point_t<T> operator+(const point_t<T>& a, const point_t<T>& b)
+{
+    if (a.size() != b.size()) { std::cerr << "a+b: a.size() != b.size(), exit..." << std::endl; exit(1); }
+    point_t<T> ret{a};
+    for (size_t i = 0; i < ret.size(); ++i) { ret[i] += b[i]; }
+    return ret;
+}
+// dot
+template<typename T>
+T operator*(const point_t<T>& a, const point_t<T>& b)
+{
+    if (a.size() != b.size()) { std::cerr << "a*b: a.size() != b.size(), exit..." << std::endl; exit(1); }
+    T ret = 0;
+    for (size_t i = 0; i < a.size(); ++i) ret += a[i] * b[i];
+    return ret;
+}
+// scale
+template<typename T>
+point_t<T> operator*(const point_t<T>& a, T scale)
+{
+    point_t<T> ret{a};
+    for (auto& x : ret) x *= scale;
+    return ret;
+}
+template<typename T>
+point_t<T> operator*(T scale, const point_t<T>& a)
+{
+    return a * scale;
+}
+template<typename T>
+point_t<T> operator/(const point_t<T>& a, T scale)
+{
+    point_t<T> ret{a};
+    for (auto& x : ret) x /= scale;
+    return ret;
+}
+template<typename T>
+point_t<T>& point_t<T>::operator*=(T scale)
+{
+    for (auto& y : this->x) y *= scale;
+    return *this;
+}
+
+// minus
+template<typename T>
+point_t<T> operator-(const point_t<T>& a, const point_t<T>& b)
+{
+    if (a.size() != b.size()) { std::cerr << "a-b: a.size() != b.size(), exit..." << std::endl; exit(1); }
+    // O(2n)
+    // return a+(-1*b);
+
+    // O(n)
+    point_t<T> ret{a};
+    for (std::size_t i = 0; i < ret.size(); ++i) { ret[i] -= b[i]; }
+    return ret;
+}
+/**** operator ****/
+
+// point_t cout
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const point_t<T>& a)
+{
+    for (auto& x : a.x) os << x << ' ';
+    return os;
+}
+
+// utility
+template<typename T>
+point_t<T> midpoint(const point_t<T>& a, const point_t<T>& b)
+{
+    if (a.size() != b.size()) { std::cerr << "mid_point(a,b): a.size() != b.size(), exit..." << std::endl; exit(1); }
+    return a/2+b/2;
+}
+
+// distance
+template<typename T>
+double minkowski_dist(const point_t<T>& a, const point_t<T>& b, int p)
+{
+    if (a.size() != b.size()) { std::cerr << "minkowski_dist(a,b): a.size() != b.size(), exit..." << std::endl; exit(1); }
+    double ret = 0;
+    for (std::size_t i = 0; i < a.size(); ++i) ret += pow(a[i]-b[i], p);
+    return pow(ret, 1.0/p);
+}
+template<typename T>
+double euclidean_dist(const point_t<T>& a, const point_t<T>& b)
+{
+    // naive
+    //const point_t c = a-b;
+    //return sqrt(c*c);
+
+    // minkowski
+    return minkowski_dist(a, b, 2);
+}
+
+template<typename T>
+bool point_t<T>::on(const hyperplane_t<T>& plane)
+{
+    return onplane(*this, plane);
+}
+/***** point_t ******/
+
+/***** hyperplane_t and point_t *****/
+template<typename T> bool operator<(const hyperplane_t<T>& plane, const point_t<T>& x)
+{
+    return plane.b < plane.n*x;
+}
+template<typename T> bool operator>(const hyperplane_t<T>& plane, const point_t<T>& x)
+{
+    return plane.n*x < plane.b;
+}
+template<typename T> bool operator<(const point_t<T>& x, const hyperplane_t<T>& plane)
+{
+    return plane.b > plane.n*x;
+}
+template<typename T> bool operator>(const point_t<T>& x, const hyperplane_t<T>& plane)
+{
+    return plane.n*x > plane.b;
+}
+
+template<typename T> bool onplane(const point_t<T>& x, const hyperplane_t<T>& plane)
+{
+    return abs(plane.b - plane.n*x) <= minerr;
+}
+
+/***** hyperplane_t *****/
+// hyperplane_t cout
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const hyperplane_t<T>& plane)
+{
+    os << "[ " << plane.n << "]^Tx = " << plane.b;
+    return os;
+}
+/***** hyperplane_t *****/
+
+/* ========================================== */
+
+
+template<typename T, typename U>
+dataset_t<T, U>& dataset_t<T, U>::operator=(const dataset_t& other)
+{
+    this->data = other.data;
+    this->label = other.label;
+    return *this;
+}
+template<typename T, typename U>
+dataset_t<T, U>& dataset_t<T, U>::operator=(dataset_t&& other)
+{
+    this->data = std::move(other.data);
+    this->label = std::move(other.label);
+    return *this;
+}
+template<typename T, typename U>
+dataset_t<T, U>& dataset_t<T, U>::operator+=(const dataset_t& other)
+{
+    this->data.insert(this->data.end(), other.data.begin(), other.data.end());
+    this->label.extend(other.label);
+    return *this;
+}
+template<typename T, typename U>
+dataset_t<T, U>& dataset_t<T, U>::operator+=(dataset_t&& other)
+{
+    this->data.insert(this->data.end(), other.data.begin(), other.data.end());
+    this->label.extend(other.label);
+    return *this;
+}
+
+template<typename T, typename U>
+std::ostream& operator<<(std::ostream& os, const dataset_t<T, U>& a)
+{
+    for (std::size_t i = 0; i < a.size(); ++i) os << "[ " << a.data[i] << "], " << a.label[i] << std::endl;
+    return os;
+}
+
+template<typename T, typename U>
+point_t<T> dataset_t<T, U>::extract(std::size_t column)
+{
+    if (column >= this->size())
+    {
+        std::cerr << "dataset_t::extract: column >= size\n";
+        exit(1);
+    }
+
+    point_t<T> ret;
+    for (const auto& data_: this->data)
+        ret.emplace_back(data_[column]);
+    return ret;
+}
+
+template<typename T, typename U>
+auto dataset_t<T, U>::extract_with_label(std::size_t column) -> decltype(auto)
+{
+    if (column >= this->size())
+    {
+        std::cerr << "dataset_t::extract: column >= size\n";
+        exit(1);
+    }
+
+    std::pair<point_t<T>, point_t<T>> ret;
+    for (std::size_t i = 0; i < this->size(); ++i)
+    {
+        ret.first.emplace_back(this->data[i][column]);
+        ret.second.emplace_back(this->label[i]);
+    }
+    return ret;
+}
+
+template<typename T, typename U>
+U score(const dataset_t<T, U>& a, const dataset_t<T, U>& b, const std::function<U(const U&, const U&)>& loss)
+{
+	U ret = 0;
+	if (a.size() != b.size()) { std::cerr << "score(): a.size() != b.size()" << std::endl; return 0; }
+	for (std::size_t i = 0; i < a.size(); ++i)
+		ret += loss(a.label[i], b.label[i]);
+	return ret;
+}
+
+template<typename T, typename U>
+U dataset_t<T, U>::delta(const dataset_t<T, U>& other, const std::function<U(const U&, const U&)>& loss)
+{
+	return score<T, U>(*this, other, loss);
+}
 
 #endif
