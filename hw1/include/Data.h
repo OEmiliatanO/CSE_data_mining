@@ -159,8 +159,8 @@ public:
     point_t<U> label;
 
     dataset_t() = default;
-    dataset_t(const dataset_t<T, U>& other): data{other.data} {}
-    dataset_t(dataset_t<T, U>&& other): data{std::move(other.data)} {}
+    dataset_t(const dataset_t<T, U>& other): data{other.data}, label{other.label} {}
+    dataset_t(dataset_t<T, U>&& other): data{std::move(other.data)}, label{other.label} {}
     dataset_t(const std::vector<point_t<T>>& other_data, const point_t<U>& other_label): data{other_data}, label{other_label} {}
     dataset_t(std::vector<point_t<T>>&& other_data, point_t<U>&& other_label): data{other_data}, label{other_label} {}
     
@@ -171,6 +171,8 @@ public:
 	// iterator-related
 	auto begin() noexcept -> decltype(data.begin()) { return data.begin(); }
 	auto end()   noexcept -> decltype(data.end())   { return data.end(); }
+	auto begin() const noexcept -> decltype(data.begin()) { return data.begin(); }
+	auto end()   const noexcept -> decltype(data.end())   { return data.end(); }
 
     // allocate
     void emplace_back(const point_t<T>& _data, const U& _label) { this->data.emplace_back(_data); this->label.emplace_back(_label); }
@@ -442,15 +444,21 @@ auto dataset_t<T, U>::extract_with_label(std::size_t column) -> decltype(auto)
     return ret;
 }
 
-template<typename T, typename U>
-U score(const dataset_t<T, U>& a, const dataset_t<T, U>& b, const std::function<U(const U&, const U&)>& loss)
+template<typename U>
+U score(const point_t<U>& a, const point_t<U>& b, const std::function<U(const U&, const U&)>& loss)
 {
 	U ret = 0;
 	if (a.size() != b.size()) { std::cerr << "score(): a.size() != b.size()" << std::endl; return 0; }
 	for (std::size_t i = 0; i < a.size(); ++i)
-		ret += loss(a.label[i], b.label[i]);
+		ret += loss(a[i], b[i]);
 	return ret;
 }
+template<typename T, typename U>
+U score(const dataset_t<T, U>& a, const dataset_t<T, U>& b, const std::function<U(const U&, const U&)>& loss)
+{
+	return score(a.label, b.label, loss);
+}
+
 
 template<typename T, typename U>
 U dataset_t<T, U>::delta(const dataset_t<T, U>& other, const std::function<U(const U&, const U&)>& loss)
