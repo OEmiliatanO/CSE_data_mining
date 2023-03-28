@@ -71,11 +71,15 @@ dataset_t<T, U> Datatransformer_t<T, U>::normalize(const dataset_t<T, U>& datase
 template<typename T, typename U>
 dataset_t<T, U> Datatransformer_t<T, U>::random_pick(const dataset_t<T, U>& dataset_, std::size_t n)
 {
-    dataset_t<T, U> dataset = dataset_;
-    std::random_shuffle(dataset.begin(), dataset.end());
+    std::vector<std::size_t> arg;
+    for (std::size_t i = 0; i < dataset_.size(); ++i)
+        arg.emplace_back(i);
+    std::random_shuffle(arg.begin(), arg.end());
 
-    dataset.data.erase(dataset.begin() + n, dataset.end());
-    return dataset;
+    arg.erase(arg.begin() + n, arg.end());
+    dataset_t<T, U> ret;
+    for (const auto& i : arg) ret.emplace_back(dataset_.data[i], dataset_.label[i]);
+    return ret;
 }
 
 template<typename T, typename U>
@@ -83,12 +87,18 @@ std::vector<dataset_t<T, U>> Datatransformer_t<T, U>::split(const dataset_t<T, U
 {
     if (n > dataset_.size()) { std::cerr << "Datatransformer_t::split(): n > dataset_.size()" << std::endl; exit(1); }
     dataset_t<T, U> dataset = dataset_;
-    std::random_shuffle(dataset.begin(), dataset.end());
+ 
+    std::vector<std::size_t> arg;
+    for (std::size_t i = 0; i < dataset_.size(); ++i)
+        arg.emplace_back(i);
+    std::random_shuffle(arg.begin(), arg.end());
+
+    //std::random_shuffle(dataset.begin(), dataset.end());
     std::vector<dataset_t<T, U>> ret;
     ret.resize(n);
     for (std::size_t i = 0; i < n; ++i)
         for (std::size_t j = 0; j < dataset.size()/n; ++j)
-            ret[i].emplace_back(dataset.data[i*(dataset.size()/n)+j], dataset.label[i*(dataset.size()/n)+j]);
+            ret[i].emplace_back(dataset.data[arg[i*(dataset.size()/n)+j]], dataset.label[arg[i*(dataset.size()/n)+j]]);
     return ret;
 }
 #endif
