@@ -47,9 +47,7 @@ template<typename T> bool onplane(const point_t<T>& x, const hyperplane_t<T>& pl
 // hyperplane_t cout
 template<typename T> std::ostream& operator<<(std::ostream& os, const hyperplane_t<T>& a);
 
-
-template<typename T, typename U>
-class dataset_t;
+template<typename T, typename U> std::ostream& operator<<(std::ostream& os, const dataset_t<T, U>& a);
 
 template<typename T>
 class point_t
@@ -80,11 +78,13 @@ public:
     // cout
     friend std::ostream& operator<< <>(std::ostream& os, const point_t<T>& a);
 
-    // extend
+    // extend && emplace_back
     void extend(const point_t<T>& other) { this->x.insert(this->x.end(), other.x.begin(), other.x.end()); }
     void extend(point_t<T>&& other) { this->x.insert(this->x.end(), other.x.begin(), other.x.end()); }
 	void extend(const std::vector<T>& vx) { this->x.insert(this->x.end(), vx.begin(), vx.end()); }
     void extend(std::vector<T>&& vx) { this->x.insert(this->x.end(), vx.begin(), vx.end()); }
+    void emplace_back(const T& x) { this->x.emplace_back(x); }
+    void emplace_back(T&& x) { this->x.emplace_back(std::forward<decltype(x)>(x)); }
 
     /**** index-access ****/
     const T& operator[](std::size_t i) const { return this->x.at(i); }
