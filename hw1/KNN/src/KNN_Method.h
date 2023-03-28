@@ -1,17 +1,53 @@
 #ifndef __KNN_METHOD_H__
 #define __KNN_METHOD_H__
+#include <algorithm>
+#include <vector>
+#include <map>
 #include "../../include/Data.h"
 
+template<typename T, typename U>
 class KNN_Method_t
 {
 public:
 	KNN_Method_t() = default;
-	KNN_Method_t(const KNN_Method_t& other): dataset{other.dataset} {};
-	KNN_Method_t(KNN_Method_t&& other): dataset{std::move(other.dataset)} {};
 	virtual ~KNN_Method_t() = default;
 	
-	dataset_t dataset;
-	virtual std::vector<data_t> knn(const data_t&, std::size_t) = 0;
-	virtual double predict(const data_t&, std::size_t) = 0;
+    // find the k-nearest points related to "data"
+	virtual std::vector<std::size_t> knn(const dataset_t<T, U>& dataset, const point_t<T>& data, std::size_t k) = 0;
+    // classify the target
+	virtual U predict(const dataset_t<T, U>& dataset, const point_t<T>& target, std::size_t k);
+    // classify the targets
+	virtual point_t<U> predict(const dataset_t<T, U>& dataset, const dataset_t<T, U>& targets, std::size_t k);
+	virtual point_t<U> predict(const dataset_t<T, U>& dataset, const std::vector<point_t<T>>& targets, std::size_t k);
 };
+
+// classify the target
+template<typename T, typename U>
+U KNN_Method_t<T, U>::predict(const dataset_t<T, U>& dataset, const point_t<T>& target, std::size_t k)
+{
+    std::vector<std::size_t> knns = this->knn(dataset, target, k);
+	std::map<U, std::size_t> cnt;
+	std::pair<std::size_t, U> maxkind{0, 0};
+	for (auto& nearbyid : knns) { ++cnt[dataset.label[nearbyid]]; }
+	for (auto& [label, howmany] : cnt) maxkind = std::max(maxkind, std::pair{howmany, label});
+	return maxkind.second;
+}
+
+// classify the targets
+template<typename T, typename U>
+point_t<U> KNN_Method_t<T, U>::predict(const dataset_t<T, U>& dataset, const dataset_t<T, U>& targets, std::size_t k)
+{
+    point_t<U> ret;
+    for (const auto& data : targets)
+        ret.emplace_back(this->predict(dataset, data, k));
+    return ret;
+}
+template<typename T, typename U>
+point_t<U> KNN_Method_t<T, U>::predict(const dataset_t<T, U>& dataset, const std::vector<point_t<T>>& targets, std::size_t k)
+{
+    point_t<U> ret;
+    for (const auto& data : targets)
+        ret.emplace_back(this->predict(dataset, data, k));
+    return ret;
+}
 #endif
