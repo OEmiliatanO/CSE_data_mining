@@ -55,7 +55,7 @@ point_t<U> random_forest_t<T, U>::predict(const dataset_t<T, U>& dataset_)
 }
 
 template<typename T, typename U>
-U random_forest_t<T, U>::predict(const point_t<T>& data_) // data_t shall be replace as point_t
+U random_forest_t<T, U>::predict(const point_t<T>& data_)
 {
     std::map<U, std::size_t> vote;
     for (auto& tree_ : this->trees)
@@ -64,7 +64,6 @@ U random_forest_t<T, U>::predict(const point_t<T>& data_) // data_t shall be rep
     for (const auto& [kind, cnt] : vote)
     {
         maxvote = std::max(maxvote, std::pair<size_t, U>{cnt, kind});
-        //std::cout << kind << ", " << cnt << std::endl;
     }
     return maxvote.second;
 }

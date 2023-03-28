@@ -28,7 +28,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
     std::cout << "Complete loading" << std::endl << std::endl;
 	std::cout << "===================================================================" << std::endl;
     
-    /*
+    
     std::size_t n = 35;
     if (argc >= 2) n = atoi(argv[1]);
     std::cout << "Create random forest with " << n << " decision trees..." << std::endl;
@@ -78,8 +78,8 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
     std::cout << std::endl << "The socre is " << correct_n << "/" << result.size() << std::endl;
     std::cout << "The accuracy is " << (double)correct_n/result.size() << std::endl;
 	std::cout << "===================================================================" << std::endl;
-    */
     
+    /*
     decision_tree_t<data_type, label_type> tree;
 
     std::cout << "Set criterion(entropy)..." << std::endl;
@@ -161,7 +161,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
     std::cout << std::endl << "The socre is " << correct_n << "/" << result.size() << std::endl;
     std::cout << "The accuracy is " << (double)correct_n/result.size() << std::endl;
 	std::cout << "===================================================================" << std::endl;
-    
+    */
 
     return 0;
 }
