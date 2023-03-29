@@ -3,6 +3,7 @@
 #include <cmath>
 #include "src/KNN.h"
 #include "src/Brute.h"
+#include "src/Annoy.h"
 #include "../include/Dataloader.h"
 #include "../include/Datatransformer.h"
 
@@ -17,7 +18,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
     std::cout << "Test data path is " << test_path << std::endl;
 
     
-    std::size_t k = 5;
+    std::size_t k = 9;
     if (argc >= 2) k = (std::size_t)std::atoi(argv[1]);
     std::cout << "k = " << k << std::endl;
 
@@ -65,6 +66,32 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
     std::cout << std::endl << "The socre is " << correct_n << "/" << result.size() << std::endl;
     std::cout << "The accuracy is " << (double)correct_n/result.size() << std::endl;
 	std::cout << "===================================================================" << std::endl;
+
+    std::cout << "Set knn search algorithm: ANNOY" << std::endl;
+    std::size_t maxpoint = 17;
+    if (argc >= 3) maxpoint = std::atoi(argv[2]);
+    std::cout << "Max point count in the leaf of search tree = " << maxpoint << std::endl;
+    KNN.set_knn_method(std::make_shared<annoy<data_type, label_type>>(maxpoint));
+    std::cout << "Train the KNN..." << std::endl;
+    KNN.train(dataloader.train_data);
+    std::cout << "Predict the test data..." << std::endl;
+    result = KNN.predict(dataloader.test_data, k);
+
+    correct_n = (int)score<label_type>(result, dataloader.test_data.label, correct);
+    std::cout << std::endl << "The socre is " << correct_n << "/" << result.size() << std::endl;
+    std::cout << "The accuracy is " << (double)correct_n/result.size() << std::endl;
+	std::cout << "===================================================================" << std::endl;
+	std::cout << "Use the normalized dataset..." << std::endl;
+    
+    KNN.train(dataloader_normal.train_data);
+    std::cout << "Predict the test data..." << std::endl;
+    result = KNN.predict(dataloader_normal.test_data, k);
+
+    correct_n = (int)score<label_type>(result, dataloader_normal.test_data.label, correct);
+    std::cout << std::endl << "The socre is " << correct_n << "/" << result.size() << std::endl;
+    std::cout << "The accuracy is " << (double)correct_n/result.size() << std::endl;
+	std::cout << "===================================================================" << std::endl;
+
 
     return 0;
 }
