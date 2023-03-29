@@ -12,6 +12,8 @@ public:
 	KNN_Method_t() = default;
 	virtual ~KNN_Method_t() = default;
 	
+	// build essential data structure if need
+	virtual void build(const dataset_t<T, U>& dataset) {}
     // find the k-nearest points related to "data"
 	virtual std::vector<std::size_t> knn(const dataset_t<T, U>& dataset, const point_t<T>& data, std::size_t k) = 0;
     // classify the target

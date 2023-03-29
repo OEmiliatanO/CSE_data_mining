@@ -14,11 +14,27 @@ public:
     std::shared_ptr<KNN_Method_t<T, U>> KNN_Method;
 
     KNN_t() = default;
-    KNN_t(const dataset_t<T, U>& dataset) { this->train_data = dataset; }
-    KNN_t(dataset_t<T, U>&& dataset) { this->train_data = std::move(dataset); }
     
-    void train(const dataset_t<T, U>& dataset) { this->train_data = dataset; }
-    void train(dataset_t<T, U>&& dataset) { this->train_data = std::move(dataset); }
+    void train(const dataset_t<T, U>& dataset)
+	{
+		if (KNN_Method == nullptr)
+		{
+			std::cerr << "KNN_Method is nullptr, please set knn method first." << std::endl;
+			exit(1);
+		}
+		this->train_data = dataset;
+		this->KNN_Method->build(this->train_data);
+	}
+    void train(dataset_t<T, U>&& dataset) 
+	{ 
+		if (KNN_Method == nullptr)
+		{
+			std::cerr << "KNN_Method is nullptr, please set knn method first." << std::endl;
+			exit(1);
+		}
+		this->train_data = std::move(dataset); 
+		this->KNN_Method->build(this->train_data);
+	}
 
 	point_t<U> predict(const dataset_t<T, U>& test_data, std::size_t k)
     {
