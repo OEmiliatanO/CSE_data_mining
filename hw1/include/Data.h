@@ -139,7 +139,7 @@ public:
     T b;
 
     hyperplane_t() = default;
-    hyperplane_t(T b, vector_t<T> n): n{n}, b{b} {}
+    hyperplane_t(vector_t<T> n, T b): n{n}, b{b} {}
     hyperplane_t(std::initializer_list<T>& n, T b): n{n}, b{b} {}
     hyperplane_t(std::initializer_list<T>&& n, T b): n{std::forward<decltype(n)>(n)}, b{b} {}
     
@@ -191,7 +191,15 @@ public:
     void clear() { this->data.clear(); label.clear(); }
 
 	// size
-	std::size_t size() const { return this->data.size(); }
+	std::size_t size() const 
+    {
+        if (this->data.size() != this->label.size())
+        {
+            std::cerr << "dataset_t::size(): data.size() != label.size()";
+            exit(1);
+        }
+        return this->data.size();
+    }
     std::size_t column() const
     { 
         if (this->data.size()) return this->data.front().size(); 
@@ -312,7 +320,7 @@ template<typename T>
 point_t<T> midpoint(const point_t<T>& a, const point_t<T>& b)
 {
     if (a.size() != b.size()) { std::cerr << "mid_point(a,b): a.size() != b.size(), exit..." << std::endl; exit(1); }
-    return a/2+b/2;
+    return a/(T)2+b/(T)2;
 }
 
 // distance
