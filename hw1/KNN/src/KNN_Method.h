@@ -13,9 +13,9 @@ public:
 	virtual ~KNN_Method_t() = default;
 	
 	// build essential data structure if need
-	virtual void build(const dataset_t<T, U>& dataset) {}
+	virtual void build([[maybe_unused]]const dataset_t<T, U>& dataset) {}
     // find the k-nearest points related to "data"
-	virtual std::vector<std::size_t> knn(const dataset_t<T, U>& dataset, const point_t<T>& data, std::size_t k) = 0;
+	virtual dataset_t<T, U> knn(const dataset_t<T, U>& dataset, const point_t<T>& data, std::size_t k) = 0;
     // classify the target
 	virtual U predict(const dataset_t<T, U>& dataset, const point_t<T>& target, std::size_t k);
     // classify the targets
@@ -27,10 +27,10 @@ public:
 template<typename T, typename U>
 U KNN_Method_t<T, U>::predict(const dataset_t<T, U>& dataset, const point_t<T>& target, std::size_t k)
 {
-    std::vector<std::size_t> knns = this->knn(dataset, target, k);
+    dataset_t<T, U> knns = this->knn(dataset, target, k);
 	std::map<U, std::size_t> cnt;
 	std::pair<std::size_t, U> maxkind{0, 0};
-	for (auto& nearbyid : knns) { ++cnt[dataset.label[nearbyid]]; }
+	for (std::size_t nearby = 0; nearby < knns.size(); ++nearby) { ++cnt[knns.label[nearby]]; }
 	for (auto& [label, howmany] : cnt) maxkind = std::max(maxkind, std::pair{howmany, label});
 	return maxkind.second;
 }

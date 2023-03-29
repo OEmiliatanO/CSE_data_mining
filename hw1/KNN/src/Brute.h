@@ -12,7 +12,7 @@ class brute_force: public KNN_Method_t<T, U>
 {
 public:
     // find k-nearest points related to "data"
-	std::vector<std::size_t> knn(const dataset_t<T, U>& dataset, const point_t<T>& data, std::size_t k) override;
+	dataset_t<T, U> knn(const dataset_t<T, U>& dataset, const point_t<T>& data, std::size_t k) override;
 };
 
 static std::vector<std::size_t> argsort(const std::vector<double>& dist)
@@ -28,15 +28,17 @@ static std::vector<std::size_t> argsort(const std::vector<double>& dist)
 }
 
 template<typename T, typename U>
-std::vector<std::size_t> brute_force<T, U>::knn(const dataset_t<T, U>& dataset, const point_t<T>& target, std::size_t k)
+dataset_t<T, U> brute_force<T, U>::knn(const dataset_t<T, U>& dataset, const point_t<T>& target, std::size_t k)
 {
     std::vector<double> dist;
-    for (const auto& data : dataset)
+    for (const auto& data : dataset.data)
         dist.emplace_back(euclidean_dist(data, target));
 
-    std::vector<std::size_t> dist_arg = argsort(dist);
-    dist_arg.erase(dist_arg.begin() + k, dist_arg.end());
-    return dist_arg;
+    std::vector<std::size_t> arg = argsort(dist);
+    arg.erase(arg.begin() + k, arg.end());
+    dataset_t<T, U> ret;
+    for (const auto& id : arg) ret.emplace_back(dataset.data[id], dataset.label[id]);
+    return ret;
 }
 
 #endif
