@@ -25,7 +25,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 
     std::cout << "Load test data..." << std::endl;
     dataloader.load_test(test_path);
-    dataloader.load_test(Datatransformer_t<data_type, label_type>::drop_attrs_are_xs(dataloader.test_data, std::vector<std::size_t>{2,3,4}, std::vector<data_type>{0,0,0}));
+    dataloader.load_test(dataloader.test_data);
     //std::cerr << "test data =\n" << dataloader.test_data << std::endl;
     std::cout << "Complete loading" << std::endl << std::endl;
 	std::cout << "===================================================================" << std::endl;
