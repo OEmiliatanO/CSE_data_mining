@@ -76,7 +76,9 @@ dataset_t<T, U> Datatransformer_t<T, U>::random_pick(const dataset_t<T, U>& data
     std::vector<std::size_t> arg;
     for (std::size_t i = 0; i < dataset_.size(); ++i)
         arg.emplace_back(i);
-    std::random_shuffle(arg.begin(), arg.end());
+    std::random_device rd;
+    std::default_random_engine eng(rd());
+    std::random_shuffle(arg.begin(), arg.end(), eng);
 
     arg.erase(arg.begin() + n, arg.end());
     dataset_t<T, U> ret;
@@ -93,7 +95,9 @@ std::vector<dataset_t<T, U>> Datatransformer_t<T, U>::split(const dataset_t<T, U
     std::vector<std::size_t> arg;
     for (std::size_t i = 0; i < dataset_.size(); ++i)
         arg.emplace_back(i);
-    std::random_shuffle(arg.begin(), arg.end());
+    std::random_device rd;
+    std::default_random_engine eng(rd());
+    std::shuffle(arg.begin(), arg.end(), eng);
 
     //std::random_shuffle(dataset.begin(), dataset.end());
     std::vector<dataset_t<T, U>> ret;
