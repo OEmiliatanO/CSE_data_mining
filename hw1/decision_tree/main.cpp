@@ -20,10 +20,12 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
     
     std::cout << "Load train data..." << std::endl;
     dataloader.load_train(train_path);
+    dataloader.load_train(Datatransformer_t<data_type, label_type>::drop_attrs_are_xs(dataloader.train_data, std::vector<std::size_t>{2,3,4}, std::vector<data_type>{0,0,0}));
     //std::cerr << "train data =\n" << dataloader.train_data << std::endl;
 
     std::cout << "Load test data..." << std::endl;
     dataloader.load_test(test_path);
+    dataloader.load_test(Datatransformer_t<data_type, label_type>::drop_attrs_are_xs(dataloader.test_data, std::vector<std::size_t>{2,3,4}, std::vector<data_type>{0,0,0}));
     //std::cerr << "test data =\n" << dataloader.test_data << std::endl;
     std::cout << "Complete loading" << std::endl << std::endl;
 	std::cout << "===================================================================" << std::endl;
