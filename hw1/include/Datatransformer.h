@@ -14,6 +14,8 @@ public:
 	static dataset_t<T, U> normalize(const dataset_t<T, U>& dataset);
     static dataset_t<T, U> random_pick(const dataset_t<T, U>& dataset, std::size_t n);
     static std::vector<dataset_t<T, U>> split(const dataset_t<T, U>& dataset, std::size_t n);
+	static dataset_t<T, U> drop_attr_is_x(const dataset_t<T, U>& dataset, std::size_t attr, const T& x);
+	static dataset_t<T, U> drop_attrs_are_xs(const dataset_t<T, U>& dataset, const std::vector<std::size_t>& attrs, const std::vector<T>& xs);
 };
 
 template<typename T, typename U>
@@ -101,4 +103,30 @@ std::vector<dataset_t<T, U>> Datatransformer_t<T, U>::split(const dataset_t<T, U
             ret[i].emplace_back(dataset.data[arg[i*(dataset.size()/n)+j]], dataset.label[arg[i*(dataset.size()/n)+j]]);
     return ret;
 }
+
+template<typename T, typename U>
+dataset_t<T, U> Datatransformer_t<T, U>::drop_attr_is_x(const dataset_t<T, U>& dataset, std::size_t attr, const T& x)
+{
+	dataset_t<T, U> ret;
+	for (std::size_t i = 0; i < dataset.size(); ++i)
+	{
+		if (dataset.data[i][attr] == x) continue;
+		ret.emplace_back(dataset.data[i], dataset.label[i]);
+	}
+	return ret;
+}
+template<typename T, typename U>
+dataset_t<T, U> Datatransformer_t<T, U>::drop_attrs_are_xs(const dataset_t<T, U>& dataset, const std::vector<std::size_t>& attrs, const std::vector<T>& xs)
+{
+	dataset_t<T, U> ret;
+	for (std::size_t i = 0; i < dataset.size(); ++i)
+	{
+		bool preserved = true;
+		for (std::size_t j = 0; j < attrs.size(); ++j)
+			if (dataset.data[i][attrs[j]] == xs[j]) { preserved = false; break; }
+		if (preserved) ret.emplace_back(dataset.data[i], dataset.label[i]);
+	}
+	return ret;
+}
+
 #endif
