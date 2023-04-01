@@ -70,25 +70,14 @@ void Dataloader_t<T, U>::load(std::string_view& path, dataset_t<T, U>& dataset)
         std::string_view rawdata{s};
         std::vector<std::string_view> alldata = split(rawdata, ',');
 
-        U label = -1;
-        auto result = std::from_chars(alldata.back().data(), alldata.back().data() + alldata.back().size(), label);
-        if (result.ec == std::errc::invalid_argument)
-        {
-            std::cerr << "Dataloader_t::load: cannot convert string, \"" << s << "\" to label." << std::endl;
-            exit(1);
-        }
+        U label = std::atoi(alldata.back().data());
         alldata.pop_back();
 
         point_t<T> data;
         for (auto& s : alldata)
         {
-            T x = 0;
-            auto result = std::from_chars(s.data(), s.data()+s.size(), x);
-            if (result.ec == std::errc::invalid_argument)
-            {
-                std::cerr << "Dataloader_t::load: cannot convert string, \"" << s << "\" to data." << std::endl;
-                exit(1);
-            }
+            char *end_;
+            T x = std::strtod(s.data(), &end_);
             data.emplace_back(std::move(x));
         }
         dataset.emplace_back(std::move(data), std::move(label));
