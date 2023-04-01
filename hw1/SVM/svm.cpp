@@ -1,4 +1,7 @@
 #include "svm.h"
+
+#ifdef SVMTEST
+
 using data_type = double;
 using label_type = int;
 
@@ -17,3 +20,5 @@ int main()
     
     return 0;
 }
+
+#endif
