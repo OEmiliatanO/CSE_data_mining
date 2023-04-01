@@ -70,10 +70,14 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 	std::cout << "===================================================================" << std::endl;
 
     std::cout << "Set knn search algorithm: ANNOY" << std::endl;
+    std::cout << "Set ANNOY search algorithm: bfs" << std::endl;
     std::size_t maxpoint = 17;
     if (argc >= 3) maxpoint = std::atoi(argv[2]);
     std::cout << "Max point count in the leaf of search tree = " << maxpoint << std::endl;
-    KNN.set_knn_method(std::make_shared<annoy<data_type, label_type>>(maxpoint));
+	auto annoy_ = std::make_shared<annoy<data_type, label_type> >(maxpoint);
+	annoy_->bfs_threhold = 5;
+	annoy_->search_method = "bfs";
+    KNN.set_knn_method(annoy_);
     std::cout << "Train the KNN..." << std::endl;
     KNN.train(dataloader.train_data);
     std::cout << "Predict the test data..." << std::endl;

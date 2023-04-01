@@ -2,6 +2,7 @@
 #define __ANNOY_H__
 #include "../../include/Data.h"
 #include <vector>
+#include <queue>
 #include <random>
 
 template<typename T, typename U>
@@ -32,12 +33,15 @@ class annoy : public KNN_Method_t<T, U>
 public:
     tree_t<T, U> tree;
 	std::size_t maxpoint = 13;
+	std::string search_method = "bfs";
+	double bfs_threhold = 20;
 	annoy() = default;
 	annoy(std::size_t maxp): maxpoint{maxp} {}
 	dataset_t<T, U> knn(const dataset_t<T, U>& dataset, const point_t<T>& data, std::size_t k);
 	void build(const dataset_t<T, U>& dataset) override;
     void dfs_build(node_t<T, U>*& now, const dataset_t<T, U>& dataset);
     dataset_t<T, U> dfs(node_t<T, U>* now, const point_t<T>& data);
+	dataset_t<T, U> bfs(node_t<T, U>* root, const point_t<T>& data, double threhold);
 };
 
 template<typename T, typename U>
@@ -54,20 +58,45 @@ dataset_t<T, U> annoy<T, U>::dfs(node_t<T, U>* now, const point_t<T>& data)
 	return dfs(now->r, data);
 }
 
-/*
 template<typename T, typename U>
-dataset_t<T, U> annoy<T, U>::bfs(node_t* now, const point_t<T>& data)
+dataset_t<T, U> annoy<T, U>::bfs(node_t<T, U>* root, const point_t<T>& data, double threhold)
 {
-    //TODO
-    exit(1);
+	std::priority_queue<std::pair<double, node_t<T, U>*>> pq;
+	pq.emplace(euclidean_dist(root->mid, data), root);
+	dataset_t<T, U> ret;
+	while (!pq.empty())
+	{
+		auto [dist, now] = pq.top(); pq.pop();
+		if (now->leaf) { ret += now->dataset; continue; }
+		if (dist < threhold)
+		{
+			//std::cout << "dist < threhold, find both subtree" << std::endl;
+			pq.emplace(euclidean_dist(now->l->mid, data), now->l);
+			pq.emplace(euclidean_dist(now->r->mid, data), now->r);
+		}
+		else if (data < now->mid)
+			pq.emplace(euclidean_dist(now->l->mid, data), now->l);
+		else
+			pq.emplace(euclidean_dist(now->r->mid, data), now->r);
+	}
+	return ret;
 }
-*/
 
 template<typename T, typename U>
 dataset_t<T, U> annoy<T, U>::knn([[maybe_unused]]const dataset_t<T, U>& dataset, const point_t<T>& data, std::size_t k)
 {
     //std::cerr << "annoy<T, U>::knn(dataset, data, k) calling..." << std::endl;
-	dataset_t<T, U> candiates = this->dfs(this->tree.root, data);
+	dataset_t<T, U> candiates;
+	if (this->search_method == "dfs")
+		candiates = this->dfs(this->tree.root, data);
+	else if (this->search_method == "bfs")
+		candiates = this->bfs(this->tree.root, data, this->bfs_threhold);
+	else
+	{
+		std::cerr << "annoy: no such search method, " << this->search_method << std::endl;
+		exit(1);
+	}
+
     //std::cerr << "found the candiates(" << candiates.size() << ")" << std::endl;
     if (candiates.size() > k)
     {
