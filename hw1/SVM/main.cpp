@@ -11,11 +11,11 @@ int main()
 
     svm_t<data_type, label_type> svm(dataloader.train_data, dataloader.test_data);
     svm.train_ga( 
-        /*level*/ 200,
+        /*level*/ 300,
         /*mutation_rate*/ 0.05, 
         /*elite_save_percent*/ 0.1, 
-        /*variation*/ 3, 
-        /*populations*/ 150
+        /*variation*/ 5, 
+        /*populations*/ 250
     );
     std::cout << "Correct_Rate: " << svm.correct_rate() << std::endl;
 
