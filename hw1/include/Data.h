@@ -248,7 +248,7 @@ point_t<T>& point_t<T>::operator+=(const point_t<T>& other)
     if (this->size() != other.size())
 	{
 		std::cerr << "ERROR: a+=b: a.size(" << this->size() << ") != b.size(" << other.size() << "), return originally left point." << std::endl;
-		return *this;
+		exit(1);
 	}
     for (size_t i = 0; i <= this->size(); ++i) { (*this)[i] += other[i]; }
     return *this;
@@ -256,7 +256,10 @@ point_t<T>& point_t<T>::operator+=(const point_t<T>& other)
 template<typename T>
 point_t<T> operator+(const point_t<T>& a, const point_t<T>& b)
 {
-    if (a.size() != b.size()) { std::cerr << "WARNING: a+b: a.size(" << a.size() << ") != b.size(" << b.size() << "). Padding zeros." << std::endl; }
+    if (a.size() != b.size())
+	{
+		//std::cerr << "WARNING: a+b: a.size(" << a.size() << ") != b.size(" << b.size() << "). Padding zeros." << std::endl;
+	}
     point_t<T> ret;
 	if (a.size() > b.size())
 	{
@@ -283,7 +286,10 @@ point_t<T> operator+(const point_t<T>& a, const point_t<T>& b)
 template<typename T>
 T operator*(const point_t<T>& a, const point_t<T>& b)
 {
-    if (a.size() != b.size()) { std::cerr << "WARNING: a*b: a.size(" << a.size() << ") != b.size(" << b.size() << "). Padding zeros." << std::endl; }
+    if (a.size() != b.size()) 
+	{ 
+		//std::cerr << "WARNING: a*b: a.size(" << a.size() << ") != b.size(" << b.size() << "). Padding zeros." << std::endl;
+	}
     T ret = 0;
     for (size_t i = 0; i < std::min(a.size(), b.size()); ++i) ret += a[i] * b[i];
     return ret;
