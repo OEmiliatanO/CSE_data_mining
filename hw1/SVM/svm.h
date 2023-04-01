@@ -1,6 +1,6 @@
 #ifndef __SVM_H__
 #define __SVM_H__
-
+#include <ctime>
 #include <iostream>
 #include <vector>
 #include <cmath>
@@ -53,7 +53,7 @@ class svm_t
     int level;
     double mutation_rate;
     double elite_save_percent;
-    int variation;
+	std::size_t variation;
     int populations;
     std::priority_queue< hypvar_t<T, U>, std::vector< hypvar_t<T, U> >, cmp_hyper<T, U> > hyperplanes_data;
     void _init_gen();
@@ -65,7 +65,7 @@ class svm_t
     dataset_t<T, U> dataset_test;
     svm_t();
     svm_t(dataset_t<T, U>& _dataset_train, dataset_t<T, U>& _dataset_test);
-    void train_ga(int level, double mutation_rate, double elite_save_percent, int variation, int populations);
+    void train_ga(int level, double mutation_rate, double elite_save_percent, std::size_t variation, int populations);
     double correct_rate();
 };
 
@@ -80,7 +80,7 @@ svm_t<T,  U> :: svm_t(dataset_t<T, U>& _dataset_train, dataset_t<T, U>& _dataset
     for (std::size_t i = 0; i < _dataset_train.size(); ++i)
     {
         double _kernel_added = 1;
-        int _dim = _dataset_train[i].size();
+		std::size_t _dim = _dataset_train[i].size();
         for(std::size_t j=0; j < _dim ; ++j)
         {
             _kernel_added *=(_dataset_train.data[i][j] ? pow(_dataset_train.data[i][j], 2.0/_dim) : 1);
@@ -93,7 +93,7 @@ svm_t<T,  U> :: svm_t(dataset_t<T, U>& _dataset_train, dataset_t<T, U>& _dataset
     for (std::size_t i = 0; i < _dataset_test.size(); ++i)
     {
         double _kernel_added = 1;
-        int _dim = _dataset_test[i].size();
+		std::size_t _dim = _dataset_test[i].size();
         for(std::size_t j=0; j < _dim ; ++j)
         {
             _kernel_added *=(_dataset_test.data[i][j] ? pow(_dataset_test.data[i][j], 2.0/_dim) : 1);
@@ -146,7 +146,7 @@ hypvar_t<T, U> svm_t<T, U> ::_crossover(hypvar_t<T, U>& a, hypvar_t<T, U>& b)
     for(std::size_t i=0; i<this->variation; i++)
     {
         double rd_choose_val = (double)rand()/(RAND_MAX+1.0);
-        int rd_index = rand() % b.hyperplane.n.size()+1;
+		std::size_t rd_index = rand() % b.hyperplane.n.size()+1;
         if(rd_choose_val < 0.5)
         {
             if(rd_index == b.hyperplane.n.size())
@@ -200,7 +200,7 @@ void svm_t<T, U> :: _next_gen()
 }
 
 template<typename T, typename U>
-void svm_t<T, U> :: train_ga(int level, double mutation_rate, double elite_save_percent, int variation, int populations)
+void svm_t<T, U> :: train_ga(int level, double mutation_rate, double elite_save_percent, std::size_t variation, int populations)
 {
     while (!hyperplanes_data.empty()) hyperplanes_data.pop();
     this->level = level;
