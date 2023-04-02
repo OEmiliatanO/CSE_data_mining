@@ -52,7 +52,7 @@
 \date{October 2022}
 \maketitle
 
-\section*{abstract}
+\section*{Abstract}
   This work compares the accuracy of some classifiers for early the prediction of diabetes. More specifically, 
   the research compares the accuracy of k-nearest neighbors (KNN) algorithm, decision tree, random forest, 
   support vector machine (SVM), neural network, naive Bayes classifier, and perceptron learning algorithm (PLA) on the prediction of diabetes, which 
@@ -105,12 +105,24 @@
   \bf{perceptron learning algorithm (PLA)}: 
 
 \section{KNN}
-  The rough process of KNN is described as follow: suppose that there is a dataset which contain $N$ data point, denoted as 
+  \rm{The} rough process of KNN algorithm is described as follow: suppose that there is a dataset which contain $N$ data point, denoted as 
   $(X_i,Y_i)$ where $X_i$ is the features of the i-th individuals data and $Y_i$ is the class label of it. Now 
   a data with unknown class label is given, denoted $(X, Y)$. By a preset distance function $d(P, Q)$, ordering the dataset 
   as $(X_{(1)}, Y_{(1)}), (X_{(2)}, Y_{(2)}), \cdots, (X_{(N)}, Y_{(N)})$ where $d(X_{(1)}, X)\leq d(X_{(2)}, X)\leq\cdots\leq d(X_{(N)}, X)$. 
   Pick the $k$-first class labels to determine the unknow class label, $Y$.
-  
+
+  The algorithm to find $k$ nearest neighbors is the soul of KNN algorithm. The naive way to do that is brute force. By calculating every 
+  distance between the dataset and the undetermined data, the desired class can be easily obtained. The time complexity of brute force is $O(n)$. 
+  Another way to find $k$ nearest neighbors is approximate nearest neighbors oh yeah (ANNOY). This approximate algorithm is used at Spotify 
+  for music recommendations. The process of ANNOY is described follow: In every iteration, two points are randomly chosen, denoted $\vec x_1,\vec x_2$, 
+  and the hyperplane in the middle, whose equation is $\vec n^T\vec x=(\vec x_1-\vec x_2)^T\vec x=(\vec x_1-\vec x_2)^T(\vec x_1+\vec x_2)/2=b$ 
+  separates all the points in dataset into two kind, "below" ($\vec n^T\vec x<b$) or "above" ($\vec n^T\vec x>b$). Also, in every iteration, a 
+  binary tree structure is constructed whose left child contains all the points "below" the hyperplane and right child contains all the points "above". 
+  The end condition is when a side of hyperplane contains points no more than $M$, which is a preset parameter. 
+  When query a $k$ nearest neighbors of a point, recursively determine if the point "below" or "above" the hyperplane until reaching the leaf node. 
+  The time complexity of construction is $O(n)$, and the time complexity of query is $O(\log n)$.
+  But since the region searched may have less $k$ points, the search path shall cover both nodes if the point is too close to the hyperplane. This 
+  techniques though may increase the search time, still, it can greatly increase the accuracy of searching.
 
 \section{decision tree}
   Given a dataset, $D$, which contains $N$ data and class label, the construction of a decision tree can be described as 
