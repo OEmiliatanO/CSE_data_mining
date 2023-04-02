@@ -3,6 +3,7 @@ DATAPATH="../data"
 DATASETS=("$DATAPATH/testA" "$DATAPATH/testB")
 repeat=50
 
+:<< DID
 for ((i=0;i<2;++i)); do
 	DATASET=${DATASETS[$i]}
 	echo $DATASET
@@ -17,13 +18,14 @@ for ((i=0;i<2;++i)); do
 		fi
 		LOGFILE="$LOGFILE-$i.log"
 		echo -n "" > $LOGFILE
-		for k in {1..2}; do
+		for k in {1..101}; do
 			echo -n "$k "
 			echo -n "$k " >> $LOGFILE
 			./main.elf --repeat $repeat --traindata $DATASET/train_data.csv --testdata $DATASET/test_data.csv --normalize $normalize --search_method brute --k $k >> $LOGFILE
 		done
 	done
 done
+DID
 
 for ((i=0;i<2;++i)); do
 	DATASET=${DATASETS[$i]}
@@ -40,8 +42,8 @@ for ((i=0;i<2;++i)); do
 		LOGFILE="$LOGFILE-$i.log"
 		echo -n "" > $LOGFILE
 
-		for k in {1..2}; do
-			for maxpoint in $(seq 1 $k); do
+		for k in {1..101}; do
+			for maxpoint in $(seq 1 101); do
 				echo -n "$k $maxpoint "
 				echo -n "$k $maxpoint " >> $LOGFILE
 				./main.elf --repeat $repeat --traindata $DATASET/train_data.csv --testdata $DATASET/test_data.csv --normalize $normalize --search_method annoy --k $k --annoy_search_method dfs --maxpoint $maxpoint >> $LOGFILE
@@ -65,8 +67,8 @@ for ((i=0;i<2;++i)); do
 		LOGFILE="$LOGFILE-$i.log"
 		echo -n "" > $LOGFILE
 
-		for k in {1..2}; do
-			for maxpoint in $(seq 1 $k); do
+		for k in {1..101}; do
+			for maxpoint in $(seq 1 101); do
 				for bfs_threhold in 0.01 0.1 1 5 10 15 20; do
 					echo -n "$k $maxpoint $bfs_threhold " >> $LOGFILE
 					echo -n "$k $maxpoint $bfs_threhold "

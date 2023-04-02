@@ -46,47 +46,53 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 	std::chrono::steady_clock::time_point st = std::chrono::steady_clock::now();
 	if (strcmp(argv[11], "decision_tree") == 0)
 	{
-		//std::cerr << "Decision tree ..." << std::endl;
-		decision_tree_t<data_t, label_t> tree;
-		//std::cerr << "Set criterion(entropy)..." << std::endl;
-		if (strcmp(argv[13], "entropy"))
-			tree.set_criterion(std::make_shared<entropy_crit<label_t>>());
-		else if (strcmp(argv[13], "gini"))
-    		tree.set_criterion(std::make_shared<gini_crit<label_t>>());
-		//std::cerr << "Build tree..." << std::endl;
-		tree.build(dataloader.train_data);
+		for (std::size_t t = 0; t < repeat; ++t)
+		{
+			//std::cerr << "Decision tree ..." << std::endl;
+			decision_tree_t<data_t, label_t> tree;
+			//std::cerr << "Set criterion(entropy)..." << std::endl;
+			if (strcmp(argv[13], "entropy"))
+				tree.set_criterion(std::make_shared<entropy_crit<label_t>>());
+			else if (strcmp(argv[13], "gini"))
+				tree.set_criterion(std::make_shared<gini_crit<label_t>>());
+			//std::cerr << "Build tree..." << std::endl;
+			tree.build(dataloader.train_data);
 
-		//std::cerr << "Predict test data..." << std::endl;
-		auto result = tree.predict(dataloader.test_data);
-		auto correct = [](int out, int y) { return (double)(out == y); };
-		auto correct_n = (int)score<label_t>(result, dataloader.test_data.label, correct);
-		double acc = (double)correct_n/result.size()*100;
-		macc += acc;
-		sum += acc;
-		sum2 += acc*acc;
+			//std::cerr << "Predict test data..." << std::endl;
+			auto result = tree.predict(dataloader.test_data);
+			auto correct = [](int out, int y) { return (double)(out == y); };
+			auto correct_n = (int)score<label_t>(result, dataloader.test_data.label, correct);
+			double acc = (double)correct_n/result.size()*100;
+			macc += acc;
+			sum += acc;
+			sum2 += acc*acc;
+		}
 	}
 	else if (strcmp(argv[11], "random_forest") == 0)
 	{
-    	//std::cerr << "Random forest ..." << std::endl;
-		std::size_t n = std::atoi(argv[15]);
-    	//std::cerr << "Create random forest with " << n << " decision trees..." << std::endl;
-    	random_forest_t<data_t, label_t> forest{0, 0, n};
-		//std::cerr << "Set criterion(entropy)..." << std::endl;
-		if (strcmp(argv[13], "entropy"))
-			forest.set_criterion(std::make_shared<entropy_crit<label_t>>());
-		else if (strcmp(argv[13], "gini"))
-    		forest.set_criterion(std::make_shared<gini_crit<label_t>>());
-		//std::cerr << "Build tree..." << std::endl;
-		forest.build(dataloader.train_data);
+		for (std::size_t t = 0; t < repeat; ++t)
+		{
+			//std::cerr << "Random forest ..." << std::endl;
+			std::size_t n = std::atoi(argv[15]);
+			//std::cerr << "Create random forest with " << n << " decision trees..." << std::endl;
+			random_forest_t<data_t, label_t> forest{0, 0, n};
+			//std::cerr << "Set criterion(entropy)..." << std::endl;
+			if (strcmp(argv[13], "entropy"))
+				forest.set_criterion(std::make_shared<entropy_crit<label_t>>());
+			else if (strcmp(argv[13], "gini"))
+				forest.set_criterion(std::make_shared<gini_crit<label_t>>());
+			//std::cerr << "Build tree..." << std::endl;
+			forest.build(dataloader.train_data);
 
-		//std::cerr << "Predict test data..." << std::endl;
-		auto result = forest.predict(dataloader.test_data);
-		auto correct = [](int out, int y) { return (double)(out == y); };
-    	auto correct_n = (int)score<label_t>(result, dataloader.test_data.label, correct);
-		double acc = (double)correct_n/result.size()*100;
-		macc += acc;
-		sum += acc;
-		sum2 += acc*acc;
+			//std::cerr << "Predict test data..." << std::endl;
+			auto result = forest.predict(dataloader.test_data);
+			auto correct = [](int out, int y) { return (double)(out == y); };
+			auto correct_n = (int)score<label_t>(result, dataloader.test_data.label, correct);
+			double acc = (double)correct_n/result.size()*100;
+			macc += acc;
+			sum += acc;
+			sum2 += acc*acc;
+		}
 	}
 	std::chrono::steady_clock::time_point ed = std::chrono::steady_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(ed - st).count() / 1000000.0 / repeat;
