@@ -3,7 +3,6 @@ DATAPATH="../data"
 DATASETS=("$DATAPATH/testA" "$DATAPATH/testB")
 repeat=50
 
-:<< DID
 for ((i=0;i<2;++i)); do
 	DATASET=${DATASETS[$i]}
 	echo $DATASET
@@ -25,7 +24,6 @@ for ((i=0;i<2;++i)); do
 		done
 	done
 done
-DID
 
 for ((i=0;i<2;++i)); do
 	DATASET=${DATASETS[$i]}
