@@ -32,7 +32,7 @@ for ((i=0;i<2;++i)); do
 			LOGFILE="random_forest"
 			if [ $normalize == "true" ]
 			then
-				echo random_forest
+				echo random_forest-normalized
 				LOGFILE="$LOGFILE-normalized"
 			else
 				echo random_forest
