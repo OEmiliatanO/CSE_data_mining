@@ -1,7 +1,8 @@
 %\documentclass[conference]{IEEEtran}
 %\IEEEoverridecommandlockouts
-\documentclass[sigconf]{acmart}
-\let\Bbbk\relax %% fix bug
+%\documentclass[sigconf]{acmart}
+%\let\Bbbk\relax %% fix bug
+\documentclass[twocolumn,10pt]{article}
 \usepackage[utf8]{inputenc}
 
 % =======================
@@ -37,8 +38,7 @@
 \usepackage{booktabs}
 \usepackage{dblfloatfix}
 % ==========================
-\input lstset.tex
-\input macros.tex
+%\usepackage[a4paper, margin = 2.5cm]{geometry}
 
 \AtBeginDocument{%
   \providecommand\BibTeX{{%
@@ -46,31 +46,87 @@
 
 \begin{document}
 
-\title{KNN with ANNOY and random forest}
+\title{The Accuracy of KNN, decision tree, random forest, SVM, neural network, naive Bayes classifier and PLA for early Prediction of Diabetes}
 
 \author{Hsieh Cheng-Han}
-\email{emiliaistruelove@gmail.com}
-\affiliation{%
-  \institution{Department of Computer Science and Engineering, National Sun Yat-sen University}
-  \streetaddress{70 Lienhai Rd}
-  \city{Kaohsiung}
-  \country{Taiwan}
-}
-
-\begin{abstract}
-
-\end{abstract}
+\date{October 2022}
 \maketitle
 
+\section*{abstract}
+  This work compares the accuracy of some classifiers for early the prediction of diabetes. More specifically, 
+  the research compares the accuracy of k-nearest neighbors (KNN) algorithm, decision tree, random forest, 
+  support vector machine (SVM), neural network, naive Bayes classifier, and PLA on the prediction of diabetes, which 
+  the dataset is collected with eight features, times of pregnancy, concentration of glucose in blood, blood 
+  pressure, skin thickness,  concentration of insulin in blood, body mass index (BMI), the value of diabetes 
+  pedigree function and age.
+
+  The result show that XXX is the most accurate on the prediction of diabetes.
+
 \section{Introduction}
-\label{sec:introduction}
+\label{sec:Introduction}
+  Diabetes is a chronic disease which may cause many complications. There're lots of reason that can put a person 
+  at the highly risk of having diabetes, such as age, obesity, lack of exercies, and more on. So many reasons 
+  interweave together making the manual prediction on diabetes is nearly impossible. However, lots of works \cite{MUJUMDAR2019292} \cite{MAHBOOBALAM2019100204} \cite{10.3389/fgene.2018.00515}
+  show that it is possible to have high accuracy by using machine learning techniques, such as random forest, 
+  K-means clustering, neural network, and so on. 
 
-\section{Related Works}
-    
-\section{the proposed algorithm}
-    
+  By collecting the essential data of human body, prediction of diabetes can be turn into classification problem. 
+  Imagine that an individual case with essential data is a point in hyperspace, if it is closer to the cluster
+  having diabetes, this case is more likely to have diabetes in the future, otherwise, this case is more likely 
+  healthy. But there are lots of machine learning techniques born to solve classification problem, it remains a 
+  problem that which technique having the hightest accuracy on the prediction of diabetes. 
 
-    \bibliographystyle{IEEEtran}
-    \bibliography{main}
+  To find out which techniques is more suitable to predict diabetes, this work examines the diagnosis of diabetes 
+  using KNN algorithm, decision tree, random forest, SVM, neural network naive Bayes classifier, and PLA.
+\section{Related works}
+\label{sec:Related works}
+  \bf{k-nearest neighbors (KNN) classification algorithm}: The KNN classification algorithm is a supervised learning 
+  method which is first developed by Fix and Hodges \cite{10.2307/1403797}. The idea of KNN is based on the idiom, 
+  "birds of a feather flock together". By pick the $k$-nearest neighbors of a data point, the class label can be determined. 
+
+  
+  The rough process of KNN is described below: suppose that there is a dataset which contain $N$ data point, denoted as 
+  $(X_i,Y_i)$ where $X_i$ is the features of the i-th individuals data and $Y_i$ is the class label of it. Now 
+  a data with unknown class label is given, denoted $(X, Y)$. By a preset distance function $d(P, Q)$, ordering the dataset 
+  as $(X_{(1)}, Y_{(1)}), (X_{(2)}, Y_{(2)}), \cdots, (X_{(N)}, Y_{(N)})$ where $d(X_{(1)}, X)\leq d(X_{(2)}, X)\leq\cdots\leq d(X_{(N)}, X)$. 
+  Pick the $k$-first class labels to determine the unknow class label, $Y$.
+
+  \bf{decision tree}: Decision tree is a supervised learning method. Unlike KNN uses distance to determine the outcome, 
+  decision tree uses a sequence of deicsion that maximize the information gain, which can distinguish the class label of 
+  data as much as possible, to determine the outcome.  Given a dataset, $D$, which contain $N$ data and class label, the 
+  construction of a decision tree can be described as below: suppose there are $M$ decisions, denoted $f_i$. A decision can 
+  separate dataset $D$ into $m$ kinds, denote $D'_j$. The decision tree will adopt $\max_{f} G(D, f)=I(D)-\sum^m_{j=1}\frac{N'_j}{N}I(D'_j)$, 
+  and then recursively construct the tree until the data in separated dataset have the same class label. 
+  When a data with unknown class label comes, a decision tree determines recursively by the decision node until the leaf node. 
+  The advantage of decision tree is fast, and the decision is clear. But the disadvantage is that it is very likely overfitting 
+  and the structure of tree will become more complex with the more the class labels. To solve this problem, the following 
+  techniques is developed:
+
+  \bf{random forst}: Instead of a signle decision tree, random forest use lots of decision trees, which form a "forest". 
+  The decision trees are constructed by random subset of dataset. The key differs random forest from decision tree is that 
+  while decision trees consider all the possible feature splits, random forests only select a subset of those features, which 
+  reduce the risk of overfitting, bias, and overall variance.
+
+  \bf{support vector machine (SVM)}: 
+  \bf{neural network}: 
+  \bf{naive Bayes classifier}: 
+  \bf{PLA}: 
+
+\section{KNN}
+
+\section{SVM}
+
+\section{neural network}
+
+\section{Naive Bayes classifier}
+
+\section{PLA}
+
+\section{Experiment result}
+
+\section{Conclusion}
+
+\bibliographystyle{IEEEtran}
+\bibliography{main}
 \end{document}
 
