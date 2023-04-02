@@ -100,8 +100,11 @@
   forest shows that it can greatly reduce the problem of over-fitting of the single decision tree, and gain an ever higher accuracy.
 
   \bf{support vector machine (SVM)}: 
+
   \bf{neural network}: 
+
   \bf{naive Bayes classifier}: 
+  
   \bf{perceptron learning algorithm (PLA)}: 
 
 \section{KNN}
@@ -127,7 +130,7 @@
 \section{decision tree}
   Given a dataset, $D$, which contains $N$ data and class label, the construction of a decision tree can be described as 
   below: suppose there are $M$ candidate decisions, denoted $f_i$. A decision can separate dataset $D$ into $m$ kinds, denote 
-  $D'_j$. The decision tree will adopt $\max_{f} G(D, f)=I(D)-\sum^m_{j=1}\frac{N'_j}{N}I(D'_j)$ as node decision, 
+  $D'_j$. The decision tree will adopt $\arg\max_{f} G(D, f)=I(D)-\sum^m_{j=1}\frac{N'_j}{N}I(D'_j)$ as node decision, 
   and then recursively construct the tree until the data in separated dataset have the same class label. 
   When a data with unknown class label comes, a decision tree determines recursively by the decision node until the leaf node.
   The function of calculating information, $I$, can be various from implementation. The most famous two information function is 
@@ -138,7 +141,7 @@
   Given the fact that a signle decision tree can be easily over-fitting, a technique called "random forest" is developed. By 
   constructing $m$ decision trees with randomized subsets of training dataset, the different decision trees forms a "forest". 
   The process that random forest determine a data with unknown class label can be outlined as follow: suppose for a coming data, 
-  $c_i$ decision trees in a random forest classify it as class $i$. Then the random forest will classify the data as class $\arg\max_{i} c_i$.
+  $c_i$ decision trees in a random forest classify it as class $i$. Then the random forest will classify the data as class $\arg\max c_i$.
 
 
 \section{SVM}
