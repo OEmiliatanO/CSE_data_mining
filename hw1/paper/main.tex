@@ -24,6 +24,7 @@
 \usepackage{times}
 \usepackage{version}
 % \usepackage[pdftex]{graphicx}
+\usepackage{graphicx} 
 \usepackage{epsfig}
 \usepackage{epsf}
 %\usepackage{graphics}
@@ -104,7 +105,7 @@
   \bf{neural network}: 
 
   \bf{naive Bayes classifier}: 
-  
+
   \bf{perceptron learning algorithm (PLA)}: 
 
 \section{KNN}
@@ -117,7 +118,21 @@
   The algorithm to find $k$ nearest neighbors is the soul of KNN algorithm. The naive way to do that is brute force. By calculating every 
   distance between the dataset and the undetermined data, the desired class can be easily obtained. The time complexity of brute force is $O(n)$. 
   Another way to find $k$ nearest neighbors is approximate nearest neighbors oh yeah (ANNOY). This approximate algorithm is used at Spotify 
-  for music recommendations. The process of ANNOY is described follow: In every iteration, two points are randomly chosen, denoted $\vec x_1,\vec x_2$, 
+  for music recommendations. 
+  \begin{figure*}[htb]
+    \centering
+    \includegraphics[scale=0.5]{assets/ANNOY-split.png}
+    \caption{The region split by ANNOY.}
+    \label{fig:ANNOY_split}
+  \end{figure*}
+
+  \begin{figure*}[htb]
+    \centering
+    \includegraphics[scale=0.5]{assets/ANNOY-tree.png}
+    \caption{The tree structure used by ANNOY.}
+    \label{fig:ANNOY_tree}
+  \end{figure*}
+  Fig. \ref{fig:ANNOY_split} and Fig. \ref{fig:ANNOY_tree} give illustrations of how ANNOY works. The process of ANNOY is detailed as follow: In every iteration, two points are randomly chosen, denoted $\vec x_1,\vec x_2$, 
   and the hyperplane in the middle, whose equation is $\vec n^T\vec x=(\vec x_1-\vec x_2)^T\vec x=(\vec x_1-\vec x_2)^T(\vec x_1+\vec x_2)/2=b$ 
   separates all the points in dataset into two kind, "below" ($\vec n^T\vec x<b$) or "above" ($\vec n^T\vec x>b$). Also, in every iteration, a 
   binary tree structure is constructed whose left child contains all the points "below" the hyperplane and right child contains all the points "above". 
