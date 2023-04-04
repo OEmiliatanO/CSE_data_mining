@@ -3,8 +3,13 @@ import numpy as np
 from sklearn.linear_model import Perceptron
 
 # input the data
-AorB = input('Select your data (A or B ?) : ')
-if (AorB == 'A' or 'a'):
+while 1:
+    AorB = input('Select your data (A or B ?) : ')
+    if (AorB == 'A' or AorB == 'B' or AorB == 'a' or AorB == 'b'):
+        break
+    else:
+        continue
+if (AorB == 'A' or AorB == 'a'):
     train_data = pd.read_csv('../data/testA/train_data.csv')
     test_data = pd.read_csv('../data/testA/test_data.csv')
 else:
@@ -30,4 +35,4 @@ while i < num_test:
     sum_accuracy += accuracy
     i += 1
 
-print(f"Using data {AorB}. {num_test} times average accuracy: {sum_accuracy / num_test:.5f}")
+print(f"Using data {AorB}. The {num_test} times average accuracy rate: {sum_accuracy / num_test:.5f}")
