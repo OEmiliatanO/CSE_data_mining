@@ -158,9 +158,12 @@
   The process that random forest determine a data with unknown class label can be outlined as follow: suppose for a coming data, 
   $c_i$ decision trees in a random forest classify it as class $i$. Then the random forest will classify the data as class $\arg\max c_i$.
 
-
 \section{SVM}
-
+ Given a dataset $D$ containing $N$ data points and a label with a binary class label of $0$ or $1$ representing the presence or absence of diabetes, respectively. Individually project each data point in the dataset $D$ onto the hyperplane, we can obtain a point $(X_{i1}, X_{i2}, ... , X_{in})$, where $X_{in}$ is the i-th individual data of $D$, containing $N$ data points. After obtaining these points, these points are projected onto a hyperplane in $N+1$ dimensions to avoid situations where the data is non-linearly separable.
+ In this case, using the kernel function below as the projection function for each data points in $D$ is a method of reducing the occurrence of non-linear separability:
+$$\begin{bmatrix}x_1^{(2)} \\x_2^{(2)} \\... \\x_n^{(2)} \\ (\prod_{i=0}^{n} x_i)^{\frac{2}{n}} \end{bmatrix}$$
+ After this step, we can find a $N+1$ dimensions hyperplane $w$ that can separate the binary class labels of $0$ and $1$ for the data points. With this hyperplane trained on the training data, we can extend it to classify future data points that do not have binary class labels.The following are the steps to find the hyperplane:
+ 
 \section{neural network}
 
 \section{Naive Bayes classifier}
