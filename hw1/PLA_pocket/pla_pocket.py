@@ -2,9 +2,8 @@ import pandas as pd
 from sklearn.linear_model import Perceptron
 import matplotlib.pyplot as plt
 import numpy as np
-from mpl_toolkits.mplot3d import Axes3D
 
-# 讀取 train_data.csv 和 test_data.csv
+
 train_data = pd.read_csv('train_data.csv')
 test_data = pd.read_csv('test_data.csv')
 
@@ -24,7 +23,7 @@ clf.fit(X_train, y_train)
 accuracy = clf.score(X_test, y_test)
 print("Accuracy:", accuracy)
 
-# 繪製超平面
+# plot hyperplane
 w = clf.coef_[0]
 b = clf.intercept_[0]
 X_min = X_train.min() - 1
@@ -34,15 +33,15 @@ fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 ax.scatter(X_train.iloc[:, 0], X_train.iloc[:, 1], X_train.iloc[:, 2], c=y_train)
 
-# 產生網格點
+# 網格
 xx, yy = np.meshgrid(np.arange(X_min[0], X_max[0], 0.2), 
                      np.arange(X_min[1], X_max[1], 0.2))
 zz = (-w[0]*xx - w[1]*yy - b) / w[2]
 
-# 繪製超平面
+# hyperplane
 ax.plot_surface(xx, yy, zz, alpha=0.6)
 
-# 設定軸標籤
+# xyz axis
 ax.set_xlabel('X1')
 ax.set_ylabel('X2')
 ax.set_zlabel('X3')
