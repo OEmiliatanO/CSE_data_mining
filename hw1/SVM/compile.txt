@@ -1,0 +1,2 @@
+for my poor MacOS:
+g++ -o main.elf main.cpp svm.cpp ../source/Data.cpp ../source/Dataloader.cpp -std=c++20
