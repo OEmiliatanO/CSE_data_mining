@@ -7,7 +7,6 @@
 #include <functional>
 #include <limits>
 #include <utility>
-#include <ranges>
 
 constexpr double minerr = std::numeric_limits<double>::epsilon();
 
@@ -36,6 +35,8 @@ template<typename T> std::ostream& operator<<(std::ostream& os, const point_t<T>
 // distance
 template<typename T> point_t<T> midpoint(const point_t<T>& a, const point_t<T>& b);
 template<typename T> double euclidean_dist(const point_t<T>& a, const point_t<T>& b);
+template<typename T> double euclidean_dist(const point_t<T>& x0, const hyperplane_t<T>& plane);
+template<typename T> double euclidean_dist(const hyperplane_t<T>& plane, const point_t<T>& x0);
 template<typename T> double minkowski_dist(const point_t<T>& a, const point_t<T>& b, int p);
 
 // hyperplane utility
@@ -244,25 +245,53 @@ point_t<T>& point_t<T>::operator=(point_t<T>&& other)
 template<typename T>
 point_t<T>& point_t<T>::operator+=(const point_t<T>& other)
 {
-    if (this->size() != other.size()) { std::cerr << "a+=b: a.size() != b.size(), return originally left point." << std::endl; return *this; }
+    if (this->size() != other.size())
+	{
+		std::cerr << "ERROR: a+=b: a.size(" << this->size() << ") != b.size(" << other.size() << "), return originally left point." << std::endl;
+		exit(1);
+	}
     for (size_t i = 0; i <= this->size(); ++i) { (*this)[i] += other[i]; }
     return *this;
 }
 template<typename T>
 point_t<T> operator+(const point_t<T>& a, const point_t<T>& b)
 {
-    if (a.size() != b.size()) { std::cerr << "a+b: a.size() != b.size(), exit..." << std::endl; exit(1); }
-    point_t<T> ret{a};
-    for (size_t i = 0; i < ret.size(); ++i) { ret[i] += b[i]; }
+    if (a.size() != b.size())
+	{
+		//std::cerr << "WARNING: a+b: a.size(" << a.size() << ") != b.size(" << b.size() << "). Padding zeros." << std::endl;
+	}
+    point_t<T> ret;
+	if (a.size() > b.size())
+	{
+		const point_t<T>& ma = a;
+		const point_t<T>& mi = b;
+		for (size_t i = 0; i < mi.size(); ++i) 
+			ret.emplace_back(ma[i] + mi[i]);
+		for (size_t i = mi.size(); i < ma.size(); ++i) 
+			ret.emplace_back(ma[i]);
+	}
+	else
+	{
+		const point_t<T>& ma = b;
+		const point_t<T>& mi = a;
+		for (size_t i = 0; i < mi.size(); ++i) 
+			ret.emplace_back(ma[i] + mi[i]);
+		for (size_t i = mi.size(); i < ma.size(); ++i) 
+			ret.emplace_back(ma[i]);
+	}
+
     return ret;
 }
 // dot
 template<typename T>
 T operator*(const point_t<T>& a, const point_t<T>& b)
 {
-    if (a.size() != b.size()) { std::cerr << "a*b: a.size() != b.size(), exit..." << std::endl; exit(1); }
+    if (a.size() != b.size()) 
+	{ 
+		//std::cerr << "WARNING: a*b: a.size(" << a.size() << ") != b.size(" << b.size() << "). Padding zeros." << std::endl;
+	}
     T ret = 0;
-    for (size_t i = 0; i < a.size(); ++i) ret += a[i] * b[i];
+    for (size_t i = 0; i < std::min(a.size(), b.size()); ++i) ret += a[i] * b[i];
     return ret;
 }
 // scale
@@ -344,6 +373,17 @@ double euclidean_dist(const point_t<T>& a, const point_t<T>& b)
 }
 
 template<typename T>
+double euclidean_dist(const point_t<T>& x0, const hyperplane_t<T>& plane)
+{
+	return std::abs(plane.n*x0-plane.b)/std::sqrt(plane.n*plane.n);
+}
+template<typename T>
+double euclidean_dist(const hyperplane_t<T>& plane, const point_t<T>& x0)
+{
+	return std::abs(plane.n*x0-plane.b)/std::sqrt(plane.n*plane.n);
+}
+
+template<typename T>
 bool point_t<T>::on(const hyperplane_t<T>& plane)
 {
     return onplane(*this, plane);
@@ -381,11 +421,13 @@ std::ostream& operator<<(std::ostream& os, const hyperplane_t<T>& plane)
     os << "[ " << plane.n << "]^Tx = " << plane.b;
     return os;
 }
+
 /***** hyperplane_t *****/
 
 /* ========================================== */
 
 
+/***** dataset_t *****/
 template<typename T, typename U>
 dataset_t<T, U>& dataset_t<T, U>::operator=(const dataset_t& other)
 {
