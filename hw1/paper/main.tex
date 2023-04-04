@@ -100,7 +100,7 @@
   reduce the risk of overfitting, bias, and overall variance. In \cite{7972337} \cite{10.1007/978-981-16-2164-2_19}, random 
   forest shows that it can greatly reduce the problem of over-fitting of the single decision tree, and gain an ever higher accuracy.
 
-  \bf{support vector machine (SVM)}: 
+  \bf{support vector machine (SVM)}: \rm{Given} a set of training datas, where each data is labeled as a binary class, such as $0$ and $1$, SVM training algorithm creates a model that assigns new examples to the binay labels by making it a non-probabilistic binary linear classifier. In addition, SVM can also use a method called kernel trick to effectively perform non-linear classification by implicitly mapping its inputs into a high-dimensional feature space.
 
   \bf{neural network}: 
 
@@ -159,10 +159,13 @@
   $c_i$ decision trees in a random forest classify it as class $i$. Then the random forest will classify the data as class $\arg\max c_i$.
 
 \section{SVM}
- Given a dataset $D$ containing $N$ data points and a label with a binary class label of $0$ or $1$ representing the presence or absence of diabetes, respectively. Individually project each data point in the dataset $D$ onto the hyperplane, we can obtain a point $(X_{i1}, X_{i2}, ... , X_{in})$, where $X_{in}$ is the i-th individual data of $D$, containing $N$ data points. After obtaining these points, these points are projected onto a hyperplane in $N+1$ dimensions to avoid situations where the data is non-linearly separable.
+ Given a dataset $D$ containing $N$ data points and a label with a binary class label of $0$ or $1$ representing the presence or absence of diabetes, respectively. Individually project each data point in the dataset $D$ onto the hyperplane, we can obtain a point $(X_{i1}, X_{i2}, ..., X_{ij}, ..., X_{in})$, where $X_{in}$ is the i-th individual data of $D$ and  j-th feature of $N$. After obtaining these points, these points are projected onto a hyperplane in $N+1$ dimensions to avoid situations where the data is non-linearly separable.
  In this case, using the kernel function below as the projection function for each data points in $D$ is a method of reducing the occurrence of non-linear separability:
 $$\begin{bmatrix}x_1^{(2)} \\x_2^{(2)} \\... \\x_n^{(2)} \\ (\prod_{i=0}^{n} x_i)^{\frac{2}{n}} \end{bmatrix}$$
- After this step, we can find a $N+1$ dimensions hyperplane $w$ that can separate the binary class labels of $0$ and $1$ for the data points. With this hyperplane trained on the training data, we can extend it to classify future data points that do not have binary class labels.The following are the steps to find the hyperplane:
+ After this step, we can find a $N+1$ dimensions hyperplane $w$ that can separate the binary class labels of $0$ and $1$ for the data points. With this hyperplane trained on the training data, we can extend it to classify future data points that do not have binary class labels. The following are the steps to find the hyperplane using a genetic algorithm:
+Firstly, decide the level of generations ($l$), population size ($n$), variant ($v$), function constant ($b$), elite save rate ($p_e$), and mutations rate ($p_m$). Next, randomly select $N+1$ parameters of floating number between $0$ and $1$ in $w$, repeat it until $n$ hyperplanes are created.
+In the second step, use $w^t \cdot x - b$ to compare the binary labels of the training data. If $w^t \cdot x - b > 0$, the output is $1$; if $w^t \cdot x - b < 0$, the output is $0$. This determines the accuracy of the $n$ hyperplanes.
+Then, select the top $n \cdot p_e$ hyperplanes with high accuracy for crossover. The method is to take $v$ feature values from the parent chromosomes to replace or average (randomly) $v$ feature values from the mother chromosomes to create a new hyperplane. During the process, there is a probability of $p_m$ for random mutation of a feature value into a random floating number between $0$ and $1$. After mating $n-n \cdot p_e$ hyperplanes, return this step until the $l$th operation is completed and the best hyperplane is found.
  
 \section{neural network}
 
