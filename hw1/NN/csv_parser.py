@@ -1,4 +1,5 @@
 from random import randint
+import numpy as np
 TYPE_FUNC=[float,float,float,float,float,float,float,float,int]
 def type_convert(li):
     for i,j in enumerate(li): 
@@ -40,6 +41,14 @@ def csv_parser(dir):
             empty_data_remove(li)
             data_list.append(li[:-1])
             tag_list.append(li[-1])
+        print(data_list)
+        np_li=np.array(data_list)
+        np_li_max=np_li.max(0)
+        np_li_min=np_li.min(0)
+        for data in data_list:
+            for ind,ite in enumerate(data):
+                data[ind]=(ite-np_li_min[ind])/(np_li_max[ind]-np_li_min[ind])
+        print(data_list)
     return (data_list,tag_list)
 if __name__ == "__main__":
     csv_parser("../data/testA/train_data.csv")
