@@ -2,9 +2,5 @@
 
 ```
 $ make dep all clean
-$ ./main.elf
+$ ./experiment.bash
 ```
-
-# TODO
-apply ANN method
-data standardize
