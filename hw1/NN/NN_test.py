@@ -2,6 +2,8 @@ import torch
 from csv_parser import csv_parser
 from NN_train import NN,BATCH_SIZE
 from torch.utils.data import TensorDataset,DataLoader
+import time
+
 
 
 test_data_A_dir="../data/testA/test_data.csv"
@@ -21,6 +23,7 @@ size = len(test_dataloader.dataset)
 num_batches = len(test_dataloader)
 model.eval()
 test_loss,correct=0,0
+s=time.time()
 with torch.no_grad():
     for inputs,target in test_dataloader:
         inputs,target=inputs.to("cuda"),target.to("cuda")
@@ -29,4 +32,5 @@ with torch.no_grad():
         correct += (pred.argmax(1) == target).type(torch.float).sum().item()
 test_loss /= num_batches
 correct /= size
-print(f"Test Error: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
+e=time.time()
+print(f"Test Error: \n Accuracy: {(100*correct):>0.4f}%, Avg loss: {test_loss:>8f} , time: {e-s:>3f}\n")

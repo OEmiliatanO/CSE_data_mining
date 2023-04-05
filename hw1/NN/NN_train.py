@@ -51,7 +51,7 @@ def main():
     
 
     train_dataloader=DataLoader(dataset=train_dataset,batch_size=BATCH_SIZE,num_workers=NUM_WORKER)
-    test_data_A_dir="../data/testA/train_data.csv"
+    test_data_A_dir="../data/testA/test_data.csv"
     test_data,test_tag=csv_parser(test_data_A_dir)
     tensor_test_data=torch.tensor(test_data)
     tensor_test_tag=torch.tensor(test_tag)
@@ -63,14 +63,14 @@ def main():
     def train(solu,output_mode=False):
         model=NN(solu).to("cuda")
         if output_mode:
-            EPOCH=200
+            EPOCH=100
         else:
             EPOCH=5
-    
+
 
         opt = torch.optim.Adam(model.parameters(), lr=1e-4)
         loss_fn = torch.nn.CrossEntropyLoss()
-
+        min_loss=9999
         for epoch in range(EPOCH):
             for step,(inputs,target) in enumerate(train_dataloader):
                 
@@ -98,10 +98,11 @@ def main():
             test_loss /= num_batches
             correct /= size
             print(f"Test Error: \n Accuracy: {(100*correct):>0.8f}%, Avg loss: {test_loss:>8f} \n")
+            if output_mode and min_loss>test_loss:
+                min_loss=test_loss
+                torch.save(model,"diabete_model.pth")
         if not output_mode:
             return test_loss
-        else:
-            torch.save(model,"diabete_model.pth")
     #SA parameter
     N=10
     MAXT=0.1
@@ -112,7 +113,8 @@ def main():
     LNMI=16 #max number of node in a layer
 
     #SA
-    solution=sa(N,MAXT,MINT,RATE,K,LNMA,LNMI,train)
+    # solution=sa(N,MAXT,MINT,RATE,K,LNMA,LNMI,train)
+    solution=[31,110,253,240,223,99,212,163,243,73]
     train(solution,output_mode=True)
     
 if __name__ == "__main__":
