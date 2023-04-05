@@ -4,7 +4,7 @@ from NN_train import NN,BATCH_SIZE
 from torch.utils.data import TensorDataset,DataLoader
 
 
-test_data_A_dir="../data/testA/train_data.csv"
+test_data_A_dir="../data/testA/test_data.csv"
 
 test_data,test_tag=csv_parser(test_data_A_dir)
 tensor_test_data=torch.tensor(test_data)
@@ -13,8 +13,8 @@ test_dataset=TensorDataset(tensor_test_data,tensor_test_tag)
 
 test_dataloader=DataLoader(test_dataset,batch_size=BATCH_SIZE)
 
-model=NN().to("cuda")
-model.load_state_dict(torch.load('diabete_model.pth'))
+# model=NN([52, 229, 230, 74, 105, 151, 50, 191, 161, 168]).to("cuda")
+model=torch.load('diabete_model.pth')
 
 loss_fn = torch.nn.CrossEntropyLoss()
 size = len(test_dataloader.dataset)

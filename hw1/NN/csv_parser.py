@@ -27,8 +27,21 @@ def empty_data_remove(li):
                 li[i]=float(randint(180,450))
             # print(li)
             
-        
+def normalization(data_list):
+    np_li=np.array(data_list)
+    np_li_max=np_li.max(0)
+    np_li_min=np_li.min(0)
+    for data in data_list:
+        for ind,ite in enumerate(data):
+            data[ind]=float((ite-np_li_min[ind])/(np_li_max[ind]-np_li_min[ind]))        
 
+def standardization(data_list):
+    np_li=np.array(data_list)
+    std=np.std(np_li,1,ddof=1)
+    mean=np.mean(np_li,1)
+    for data in data_list:
+        for ind,ite in enumerate(data):
+            data[ind]=float((ite-mean[ind])/std[ind])
 def csv_parser(dir):
     with open(dir,"r") as f:
         raw_data=f.read()
@@ -41,14 +54,11 @@ def csv_parser(dir):
             empty_data_remove(li)
             data_list.append(li[:-1])
             tag_list.append(li[-1])
-        print(data_list)
-        np_li=np.array(data_list)
-        np_li_max=np_li.max(0)
-        np_li_min=np_li.min(0)
-        for data in data_list:
-            for ind,ite in enumerate(data):
-                data[ind]=(ite-np_li_min[ind])/(np_li_max[ind]-np_li_min[ind])
-        print(data_list)
+        normalization(data_list)
+        standardization(data_list)
+        # print(data_list)
+        
+        # print(type(data_list[0][0]))
     return (data_list,tag_list)
 if __name__ == "__main__":
     csv_parser("../data/testA/train_data.csv")
