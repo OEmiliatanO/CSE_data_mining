@@ -102,7 +102,7 @@
 
   \bf{support vector machine (SVM)}: \rm{Given} a set of training datas, where each data is labeled as a binary class, such as $0$ and $1$, SVM training algorithm creates a model that assigns new examples to the binay labels by making it a non-probabilistic binary linear classifier. In addition, accroding to \cite{amari1999improving} \cite{hofmann2006support}, SVM can also use a method called kernel trick to effectively perform non-linear classification by implicitly mapping its inputs into a high-dimensional feature space.
 
-  \bf{neural network}: 
+  \bf{neural network}: \rm{Neural} network have been used in many fields to deal with intricate datas.With input layer, hidden layer and output layer constructed by neurons, each data in dataset is processed while passing through neurons, layer by layer.After the processing, the outcome can be used to predict.Using back propogation, the accuracy of predictions increase in each training.In order to construct the hidden layer more efficient, NAS(Neural Arcitecture Searching) is used to search suitable structure for hidden layer, increasing the accuracy.According to \cite{Gadekallu2020}\cite{Beghriche2021}, many neural network have been constructed and trained already, with high efficiency and accuracy in prediction of diabetes.
 
   \bf{naive Bayes classifier}: \rm{naive Bayes classifier} as its name suggest, is a machine learning method base on Bayesian theorem, this model will statistic each data and find all conditional probability of each event occurring if each outcome holds. And finally when it is asked to predict the result, the model will evaluate the data which requist provide and find the most likely outcome according to the conditional probability it just recorded. 
 
@@ -159,33 +159,80 @@
   $c_i$ decision trees in a random forest classify it as class $i$. Then the random forest will classify the data as class $\arg\max c_i$.
 
 \section{SVM}
-Given a dataset $D$ containing $N$ data points and a label with a binary class label of $0$ or $1$ representing the presence 
-or absence of diabetes, respectively. Individually project each data point in the dataset $D$ onto the hyperplane, we can obtain 
-a point $(X_{i1}, X_{i2}, ..., X_{ij}, ..., X_{in})$, where $X_{in}$ is the i-th individual data of $D$ and  j-th feature of $N$. 
-After obtaining these points, these points are projected onto a hyperplane in $N+1$ dimensions to avoid situations where the 
-data is non-linearly separable. 
-In this case, using the kernel function below as the projection function for each data points in $D$ is a method of reducing 
-the occurrence of non-linear separability: 
-  $$\begin{bmatrix}x_1^{(2)} \\x_2^{(2)} \\... \\x_n^{(2)} \\ (\prod_{i=0}^{n} x_i)^{\frac{2}{n}} \end{bmatrix}$$
-After this step, we can find a $N+1$ dimensions hyperplane $w$ that can separate the binary class labels of $0$ and $1$ for 
-the data points. With this hyperplane trained on the training data, we can extend it to classify future data points that do 
-not have binary class labels. 
-In \cite{santhanam2015application}, we can use genetic algorithms to achieve finding better hyperplanes. The following are the 
-steps to find the hyperplane using a genetic algorithm: Firstly, decide the level of generations ($l$), population size ($n$), 
-variant ($v$), function constant ($b$), elite save rate ($p_e$), and mutations rate ($p_m$). Next, randomly select $N+1$ parameters 
-of floating number between $0$ and $1$ in $w$, repeat it until $n$ hyperplanes are created. 
-In the second step, use $w^t \cdot x - b$ \cite{kumari2013classification} to compare the binary labels of the training data. If 
-$w^t \cdot x - b > 0$, the output is $1$; if $w^t \cdot x - b < 0$, the output is $0$. This determines the accuracy of the $n$ hyperplanes. 
-Then, select the top $n \cdot p_e$ hyperplanes with high accuracy for crossover. The method is to take $v$ feature values from 
-the parent chromosomes to replace or average (randomly) $v$ feature values from the mother chromosomes to create a new hyperplane. 
-During the process, there is a probability of $p_m$ for random mutation of a feature value into a random floating number between 
-$0$ and $1$. After mating $n-n \cdot p_e$ hyperplanes, return this step until the $l$th operation is completed and the best hyperplane 
-is found.
- 
+  Given a dataset $D$ containing $N$ data points and a label with a binary class label of $0$ or $1$ representing the presence 
+  or absence of diabetes, respectively. Individually project each data point in the dataset $D$ onto the hyperplane, we can obtain 
+  a point $(X_{i1}, X_{i2}, ..., X_{ij}, ..., X_{in})$, where $X_{in}$ is the i-th individual data of $D$ and  j-th feature of $N$. 
+  After obtaining these points, these points are projected onto a hyperplane in $N+1$ dimensions to avoid situations where the 
+  data is non-linearly separable. 
+  In this case, using the kernel function below as the projection function for each data points in $D$ is a method of reducing 
+  the occurrence of non-linear separability: 
+	$$\begin{bmatrix}x_1^{(2)} \\x_2^{(2)} \\... \\x_n^{(2)} \\ (\prod_{i=0}^{n} x_i)^{\frac{2}{n}} \end{bmatrix}$$
+  After this step, we can find a $N+1$ dimensions hyperplane $w$ that can separate the binary class labels of $0$ and $1$ for 
+  the data points. With this hyperplane trained on the training data, we can extend it to classify future data points that do 
+  not have binary class labels. 
+  In \cite{santhanam2015application}, we can use genetic algorithms to achieve finding better hyperplanes. The following are the 
+  steps to find the hyperplane using a genetic algorithm: Firstly, decide the level of generations ($l$), population size ($n$), 
+  variant ($v$), function constant ($b$), elite save rate ($p_e$), and mutations rate ($p_m$). Next, randomly select $N+1$ parameters 
+  of floating number between $0$ and $1$ in $w$, repeat it until $n$ hyperplanes are created. 
+  In the second step, use $w^t \cdot x - b$ \cite{kumari2013classification} to compare the binary labels of the training data. If 
+  $w^t \cdot x - b > 0$, the output is $1$; if $w^t \cdot x - b < 0$, the output is $0$. This determines the accuracy of the $n$ hyperplanes. 
+  Then, select the top $n \cdot p_e$ hyperplanes with high accuracy for crossover. The method is to take $v$ feature values from 
+  the parent chromosomes to replace or average (randomly) $v$ feature values from the mother chromosomes to create a new hyperplane. 
+  During the process, there is a probability of $p_m$ for random mutation of a feature value into a random floating number between 
+  $0$ and $1$. After mating $n-n \cdot p_e$ hyperplanes, return this step until the $l$th operation is completed and the best hyperplane 
+  is found.
+   
 \section{neural network}
+  Given a dataset $D$ containing $N$ data points and a label with $0$ or $1$ representing the patient is diagnosed with diabetes or 
+  not, we need to construct a model with $N$-neurons input layer and 2-neurons output layer.Before we construct the model, we have 
+  to find the structure of the hidden layer with NAS.
+  We set the number of the layer to 10, with each layer has more than 16 and less than 256 neurons.Define the search space $\mathcal{F}$, 
+  which including all the arrays including 10 numbers and each of the number in the array represents the number of neurons in each layers, 
+  which is more then 16 and less than 256, like above.We are aiming to find the approximate solution 
+  $f= \{x_1, x_2, ..., x_{10}|16\leq x_i \leq 256, 1\leq i \leq 10\}$ $\in$ $\mathcal{F}$, which increase the accuracy of the model in 
+  the short term.With simulating annealing algorithm\cite{17235}, we can find the approximate solutions.First, set the initial temperature 
+  $T$, the end temperature $T_E$, temperature decreasing rate $R_T$, and a random solution $f^*$.Second, create a model based on the 
+  parameter in the $f^*$, and train with $D$.We use cross entropy loss as loss function and Adam as optimization function.After training, 
+  we get the average loss of every epoch, $L^*$.Then, start the iteration by swap two of the parameters in $f^*$, get a new array $f^{**}$, 
+  train it with dataset, and get its average loss, $L^{**}$.After getting $L^*$ and $L^{**}$, we calculating the difference 
+  $\Delta L = L^{**} - L^*$.If $\Delta L \leq 0$, we update $f^* = f^{**}$.Otherwise, we use $e^{\frac{\Delta L}{T}}$ as the probability 
+  of the $f^{**}$ accepted as the new solution, get a random number $R^*$ $\in$ [1, 0] from random number generator, if $R^*$ is less than 
+  $e^{\frac{\Delta L}{T}}$, we update $f^* = f^{**}$.Then repeat the iteration, but replace the swapping with changing one of the number 
+  in $f^*$ to $n, 16 \leq n \leq 256$.
+  \begin{equation}
+	  f^* = 
+	  \begin{cases}
+	  f^{**},  &\Delta L\le 0 \\
+	  f^{**},  &\Delta L \ge 0 \text{ and } R^*<e^{\frac{\Delta L}{T}} \\ 
+	  f^{*},   &\text{else}\\
+	  \end{cases}
+  \end{equation} 
+
+  After the end of the iteration, multiply $T$ by $R_T$ and continue the iteration until the $T \le T_E$.Then, we get the approximate 
+  solution$f=f^*$.Every 2 iteration, the $T$ decreases and lower the probability of $f^{**}$ accepted as the solution.Stimulating annealing 
+  can avoid solution stuck at local minimum.Use neural network found by NAS, we can now predict with untrained data with $80\%$ or so accuracy.
 
 \section{Naive Bayes classifier}
-First, let's explain the princple of Naive Bayes classifier, here is a very intuitive and easy-to-understand example, consider you are a scientist who study earthquake, what a intresting relation attract you is when there are eqrthquake, the number of rainy days is particular high while its low when there are no earthquake. Although it may sounds nonsense, we can assume there may exists a positive relation betweeen earthquake and rainy days. Here we talk about the Bayesian theorem, which is the basis of naive Bayes classifier. What the formula it give is $P(A|B) = \frac{P(A\capB)}{P(B)}$. Consider we need to predict the result by the data meaning the outcome will be unknown, what we need do is just change the formula a little bit and it becomes: $P(A|B) = \frac{P(B|A)*P(A)}{P(B)}$. We can consider $A$ as the outcome and $B$ as data. Given a data that contains a sequence of data and various outcomes. We just record each event in each dimension and compute their conditional probabilities for each outcome and store these result in other place. When predicting the outcome using given data, find the conditional probability of each event in given data for one outcome and multiply them. Keep repeating until we had computed all conditional probability for each outcome, then find the maximum one, which is the most likely outcome. The problem is, when given is a continuous value instead of individual events, it look like we need to partition this continuous interval as individual events. However, the difficulty is how to find the best partition that can fit the model best. What I use to slove this problem is gene alogrithm. First ecord maximum and minimum values of given data in each dimension. Step2 is randomly partition data in each dimension according the maximum and minimum value we record before and repeat 100 times to generate enoguh species. Step3 is test the accuracy of the model on the training data and keep top 15 good species and kill the rest. Step4 is let the these elite to crossover, which means let them pass their partition to kids. Step4 is when there is enough offspring, all offspring will start mutation, which means their partitions will slightly shift, merge, split, or disapar etc..., make each animal different to optmize the model. And back to step2, here I called an evolution. We thus find the partition that is close to optimal solution after enough evolution.
+  First, let's explain the princple of Naive Bayes classifier, here is a very intuitive and easy-to-understand example, consider 
+  you are a scientist who study earthquake, what a intresting relation attract you is when there are eqrthquake, the number of 
+  rainy days is particular high while its low when there are no earthquake. Although it may sounds nonsense, we can assume there 
+  may exists a positive relation betweeen earthquake and rainy days. Here we talk about the Bayesian theorem, which is the basis 
+  of naive Bayes classifier. What the formula it give is $P(A|B) = \frac{P(A\capB)}{P(B)}$. Consider we need to predict the result 
+  by the data meaning the outcome will be unknown, what we need do is just change the formula a little bit and it becomes: $P(A|B) = \frac{P(B|A)*P(A)}{P(B)}$. 
+  We can consider $A$ as the outcome and $B$ as data. Given a data that contains a sequence of data and various outcomes. We just 
+  record each event in each dimension and compute their conditional probabilities for each outcome and store these result in other 
+  place. When predicting the outcome using given data, find the conditional probability of each event in given data for one outcome 
+  and multiply them. Keep repeating until we had computed all conditional probability for each outcome, then find the maximum one, 
+  which is the most likely outcome. The problem is, when given is a continuous value instead of individual events, it look like we 
+  need to partition this continuous interval as individual events. However, the difficulty is how to find the best partition that 
+  can fit the model best. What I use to slove this problem is gene alogrithm. First ecord maximum and minimum values of given data 
+  in each dimension. Step2 is randomly partition data in each dimension according the maximum and minimum value we record before 
+  and repeat 100 times to generate enoguh species. Step3 is test the accuracy of the model on the training data and keep top 15 
+  good species and kill the rest. Step4 is let the these elite to crossover, which means let them pass their partition to kids. 
+  Step4 is when there is enough offspring, all offspring will start mutation, which means their partitions will slightly shift, 
+  merge, split, or disapar etc..., make each animal different to optmize the model. And back to step2, here I called an evolution. 
+  We thus find the partition that is close to optimal solution after enough evolution.
+
 \section{PLA}
 
 \section{Experiment result}
