@@ -81,6 +81,7 @@
   using KNN algorithm, decision tree, random forest, SVM, neural network naive Bayes classifier, and PLA.
 \section{Related works}
 \label{sec:Related works}
+
   \bf{k-nearest neighbors (KNN) classification algorithm}: \rm{The} KNN classification algorithm is a supervised learning 
   method which is first developed by Fix and Hodges \cite{10.2307/1403797}. The idea of KNN is based on the idiom, 
   "birds of a feather flock together". By picking the $k$-nearest neighbors of a data point, the unkonwn class label 
@@ -100,11 +101,23 @@
   reduce the risk of overfitting, bias, and overall variance. In \cite{7972337} \cite{10.1007/978-981-16-2164-2_19}, random 
   forest shows that it can greatly reduce the problem of over-fitting of the single decision tree, and gain an ever higher accuracy.
 
-  \bf{support vector machine (SVM)}: \rm{Given} a set of training datas, where each data is labeled as a binary class, such as $0$ and $1$, SVM training algorithm creates a model that assigns new examples to the binay labels by making it a non-probabilistic binary linear classifier. In addition, accroding to \cite{amari1999improving} \cite{hofmann2006support}, SVM can also use a method called kernel trick to effectively perform non-linear classification by implicitly mapping its inputs into a high-dimensional feature space.
+  \bf{support vector machine (SVM)}: \rm{Given} a set of training datas, where each data is labeled as a binary class, such as 
+  $0$ and $1$, SVM training algorithm creates a model that assigns new examples to the binay labels by making it a non-probabilistic 
+  binary linear classifier. In addition, accroding to \cite{amari1999improving} \cite{hofmann2006support}, SVM can also use a 
+  method called kernel trick to effectively perform non-linear classification by implicitly mapping its inputs into a high-dimensional 
+  feature space.
 
-  \bf{neural network}: \rm{Neural} network have been used in many fields to deal with intricate datas.With input layer, hidden layer and output layer constructed by neurons, each data in dataset is processed while passing through neurons, layer by layer.After the processing, the outcome can be used to predict.Using back propogation, the accuracy of predictions increase in each training.In order to construct the hidden layer more efficient, NAS(Neural Arcitecture Searching) is used to search suitable structure for hidden layer, increasing the accuracy.According to \cite{Gadekallu2020}\cite{Beghriche2021}, many neural network have been constructed and trained already, with high efficiency and accuracy in prediction of diabetes.
+  \bf{neural network}: \rm{Neural} network have been used in many fields to deal with intricate datas.With input layer, hidden 
+  layer and output layer constructed by neurons, each data in dataset is processed while passing through neurons, layer by layer. 
+  After the processing, the outcome can be used to predict.Using back propogation, the accuracy of predictions increase in each 
+  training. In order to construct the hidden layer more efficient, NAS(Neural Arcitecture Searching) is used to search suitable 
+  structure for hidden layer, increasing the accuracy.According to \cite{Gadekallu2020}\cite{Beghriche2021}, many neural network 
+  have been constructed and trained already, with high efficiency and accuracy in prediction of diabetes.
 
-  \bf{naive Bayes classifier}: \rm{naive Bayes classifier} as its name suggest, is a machine learning method base on Bayesian theorem, this model will statistic each data and find all conditional probability of each event occurring if each outcome holds. And finally when it is asked to predict the result, the model will evaluate the data which requist provide and find the most likely outcome according to the conditional probability it just recorded. 
+  \bf{naive Bayes classifier}: \rm{naive Bayes classifier} as its name suggest, is a machine learning method base on Bayesian 
+  theorem, this model will statistic each data and find all conditional probability of each event occurring if each outcome holds. 
+  And finally when it is asked to predict the result, the model will evaluate the data which requist provide and find the most 
+  likely outcome according to the conditional probability it just recorded. 
 
   \bf{perceptron learning algorithm (PLA)}: 
 
@@ -217,8 +230,8 @@
   you are a scientist who study earthquake, what a intresting relation attract you is when there are eqrthquake, the number of 
   rainy days is particular high while its low when there are no earthquake. Although it may sounds nonsense, we can assume there 
   may exists a positive relation betweeen earthquake and rainy days. Here we talk about the Bayesian theorem, which is the basis 
-  of naive Bayes classifier. What the formula it give is $P(A|B) = \frac{P(A\capB)}{P(B)}$. Consider we need to predict the result 
-  by the data meaning the outcome will be unknown, what we need do is just change the formula a little bit and it becomes: $P(A|B) = \frac{P(B|A)*P(A)}{P(B)}$. 
+  of naive Bayes classifier. What the formula it give is $P(A\mid B) = \frac{P(A\cap B)}{P(B)}$. Consider we need to predict the result 
+  by the data meaning the outcome will be unknown, what we need do is just change the formula a little bit and it becomes: $P(A\mid B) = \frac{P(B\mid A)\cdot P(A)}{P(B)}$ 
   We can consider $A$ as the outcome and $B$ as data. Given a data that contains a sequence of data and various outcomes. We just 
   record each event in each dimension and compute their conditional probabilities for each outcome and store these result in other 
   place. When predicting the outcome using given data, find the conditional probability of each event in given data for one outcome 
