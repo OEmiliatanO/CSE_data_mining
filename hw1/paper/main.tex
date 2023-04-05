@@ -177,7 +177,7 @@
   The process that random forest determine a data with unknown class label can be outlined as follow: suppose for a coming data, 
   $c_i$ decision trees in a random forest classify it as class $i$. Then the random forest will classify the data as class $\arg\max c_i$.
 
-\section{SVM}
+\section{SVM-GA}
   Given a dataset $D$ containing $N$ data points and a label with a binary class label of $0$ or $1$ representing the presence 
   or absence of diabetes, respectively. Individually project each data point in the dataset $D$ onto the hyperplane, we can obtain 
   a point $(X_{i1}, X_{i2}, ..., X_{ij}, ..., X_{in})$, where $X_{in}$ is the i-th individual data of $D$ and  j-th feature of $N$. 
@@ -231,7 +231,7 @@
   solution$f=f^*$.Every 2 iteration, the $T$ decreases and lower the probability of $f^{**}$ accepted as the solution.Stimulating annealing 
   can avoid solution stuck at local minimum.Use neural network found by NAS, we can now predict with untrained data with $80\%$ or so accuracy.
 
-\section{Naive Bayes classifier}
+\section{Naive Bayes classifier-GA}
   Consider a dataset, $D$, which contain $M$ data points with $k$ class labels. The probability that a random data points belongs to 
   $i$-th class is $P(C_k\mid \bf{x})$ where $C_k$ is the event that data points $\bf{x}=(x_1,\cdots,x_n)$ belongs to $k$-th class.
   By using Bayes' theorem, the probability can be rewritten as 
