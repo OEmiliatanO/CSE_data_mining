@@ -156,14 +156,20 @@
   techniques though may increase the search time, still, it can greatly increase the accuracy of searching.
 
 \section{decision tree}
-  Given a dataset, $D$, which contains $N$ data and class label, the construction of a decision tree can be described as 
+  Consider a dataset, $D$, which contains $N$ data and class label, the construction of a decision tree can be described as 
   below: suppose there are $M$ candidate decisions, denoted $f_i$. A decision can separate dataset $D$ into $m$ kinds, denote 
   $D'_j$. The decision tree will adopt $\arg\max_{f} G(D, f)=I(D)-\sum^m_{j=1}\frac{N'_j}{N}I(D'_j)$ as node decision, 
   and then recursively construct the tree until the data in separated dataset have the same class label. 
   When a data with unknown class label comes, a decision tree determines recursively by the decision node until the leaf node.
   The function of calculating information, $I$, can be various from implementation. The most famous two information function is 
-  entropy, and gini impurity. The formula of information entropy is $I_H(X)=-\sum_{x}p(x)\log_2p(x)$ 
-  and gini impurity is $I_G(X)=1-\sum_{x}p(x)^2$.
+  entropy, and gini impurity. The formula of information entropy is 
+  \begin{equation}
+    I_H(X)=-\sum_{x}p(x)\log_2p(x) 
+  \end{equation}
+  and gini impurity is 
+  \begin{equation}
+    I_G(X)=1-\sum_{x}p(x)^2
+  \end{equation}
 
 \section{random forest}
   Given the fact that a signle decision tree can be easily over-fitting, a technique called "random forest" is developed. By 
@@ -183,8 +189,8 @@
   After this step, we can find a $N+1$ dimensions hyperplane $w$ that can separate the binary class labels of $0$ and $1$ for 
   the data points. With this hyperplane trained on the training data, we can extend it to classify future data points that do 
   not have binary class labels. 
-  In \cite{santhanam2015application}, we can use genetic algorithms to achieve finding better hyperplanes. The following are the 
-  steps to find the hyperplane using a genetic algorithm: Firstly, decide the level of generations ($l$), population size ($n$), 
+  Based on \cite{santhanam2015application}, we can use genetic algorithm (GA) to achieve finding better hyperplanes. The following are the 
+  steps to find the hyperplane using a GA: Firstly, decide the level of generations ($l$), population size ($n$), 
   variant ($v$), function constant ($b$), elite save rate ($p_e$), and mutations rate ($p_m$). Next, randomly select $N+1$ parameters 
   of floating number between $0$ and $1$ in $w$, repeat it until $n$ hyperplanes are created. 
   In the second step, use $w^t \cdot x - b$ \cite{kumari2013classification} to compare the binary labels of the training data. If 
@@ -226,32 +232,82 @@
   can avoid solution stuck at local minimum.Use neural network found by NAS, we can now predict with untrained data with $80\%$ or so accuracy.
 
 \section{Naive Bayes classifier}
-  First, let's explain the princple of Naive Bayes classifier, here is a very intuitive and easy-to-understand example, consider 
-  you are a scientist who study earthquake, what a intresting relation attract you is when there are eqrthquake, the number of 
-  rainy days is particular high while its low when there are no earthquake. Although it may sounds nonsense, we can assume there 
-  may exists a positive relation betweeen earthquake and rainy days. Here we talk about the Bayesian theorem, which is the basis 
-  of naive Bayes classifier. What the formula it give is $P(A\mid B) = \frac{P(A\cap B)}{P(B)}$. Consider we need to predict the result 
-  by the data meaning the outcome will be unknown, what we need do is just change the formula a little bit and it becomes: $P(A\mid B) = \frac{P(B\mid A)\cdot P(A)}{P(B)}$ 
-  We can consider $A$ as the outcome and $B$ as data. Given a data that contains a sequence of data and various outcomes. We just 
-  record each event in each dimension and compute their conditional probabilities for each outcome and store these result in other 
-  place. When predicting the outcome using given data, find the conditional probability of each event in given data for one outcome 
-  and multiply them. Keep repeating until we had computed all conditional probability for each outcome, then find the maximum one, 
-  which is the most likely outcome. The problem is, when given is a continuous value instead of individual events, it look like we 
-  need to partition this continuous interval as individual events. However, the difficulty is how to find the best partition that 
-  can fit the model best. What I use to slove this problem is gene alogrithm. First ecord maximum and minimum values of given data 
-  in each dimension. Step2 is randomly partition data in each dimension according the maximum and minimum value we record before 
-  and repeat 100 times to generate enoguh species. Step3 is test the accuracy of the model on the training data and keep top 15 
-  good species and kill the rest. Step4 is let the these elite to crossover, which means let them pass their partition to kids. 
-  Step4 is when there is enough offspring, all offspring will start mutation, which means their partitions will slightly shift, 
-  merge, split, or disapar etc..., make each animal different to optmize the model. And back to step2, here I called an evolution. 
-  We thus find the partition that is close to optimal solution after enough evolution.
+  Consider a dataset, $D$, which contain $M$ data points with $k$ class labels. The probability that a random data points belongs to 
+  $i$-th class is $P(C_k\mid \bf{x})$ where $C_k$ is the event that data points $\bf{x}=(x_1,\cdots,x_n)$ belongs to $k$-th class.
+  By using Bayes' theorem, the probability can be rewritten as 
+  \begin{equation}
+    \label{eqn:bayes}
+    P(C_k\mid x)=\frac{P(C_k)P(\bf{x}\mid C_k)}{P(\bf{x})}
+  \end{equation}
+  In partice, 
+  there is interest only in the numerator of that fraction, because the denominator does not depend on $C_k$ and the values of the 
+  features that are given, so the denominator is effectively constant. 
+  Then, by chain rule of conditional probability, the numerator of Eq. \ref{eqn:bayes} can be rewritten as
+  \begin{equation}
+    \label{eqn:rebayes}
+    \begin{split}
+      &P(C)P(x_1\mid C_k)P(x_2,\cdots,x_n\mid C_k,x_1)
+      \\&=\cdots
+      \\&=P(C)P(x_1\mid C_k)\cdots P(x_n\mid C_k,x_1,\cdots,x_{n-1})
+    \end{split}
+  \end{equation}
+
+  Now assume that all features in $\bf{x}$ is mutually independent, $P(x_i\mid x_j, C_k)$ will be equal to $P(x_i\mid C_k)$. 
+  Thus, the probability is 
+  \begin{equation}
+    \label{eqn:prob_classifier}
+    P(C_k\mid x)=\frac{P(C_k)\prod^n_{i=1}P(x_i\mid C_k)}{Z}
+  \end{equation}
+  where $Z$ is a constant. 
+  With Eq. \ref{eqn:prob_classifier}, a data points with unknown class label can be classified by choosing the most possible class: 
+  \begin{equation}
+    \label{eqn:classifier}
+    \arg\max_k P(C_k)\prod^n_{i=1}P(x_i=x'_i\mid C_k)
+  \end{equation}
+
+  The problem is, when given is a continuous value instead of individual events, it need to be partitioned accroding to specific value 
+  which below this value is an individual event while above is other evnet. However, the difficulty is how to find the best partition 
+  that can fit the model best. By using gene alogrithm, the answer can be easily found. First, record maximum and minimum values of 
+  given data in each dimension. Second, randomly partition data in each dimension according the maximum and minimum value recorded before 
+  and repeat 100 times to generate enoguh species. Third, testing the accuracy of the model on the training data and keep top $K$ 
+  good species and kill the rest. Then, let the these elites prodece offsprings, which means pass their partitions to offsprings. 
+  When there is enough offsprings, all offsprings are going to have mutation, the partitions may slightly shift, 
+  merge, split, disappear, or keep originally. Finally, repeat the whole iteration until found the partition that is close to optimal 
+  solution after $T$ iterations.
 
 \section{PLA}
 
 \section{Experiment result}
+  This work compare the common classification algorithms, including KNN (with brute force, ANNOY-DFS, ANNOY-BFS), decision tree, 
+  random forest, SVM (modified by GA), Neural Network, Naive Bayes classifier (modified by GA), PLA-pocket algorithm. 
+  The programming language of KNN, decision tree, random forest and SVM-GA are C++20. And Neural Network, Naive Bayes classifier-GA 
+  and PLA-pocket are using Python3 with pytorch and scikit-learn library. 
+  Table \ref{table:overall} compares all datasets, which show that ...
+  \begin{table*}[htb]
+    %\normalsize
+    %\centering
+    \newcommand{\z}{\phantom{0}}
+    \caption{\textsc{Comparison of Classification Techniques.}}
+      \vspace{-\baselineskip}
+    \begin{tabular}{@{}lccccccl@{}}\toprule
+    Technique & Search (s) & testA & testA-normalized & testB & testB-normalized \\ \midrule
+    KNN-Brute-Force  & $0.009$ & $76.6169 \pm \z{0}$                & $80.597 \pm 0$               & $78 \pm \z{0}$                 & $80 \pm \z{0}$\\
+    KNN-ANNOY-DFS    & $0.003$ & $75.2438 \pm \z{1.8762}$           & $76.1294 \pm 2.0977$         & $74.9 \pm \z{2.5554}$          & $76.4 \pm \z{2.5377}$\\
+    KNN-ANNOY-BFS    & $0.012$ & $76.6567 \pm \z{0.5340}$           & $80.597 \pm 0$               & $78.16 \pm \z{0.7310}$         & $80 \pm \z{0}$\\
+    decision tree    & $0.009$ & $74.1294 \pm \z{0}$                & $74.1294 \pm 0$              & $76 \pm \z{0}$                 & $77 \pm \z{0}$\\
+    random forest    & $0.004$ & $78.6965 \pm \z{1.751}$            & $78.5373 \pm 1.452$          & $77.98 \pm \z{2.083}$          & $77.5 \pm \z{2.516}$\\
+    SVM-GA           & $X$ & $X \pm \z{X}$                          & $X \pm X$                    & $X \pm \z{X}$                  & $X \pm \z{X}$\\
+    Neural Network   & $X$ & $X \pm \z{X}$                          & $X \pm X$                    & $X \pm \z{X}$                  & $X \pm \z{X}$\\
+    Naive Bayes classifier-GA    & $X$ & $X \pm \z{X}$              & $X \pm X$                    & $X \pm \z{X}$                  & $X \pm \z{X}$\\
+    PLA-pocket       & $X$ & $X \pm \z{X}$                          & $X \pm X$                    & $X \pm \z{X}$                  & $X \pm \z{X}$\\ \midrule
+    %&& Search (s) & test & Search(s) & test & Search(s) & test \\ \midrule
+    \end{tabular}
+    \label{table:overall}
+      \vspace{-\baselineskip}
+  \end{table*}
 
 \section{Conclusion}
-
+  The experiment result shows that ...
 \bibliographystyle{IEEEtran}
 \bibliography{main}
 \end{document}
