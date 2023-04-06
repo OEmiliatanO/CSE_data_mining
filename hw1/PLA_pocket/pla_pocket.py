@@ -36,9 +36,10 @@ while i < num_test:
     accuracy = clf.score(X_test, y_test)
     end = time.time()
     search_time = end - start
-    
+
     sum_search_time += search_time
     sum_accuracy += accuracy
+    
     i += 1
 
 print(f"Using data {AorB}.")
