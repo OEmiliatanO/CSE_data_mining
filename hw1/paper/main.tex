@@ -49,7 +49,7 @@
 
 \title{The Accuracy of KNN, decision tree, random forest, SVM, neural network, naive Bayes classifier and PLA for early Prediction of Diabetes}
 
-\author{Hsieh Cheng-Han, Hsu Ting Hao, Sun Shih Yu}
+\author{Hsieh Cheng-Han, Hsu Ting-Hao, Sun Shih-Yu, Lu Che-Yuan, Huang Chia-Yen}
 \date{April 2023}
 \maketitle
 
@@ -61,7 +61,8 @@
   pressure, skin thickness,  concentration of insulin in blood, body mass index (BMI), the value of diabetes 
   pedigree function and age.
 
-  The result show that XXX is the most accurate on the prediction of diabetes.
+  The result show that KNN is the most accurate on the prediction of diabetes and balance the cost of time between accuracy, and since
+  it is deterministic algorithm, it is very stable.
 
 \section{Introduction}
 \label{sec:Introduction}
@@ -298,11 +299,6 @@
   solution after $T$ iterations.
 
 \section{Experiment result}
-  This work compare the common classification algorithms, including KNN (with brute force, ANNOY-DFS, ANNOY-BFS), decision tree, 
-  random forest, SVM (modified by GA), Neural Network, Naive Bayes classifier (modified by GA), PLA-pocket algorithm. 
-  The programming language of KNN, decision tree, random forest and SVM-GA are C++20. And Neural Network, Naive Bayes classifier-GA 
-  and PLA-pocket are using Python3 with pytorch and scikit-learn library. 
-  Table \ref{table:overall} compares all datasets, which show that ...
   \begin{table*}[htb]
     %\normalsize
     %\centering
@@ -310,24 +306,37 @@
     \caption{\textsc{Comparison of Classification Techniques.}}
       \vspace{-\baselineskip}
     \begin{tabular}{@{}lccccccl@{}}\toprule
-    Technique & Search (s) & testA & testA-normalized & testB & testB-normalized \\ \midrule
-    KNN-Brute-Force  & $0.009$ & $76.6169 \pm \z{0}$                & $80.597 \pm 0$               & $78 \pm \z{0}$                 & $80 \pm \z{0}$\\
-    KNN-ANNOY-DFS    & $0.003$ & $75.2438 \pm \z{1.8762}$           & $76.1294 \pm 2.0977$         & $74.9 \pm \z{2.5554}$          & $76.4 \pm \z{2.5377}$\\
-    KNN-ANNOY-BFS    & $0.012$ & $76.6567 \pm \z{0.5340}$           & $80.597 \pm 0$               & $78.16 \pm \z{0.7310}$         & $80 \pm \z{0}$\\
-    decision tree    & $0.009$ & $74.1294 \pm \z{0}$                & $74.1294 \pm 0$              & $76 \pm \z{0}$                 & $77 \pm \z{0}$\\
-    random forest    & $0.004$ & $78.6965 \pm \z{1.751}$            & $78.5373 \pm 1.452$          & $77.98 \pm \z{2.083}$          & $77.5 \pm \z{2.516}$\\
-    SVM-GA           & $1.8462$ & $76.6616 \pm \z{4.0301}$          & $75.9219 \pm 2.736$          & $75 \pm \z{2}$                  & $75 \pm \z{4}$\\
-    Neural Network   & $3.2$   & $81.7910 \pm \z{2.0294}$           & $80.2985 \pm 1.4106$         & $78 \pm \z{1.6733}$            & $77.5 \pm \z{1.892}$\\
-    Naive Bayes classifier-GA    & $X$ & $X \pm \z{X}$              & $X \pm X$                    & $X \pm \z{X}$                  & $X \pm \z{X}$\\
-    PLA-pocket       & $X$ & $X \pm \z{X}$                          & $X \pm X$                    & $X \pm \z{X}$                  & $X \pm \z{X}$\\ \midrule
+    Technique & Search (s)       & testA                              & testA-normalized             & testB                          & testB-normalized \\ \midrule
+    KNN-Brute-Force  & $0.009$   & $76.6169 \pm \z{0}$                & $\bf{80.597 \pm 0}$          & $78 \pm \z{0}$                 & $\bf{80 \pm \z{0}}$\\
+    KNN-ANNOY-DFS    & $0.003$   & $75.2438 \pm \z{1.8762}$           & $76.1294 \pm 2.0977$         & $74.9 \pm \z{2.5554}$          & $76.4 \pm \z{2.5377}$\\
+    KNN-ANNOY-BFS    & $0.012$   & $76.6567 \pm \z{0.5340}$           & $\bf{80.597 \pm 0}$          & $\bf{78.16 \pm \z{0.7310}}$    & $\bf{80 \pm \z{0}}$\\
+    decision tree    & $0.009$   & $74.1294 \pm \z{0}$                & $74.1294 \pm 0$              & $76 \pm \z{0}$                 & $77 \pm \z{0}$\\
+    random forest    & $0.004$   & $78.6965 \pm \z{1.7510}$           & $78.5373 \pm 1.452$          & $77.98 \pm \z{2.083}$          & $77.5 \pm \z{2.516}$\\
+    SVM-GA           & $1.846$   & $76.6616 \pm \z{4.0301}$           & $75.9219 \pm 2.736$          & $75 \pm \z{2}$                 & $75 \pm \z{4}$\\
+    Neural Network   & $3.2$     & $\bf{81.7910 \pm \z{2.0294}}$      & $80.2985 \pm 1.4106$         & $78 \pm \z{1.6733}$            & $77.5 \pm \z{1.892}$\\
+    Naive Bayes classifier-GA  & $14.29$ & $78.5353 \pm \z{0.0322}$   & $72.6866 \pm 0.0237$         & $77.4038 \pm \z{0.0626}$       & $71 \pm \z{0.0289}$\\
+    PLA-pocket       & $0.00052$ & $63.682 \pm \z{0}$                 & $3.162 \pm 0$                & $63 \pm \z{0}$                 & $3.162 \pm \z{0}$\\ \midrule
     %&& Search (s) & test & Search(s) & test & Search(s) & test \\ \midrule
     \end{tabular}
     \label{table:overall}
       \vspace{-\baselineskip}
   \end{table*}
+  This work compare the common classification algorithms, including KNN (with brute force, ANNOY-DFS, ANNOY-BFS), decision tree, 
+  random forest, SVM (modified by GA), Neural Network, Naive Bayes classifier (modified by GA), PLA-pocket algorithm. 
+  The programming language of KNN, decision tree, random forest and SVM-GA are C++20. And Neural Network, Naive Bayes classifier-GA 
+  and PLA-pocket are using Python3 with pytorch and scikit-learn library. 
+  Table \ref{table:overall} compares all datasets, which show that KNN with brute force is the best method to predict 
+  diabetes. And since it is deterministic algorithm, it is very stable. The only drawback is the time complexity is $O(n)$ where 
+  $n$ is the number of the data points in dataset. But with ANNOY technique, the time complexity can be reduce to almost $O(\log n)$, 
+  which solve the huge cost of brute force.
 
 \section{Conclusion}
-  The experiment result shows that ...
+  Though PLA-pocket is the fastest method, the accuracy is not ideal. The neural network performs better, but it is not so stable. 
+  While naive Bayes classifier modified by GA has surpurising good performance and stability, which can compete with random forests 
+  in un-normalized dataset. The experiment result shows that KNN method fits best to early predict diabetes. 
+  One thing to note that KNN performs better after normalized the dataset, while others perform the same or even worse, e.g. PLA-pocket. 
+  The reason behind is normalization can make the data points scatter uniformly, which make KNN have better immunity to the wide gap 
+  of data range.
 \bibliographystyle{IEEEtran}
 \bibliography{main}
 \end{document}
