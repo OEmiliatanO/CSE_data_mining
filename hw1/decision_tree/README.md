@@ -2,9 +2,5 @@
 
 ```
 $ make dep all clean
-$ ./main.elf
+$ ./experiment.bash
 ```
-
-# TODO
-random forest
-data standardize

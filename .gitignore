@@ -1,2 +1,8 @@
 *.elf
 *.o
+*.log
+*.aux
+*.bbl
+*.out
+*.blg
+*.gz
