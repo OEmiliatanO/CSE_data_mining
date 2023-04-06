@@ -204,11 +204,24 @@
   is found.
    
 \section{PLA}
-  Assume that in a dataset $D$, there are two class labels. A perceptron will determine a data point with unknown class label by formula 
+  Assume that in a dataset $D$, there are two class labels, $0$ and $1$. A perceptron will determine a data point with unknown 
+  class label by formula 
   \begin{equation}
     \rm{sign}(w^Tx)
   \end{equation}
-  where $w$ is the weight
+  where $w$ is the weight, and the $\rm{sign}$ function is defined as 
+  \begin{equation}
+    \rm{sign}(x)=\begin{cases}1&,\rm{if }x>0\\0&,\rm{otherwise}\end{cases}
+  \end{equation}
+  The perceptron can update the weight dynamically by formula 
+  \begin{equation}
+    w_{t+1}\leftarrow w_t+y_{n(t)}x_{n(t)} \text{ when sign}(w^T_tx_{n(t)})\neq y_{n(t)}
+  \end{equation}
+  In \cite{gallant1990perceptron}, Gallant prove that if the dataset is linear separable, the perceptron learning algorithm will 
+  eventually find a weight $w_T$ which satisfies $\rm{sign}(w^Tx_i)=y_i,\forall i$, in other words, $w_T$ can separate the dataset 
+  by its class labels perfectly.
+  In partice, the dataset is not always linear separable. Therefore, Gallant proposed a algorithm, PLA-pocket. Instead of find a 
+  perfect weight, PLA-pocket picks a weight which minimize the errors in dataset. 
 
 \section{neural network}
   Given a dataset $D$ containing $N$ data points and a label with $0$ or $1$ representing the patient is diagnosed with diabetes or 
