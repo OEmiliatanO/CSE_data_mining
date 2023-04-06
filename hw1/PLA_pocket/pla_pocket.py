@@ -23,7 +23,7 @@ num_test = int(num_test)
 i = 0
 sum_accuracy = 0
 sum_search_time = 0
-array = [0 for i in range(num_test)]
+array = np.array([0.0 for i in range(num_test)])
 while i < num_test:
 
     X_train = train_data.iloc[:,:-1].values
@@ -39,21 +39,19 @@ while i < num_test:
     accuracy = clf.score(X_test, y_test)
     end = time.time()
     search_time = end - start
-
     sum_search_time += search_time
-    sum_accuracy += accuracy
+    # sum_accuracy += accuracy
     array[i] = accuracy
-    
     i += 1
 
 avg_accuracy = array.mean()
 std_accuracy = array.std()
 normalized_arr = preprocessing.normalize([array])
-nor_avg_acc = normalized_arr.mean()
-nor_std_acc = normalized_arr.std()
+avg_nor_acc = normalized_arr.mean()
+std_nor_acc = normalized_arr.std()
 print(f"Using data {AorB}.")
-print(f" The {num_test} times average search time: {sum_search_time / num_test:.5f}")
-print(f" The {num_test} times average accuracy rate: {avg_accuracy:.5f}")
-print(f" The {num_test} times average accuracy rate std: {std_accuracy:.5f}")
-print(f" The {num_test} times normalized average accuracy rate: {nor_avg_acc:.5f}")
-print(f" The {num_test} times normalized average accuracy rate std: {nor_std_acc / num_test:.5f}")
+print(f"The {num_test} times average search time: {sum_search_time / num_test:.5f}")
+print(f"The {num_test} times average accuracy rate: {avg_accuracy:.5f}")
+print(f"The {num_test} times standard deviation of accuracy rate: {std_accuracy:.5f}")
+print(f"The {num_test} times average normalized accuracy rate: {avg_nor_acc:.5f}")
+print(f"The {num_test} times standard deviation of normalized accuracy rate: {std_nor_acc / num_test:.5f}")
