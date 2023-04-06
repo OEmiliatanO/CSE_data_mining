@@ -49,8 +49,8 @@
 
 \title{The Accuracy of KNN, decision tree, random forest, SVM, neural network, naive Bayes classifier and PLA for early Prediction of Diabetes}
 
-\author{Hsieh Cheng-Han}
-\date{October 2022}
+\author{Hsieh Cheng-Han, Hsu Ting Hao, Sun Shih Yu}
+\date{April 2023}
 \maketitle
 
 \section*{Abstract}
@@ -107,6 +107,10 @@
   method called kernel trick to effectively perform non-linear classification by implicitly mapping its inputs into a high-dimensional 
   feature space.
 
+  \bf{perceptron learning algorithm (PLA)}: \rm{Perceptron} learning algorithm \cite{gallant1990perceptron} is proposed by Gallant 
+  in 1990, which is a fast and simple classification algorithm. However, the limitation of perceptron learning algorithm is that it 
+  can only address the data which is linear separable. Thus, the following model connecting layers of perceptrons is proposed:
+
   \bf{neural network}: \rm{Neural} network have been used in many fields to deal with intricate datas.With input layer, hidden 
   layer and output layer constructed by neurons, each data in dataset is processed while passing through neurons, layer by layer. 
   After the processing, the outcome can be used to predict.Using back propogation, the accuracy of predictions increase in each 
@@ -118,8 +122,6 @@
   theorem, this model will statistic each data and find all conditional probability of each event occurring if each outcome holds. 
   And finally when it is asked to predict the result, the model will evaluate the data which requist provide and find the most 
   likely outcome according to the conditional probability it just recorded. 
-
-  \bf{perceptron learning algorithm (PLA)}: 
 
 \section{KNN}
   \rm{The} rough process of KNN algorithm is described as follow: suppose that there is a dataset which contain $N$ data point, denoted as 
@@ -201,6 +203,13 @@
   $0$ and $1$. After mating $n-n \cdot p_e$ hyperplanes, return this step until the $l$th operation is completed and the best hyperplane 
   is found.
    
+\section{PLA}
+  Assume that in a dataset $D$, there are two class labels. A perceptron will determine a data point with unknown class label by formula 
+  \begin{equation}
+    \rm{sign}(w^Tx)
+  \end{equation}
+  where $w$ is 
+
 \section{neural network}
   Given a dataset $D$ containing $N$ data points and a label with $0$ or $1$ representing the patient is diagnosed with diabetes or 
   not, we need to construct a model with $N$-neurons input layer and 2-neurons output layer.Before we construct the model, we have 
@@ -274,8 +283,6 @@
   When there is enough offsprings, all offsprings are going to have mutation, the partitions may slightly shift, 
   merge, split, disappear, or keep originally. Finally, repeat the whole iteration until found the partition that is close to optimal 
   solution after $T$ iterations.
-
-\section{PLA}
 
 \section{Experiment result}
   This work compare the common classification algorithms, including KNN (with brute force, ANNOY-DFS, ANNOY-BFS), decision tree, 
