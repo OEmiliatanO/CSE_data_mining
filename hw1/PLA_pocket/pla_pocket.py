@@ -1,6 +1,8 @@
 import pandas as pd
 import time
 from sklearn.linear_model import Perceptron
+from sklearn import preprocessing
+import numpy as np
 
 # input the data
 while 1:
@@ -21,6 +23,7 @@ num_test = int(num_test)
 i = 0
 sum_accuracy = 0
 sum_search_time = 0
+array = [0 for i in range(num_test)]
 while i < num_test:
 
     X_train = train_data.iloc[:,:-1].values
@@ -39,9 +42,18 @@ while i < num_test:
 
     sum_search_time += search_time
     sum_accuracy += accuracy
+    array[i] = accuracy
     
     i += 1
 
+avg_accuracy = array.mean()
+std_accuracy = array.std()
+normalized_arr = preprocessing.normalize([array])
+nor_avg_acc = normalized_arr.mean()
+nor_std_acc = normalized_arr.std()
 print(f"Using data {AorB}.")
-print(f" The {num_test} times average accuracy rate: {sum_accuracy / num_test:.5f}")
 print(f" The {num_test} times average search time: {sum_search_time / num_test:.5f}")
+print(f" The {num_test} times average accuracy rate: {avg_accuracy:.5f}")
+print(f" The {num_test} times average accuracy rate std: {std_accuracy:.5f}")
+print(f" The {num_test} times normalized average accuracy rate: {nor_avg_acc:.5f}")
+print(f" The {num_test} times normalized average accuracy rate std: {nor_std_acc / num_test:.5f}")
