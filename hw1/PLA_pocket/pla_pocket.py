@@ -1,5 +1,5 @@
 import pandas as pd
-import numpy as np
+import time
 from sklearn.linear_model import Perceptron
 
 # input the data
@@ -20,6 +20,7 @@ num_test = input('Number of tests: ')
 num_test = int(num_test)
 i = 0
 sum_accuracy = 0
+sum_search_time = 0
 while i < num_test:
 
     X_train = train_data.iloc[:,:-1].values
@@ -31,8 +32,15 @@ while i < num_test:
     # train model
     clf.fit(X_train, y_train)
     # calculate accuracy
+    start = time.time()
     accuracy = clf.score(X_test, y_test)
+    end = time.time()
+    search_time = end - start
+    
+    sum_search_time += search_time
     sum_accuracy += accuracy
     i += 1
 
-print(f"Using data {AorB}. The {num_test} times average accuracy rate: {sum_accuracy / num_test:.5f}")
+print(f"Using data {AorB}.")
+print(f" The {num_test} times average accuracy rate: {sum_accuracy / num_test:.5f}")
+print(f" The {num_test} times average search time: {sum_search_time / num_test:.5f}")
