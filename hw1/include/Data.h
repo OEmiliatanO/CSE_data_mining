@@ -62,7 +62,7 @@ public:
     point_t(point_t<T>&& other): x{std::move(other.x)} { }
     
 	point_t(const std::vector<T>& vx): x{vx} { }
-    point_t(std::vector<T>&& vx): x{vx} { }
+    point_t(std::vector<T>&& vx): x{std::move(vx)} { }
     
 	point_t(std::initializer_list<T>& list): x{list} { }
     point_t(std::initializer_list<T>&& list): x{list} { }
