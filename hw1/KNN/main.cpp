@@ -83,7 +83,6 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 	stand = sqrt(abs(sum2*repeat - sum*sum))/repeat;
 	macc /= repeat;
 	std::cout << macc << " " << stand << " " << duration << std::endl;
-	std::cerr << macc << " " << stand << " " << duration << std::endl;
 
     return 0;
 }
