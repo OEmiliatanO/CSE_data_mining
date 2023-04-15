@@ -256,29 +256,13 @@ point_t<T>& point_t<T>::operator+=(const point_t<T>& other)
 template<typename T>
 point_t<T> operator+(const point_t<T>& a, const point_t<T>& b)
 {
-    if (a.size() != b.size())
-	{
-		//std::cerr << "WARNING: a+b: a.size(" << a.size() << ") != b.size(" << b.size() << "). Padding zeros." << std::endl;
-	}
     point_t<T> ret;
-	if (a.size() > b.size())
-	{
-		const point_t<T>& ma = a;
-		const point_t<T>& mi = b;
-		for (size_t i = 0; i < mi.size(); ++i) 
-			ret.emplace_back(ma[i] + mi[i]);
-		for (size_t i = mi.size(); i < ma.size(); ++i) 
-			ret.emplace_back(ma[i]);
-	}
-	else
-	{
-		const point_t<T>& ma = b;
-		const point_t<T>& mi = a;
-		for (size_t i = 0; i < mi.size(); ++i) 
-			ret.emplace_back(ma[i] + mi[i]);
-		for (size_t i = mi.size(); i < ma.size(); ++i) 
-			ret.emplace_back(ma[i]);
-	}
+	
+    const auto& [ma, mi] = std::pair{(a.size() > b.size() ? a : b), (a.size() <= b.size() ? a : b)};
+    for (size_t i = 0; i < mi.size(); ++i) 
+        ret.emplace_back(ma[i] + mi[i]);
+    for (size_t i = mi.size(); i < ma.size(); ++i) 
+        ret.emplace_back(ma[i]);
 
     return ret;
 }
@@ -286,10 +270,6 @@ point_t<T> operator+(const point_t<T>& a, const point_t<T>& b)
 template<typename T>
 T operator*(const point_t<T>& a, const point_t<T>& b)
 {
-    if (a.size() != b.size()) 
-	{ 
-		//std::cerr << "WARNING: a*b: a.size(" << a.size() << ") != b.size(" << b.size() << "). Padding zeros." << std::endl;
-	}
     T ret = 0;
     for (size_t i = 0; i < std::min(a.size(), b.size()); ++i) ret += a[i] * b[i];
     return ret;
@@ -325,14 +305,7 @@ point_t<T>& point_t<T>::operator*=(T scale)
 template<typename T>
 point_t<T> operator-(const point_t<T>& a, const point_t<T>& b)
 {
-    if (a.size() != b.size()) { std::cerr << "a-b: a.size() != b.size(), exit..." << std::endl; exit(1); }
-    // O(2n)
-    // return a+(-1*b);
-
-    // O(n)
-    point_t<T> ret{a};
-    for (std::size_t i = 0; i < ret.size(); ++i) { ret[i] -= b[i]; }
-    return ret;
+    return a+(T)(-1)*b;
 }
 /**** operator ****/
 
