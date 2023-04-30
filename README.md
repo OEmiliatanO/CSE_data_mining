@@ -1,2 +1,2 @@
-This repo is our homework project on CSE class, Data Mining.
+This repo is our projects on CSE class, Data Mining.
 
