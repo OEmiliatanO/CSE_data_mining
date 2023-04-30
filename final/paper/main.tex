@@ -1,0 +1,92 @@
+%\documentclass[conference]{IEEEtran}
+%\IEEEoverridecommandlockouts
+%\documentclass[sigconf]{acmart}
+%\let\Bbbk\relax %% fix bug
+\documentclass[twocolumn,10pt]{article}
+\usepackage[utf8]{inputenc}
+
+% =======================
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amstext}
+\usepackage{amsopn}
+%\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+
+\usepackage{textcomp}
+
+\usepackage{boxedminipage}
+\usepackage{enumerate}
+\usepackage{multirow}
+\usepackage{url}
+\usepackage{times}
+\usepackage{version}
+% \usepackage[pdftex]{graphicx}
+\usepackage{graphicx} 
+\usepackage{epsfig}
+\usepackage{epsf}
+%\usepackage{graphics}
+\usepackage{caption}
+\usepackage{subfigure}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+%\PassOptionsToPackage{bookmarks={false}}{hyperref}
+%%%%%%%%%%%%
+\usepackage{comment}
+\usepackage{multicol}
+\usepackage{booktabs}
+\usepackage{dblfloatfix}
+% ==========================
+%\usepackage[a4paper, margin = 2.5cm]{geometry}
+
+\AtBeginDocument{%
+  \providecommand\BibTeX{{%
+    \normalfont B\kern-0.5em{\scshape i\kern-0.25em b}\kern-0.8em\TeX}}}
+
+\begin{document}
+
+\title{TBD}
+
+\author{Hsieh Cheng-Han, Hsu Ting-Hao, Sun Shih-Yu, Lu Che-Yuan, Huang Chia-Yen}
+\date{June 2023}
+\maketitle
+
+\section*{Abstract}
+
+\section{Introduction}
+\label{sec:Introduction}
+
+\section{Related works}
+\label{sec:Related works}
+
+\section{main section}
+
+\section{Experiment result}
+  \begin{table*}[htb]
+    \newcommand{\z}{\phantom{0}}
+    \caption{\textsc{Comparison of Classification Techniques.}}
+      \vspace{-\baselineskip}
+    \begin{tabular}{@{}lccccccl@{}}\toprule
+    Technique & Search (s)       & testA                              & testA-normalized             & testB                          & testB-normalized \\ \midrule
+    KNN-Brute-Force  & $0.009$   & $76.6169 \pm \z{0}$                & $\bf{80.597 \pm 0}$          & $78 \pm \z{0}$                 & $\bf{80 \pm \z{0}}$\\
+    KNN-ANNOY-DFS    & $0.003$   & $75.2438 \pm \z{1.8762}$           & $76.1294 \pm 2.0977$         & $74.9 \pm \z{2.5554}$          & $76.4 \pm \z{2.5377}$\\
+    KNN-ANNOY-BFS    & $0.012$   & $76.6567 \pm \z{0.5340}$           & $\bf{80.597 \pm 0}$          & $\bf{78.16 \pm \z{0.7310}}$    & $\bf{80 \pm \z{0}}$\\
+    decision tree    & $0.009$   & $74.1294 \pm \z{0}$                & $74.1294 \pm 0$              & $76 \pm \z{0}$                 & $77 \pm \z{0}$\\
+    random forest    & $0.004$   & $78.6965 \pm \z{1.7510}$           & $78.5373 \pm 1.452$          & $77.98 \pm \z{2.083}$          & $77.5 \pm \z{2.516}$\\
+    SVM-GA           & $1.846$   & $76.6616 \pm \z{4.0301}$           & $75.9219 \pm 2.736$          & $75 \pm \z{2}$                 & $75 \pm \z{4}$\\
+    Neural Network   & $3.2$     & $\bf{81.7910 \pm \z{2.0294}}$      & $80.2985 \pm 1.4106$         & $78 \pm \z{1.6733}$            & $77.5 \pm \z{1.892}$\\
+    Naive Bayes classifier-GA  & $14.29$ & $78.5353 \pm \z{0.0322}$   & $72.6866 \pm 0.0237$         & $77.4038 \pm \z{0.0626}$       & $71 \pm \z{0.0289}$\\
+    PLA-pocket       & $0.00052$ & $63.682 \pm \z{0}$                 & $3.162 \pm 0$                & $63 \pm \z{0}$                 & $3.162 \pm \z{0}$\\ \midrule
+    \end{tabular}
+    \label{table:overall}
+      \vspace{-\baselineskip}
+  \end{table*}
+  
+\section{Conclusion}
+
+\bibliographystyle{IEEEtran}
+\bibliography{main}
+\end{document}
+
