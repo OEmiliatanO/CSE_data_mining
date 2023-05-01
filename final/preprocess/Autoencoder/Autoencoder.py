@@ -43,3 +43,6 @@ class autoencoder(nn.Module):
         self.opt.zero_grad()
         loss.backward()
         self.opt.step()
+        return loss
+    def encode(self, x):
+        return self.encoder(x)
