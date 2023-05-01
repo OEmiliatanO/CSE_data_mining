@@ -18,7 +18,7 @@ torch.backends.cudnn.benchmark = False
 torch.backends.cudnn.deterministic = True
 
 batch_size = 4
-epoch = 1000
+epoch = 500
 
 input_dim = int(sys.argv[1])
 output_dim = int(sys.argv[2])
