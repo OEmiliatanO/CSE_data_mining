@@ -23,8 +23,6 @@ epoch = 500
 input_dim = int(sys.argv[1])
 output_dim = int(sys.argv[2])
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-encoder = autoencoder(input_dim, output_dim, torch.optim.Adadelta, 0.5)
-encoder.to(device)
 print(f"read_csv:{sys.argv[3]}")
 rX = pd.read_csv(sys.argv[3]).to_numpy()
 rX = np.nan_to_num(rX, nan = 0, posinf = 999999, neginf = -999999)
@@ -38,6 +36,8 @@ Y = np.array(Y, dtype = np.float64)
 X = torch.Tensor(X).to(device)
 Y = torch.Tensor(Y).to(device)
 
+encoder = autoencoder(input_dim, output_dim, torch.optim.Adadelta, 0.5)
+encoder.to(device)
 sigma = 1
 loss_fn = nn.MSELoss()
 #loss_fn = nn.CrossEntropyLoss()
@@ -52,9 +52,11 @@ for i in range(epoch):
     encoder.opt.step()
  
     losses.append(loss.detach().cpu().numpy())
+    """
     if i % 10 == 0:
         Z, decode = encoder(X)
         print(f"[{i}/{epoch}] loss = {loss_fn(X, decode)}")
+    """
 
 plt.plot(losses)
 plt.savefig(sys.argv[-1])
@@ -63,6 +65,7 @@ X = torch.Tensor(rX).to(device)
 Z, decode = encoder(X)
 print(f"final loss = {loss_fn(X, decode)}")
 Z = Z.detach().cpu().numpy()
+print("save csv", sys.argv[7])
 np.savetxt(sys.argv[7], Z, delimiter = ',')
 
 rX = pd.read_csv(sys.argv[5]).to_numpy()
@@ -73,4 +76,5 @@ X = torch.Tensor(rX).to(device)
 Z, decode = encoder(X)
 print(f"final loss = {loss_fn(X, decode)}")
 Z = Z.detach().cpu().numpy()
+print("save csv", sys.argv[8])
 np.savetxt(sys.argv[8], Z, delimiter = ',')
