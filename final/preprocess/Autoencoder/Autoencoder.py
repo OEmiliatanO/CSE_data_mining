@@ -5,9 +5,9 @@ class encoder(nn.Module):
     def __init__(self, input_dim, output_dim):
         super().__init__()
         self.net = nn.Sequential(
-            nn.Linear(input_dim, 128)
-            nn.Linear(128, 64)
-            nn.Linear(64, 32)
+            nn.Linear(input_dim, 128),
+            nn.Linear(128, 64),
+            nn.Linear(64, 32),
             nn.Linear(32, output_dim)
         )
     def forward(self, x):
@@ -15,11 +15,11 @@ class encoder(nn.Module):
 
 class decoder(nn.Module):
     def __init__(self, input_dim, output_dim):
-        super.__init__()
+        super().__init__()
         self.net = nn.Sequential(
-            nn.Linear(input_dim, 32)
-            nn.Linear(32, 64)
-            nn.Linear(64, 128)
+            nn.Linear(input_dim, 32),
+            nn.Linear(32, 64),
+            nn.Linear(64, 128),
             nn.Linear(128, output_dim)
         )
     def forward(self, x):
@@ -27,7 +27,7 @@ class decoder(nn.Module):
 
 class autoencoder(nn.Module):
     def __init__(self, input_dim, output_dim, opt, lr):
-        super.__init__()
+        super().__init__()
         self.encoder = encoder(input_dim, output_dim)
         self.decoder = decoder(output_dim, input_dim)
         self.net = nn.Sequential(
