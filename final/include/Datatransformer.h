@@ -78,7 +78,7 @@ dataset_t<T, U> Datatransformer_t<T, U>::random_pick(const dataset_t<T, U>& data
         arg.emplace_back(i);
     std::random_device rd;
     std::default_random_engine eng(rd());
-    std::random_shuffle(arg.begin(), arg.end(), eng);
+    std::shuffle(arg.begin(), arg.end(), eng);
 
     arg.erase(arg.begin() + n, arg.end());
     dataset_t<T, U> ret;
