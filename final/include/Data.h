@@ -75,6 +75,7 @@ public:
 
     // clear
     void clear() { this->x.clear(); }
+    void fill0() { std::fill(this->x.begin(), this->x.end(), 0); }
 
     // cout
     friend std::ostream& operator<< <>(std::ostream& os, const point_t<T>& a);
