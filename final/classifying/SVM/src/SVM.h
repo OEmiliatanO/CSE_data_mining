@@ -1,9 +1,11 @@
 #ifndef __SVM_H__
 #define __SVM_H__
 #include <vector>
+#include <cstdlib>
 #include "../../../include/Data.h"
 
 // U must be double or int
+// note that SVM::predict returns +1 or -1
 template<typename T, typename U>
 class SVM_t
 {
@@ -54,9 +56,11 @@ template<typename T, typename U>
 void SVM_t<T, U>::set_hp(const point_t<T>& alpha, const std::vector<point_t<T>>& X, const point_t<U>& Y)
 {
     for (std::size_t i = 0; i < alpha.size(); ++i)
+    {
         this->H.n += alpha[i] * Y[i] * X[i];
+    }
     std::size_t k = 0;
-    while (alpha[k] <= 0 || alpha[k] >= this->C) ++k;
+    while (k < alpha.size() && (alpha[k] <= 0 || alpha[k] >= this->C)) ++k;
 	if (k >= alpha.size()) { std::cerr << "didn't find supported vector. exit..." << std::endl; exit(1); }
     this->H.b = Y[k] - this->H.n * X[k];
 }
@@ -67,7 +71,7 @@ point_t<T> SVM_t<T, Q>::SMO(const std::vector<point_t<T>>& X, const point_t<Q>& 
     point_t<T> alpha;
     alpha.resize(X.size());
     for (std::size_t i = 0; i < alpha.size(); ++i)
-        alpha[i] = 1;
+        alpha[i] = this->C/2;
     
     while (true)
     {

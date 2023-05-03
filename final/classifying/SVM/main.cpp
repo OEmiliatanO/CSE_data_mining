@@ -35,7 +35,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 	}
 	//std::cerr << "===================================================================" << std::endl;
 	
-    SVM_t<data_t, label_t> SVM{1, 1e-5};
+    SVM_t<data_t, label_t> SVM{0.5, 1e-7};
 	std::size_t repeat = (std::size_t)std::atoi(argv[4]);
 	double macc = 0.0;
 	double stand = 0.0;
@@ -47,6 +47,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 		SVM.fit(dataloader.train_data);
 		//std::cerr << "Predict the test data..." << std::endl;
 		point_t<label_t> result = SVM.predict(dataloader.test_data);
+        for (auto& y : result) y = (y == -1 ? 0 : y);
 
 		[[maybe_unused]]auto correct = [](label_t out, label_t y) { return (double)(out == y); };
 
