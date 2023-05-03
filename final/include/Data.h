@@ -250,7 +250,7 @@ point_t<T>& point_t<T>::operator+=(const point_t<T>& other)
 		std::cerr << "ERROR: a+=b: a.size(" << this->size() << ") != b.size(" << other.size() << "), exit." << std::endl;
 		exit(1);
 	}
-    for (size_t i = 0; i <= this->size(); ++i) { (*this)[i] += other[i]; }
+    for (size_t i = 0; i < this->size(); ++i) { (*this)[i] += other[i]; }
     return *this;
 }
 template<typename T>
