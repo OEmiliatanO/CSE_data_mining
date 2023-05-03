@@ -10,23 +10,25 @@ class SVM_t
 public:
     double C;
     double P;
-    hyperplane_t H;
+    hyperplane_t<T> H;
     SVM_t() = default;
-    SVM_t(double c, double p): C(c), P() {}
+    SVM_t(double c, double p): C(c), P(p) {}
 
-    void fit(const std::vector<point_t<T>>& X, const std::vector<U>& Y);
+    void fit(const std::vector<point_t<T>>& X, const point_t<U>& Y);
     void fit(const dataset_t<T, U>& dataset);
     U predict(const point_t<T>& X);
+	std::vector<U> predict(const dataset_t<T, U>& X);
 private:
-    point_t<T> SMO(const std::vector<point_t<T>>& X, const std::vector<U>& Y);
-    void set_hp(const point_t<T>& alpha);
-}
+    point_t<T> SMO(const std::vector<point_t<T>>& X, const point_t<U>& Y);
+    void set_hp(const point_t<T>& alpha, const std::vector<point_t<T>>& X, const point_t<U>& Y);
+};
 
 template<typename T, typename U>
-void SVM_t<T, U>::fit(const std::vector<point_t<T>>& X, const std::vector<U>& Y)
+void SVM_t<T, U>::fit(const std::vector<point_t<T>>& X, const point_t<U>& Y)
 {
+	this->H.n.resize(X.front().size());
     point_t<T> alpha = this->SMO(X, Y);
-    this->set_hp(alpha);
+    this->set_hp(alpha, X, Y);
 }
 template<typename T, typename U>
 void SVM_t<T, U>::fit(const dataset_t<T, U>& X)
@@ -49,26 +51,27 @@ std::vector<U> SVM_t<T, U>::predict(const dataset_t<T, U>& X)
 }
 
 template<typename T, typename U> 
-void SVM_t<T, U>::set_hp(const point_t<T>& alpha)
+void SVM_t<T, U>::set_hp(const point_t<T>& alpha, const std::vector<point_t<T>>& X, const point_t<U>& Y)
 {
     for (std::size_t i = 0; i < alpha.size(); ++i)
         this->H.n += alpha[i] * Y[i] * X[i];
     std::size_t k = 0;
     while (alpha[k] <= 0 || alpha[k] >= this->C) ++k;
+	if (k >= alpha.size()) { std::cerr << "didn't find supported vector. exit..." << std::endl; exit(1); }
     this->H.b = Y[k] - this->H.n * X[k];
 }
 
-template<typename T, typename U> 
-point_t<T> SMO(const std::vector<point_t<T>>& X, const std::vector<U>& Y)
+template<typename T, typename Q> 
+point_t<T> SVM_t<T, Q>::SMO(const std::vector<point_t<T>>& X, const point_t<Q>& Y)
 {
     point_t<T> alpha;
-    alpha.resize(x[0].size())
+    alpha.resize(X.size());
     for (std::size_t i = 0; i < alpha.size(); ++i)
         alpha[i] = 1;
     
     while (true)
     {
-        this->set_hp(alpha);
+        this->set_hp(alpha, X, Y);
         double W0 = 0;
         for (std::size_t i = 0; i < alpha.size(); ++i)
         {
@@ -82,8 +85,8 @@ point_t<T> SMO(const std::vector<point_t<T>>& X, const std::vector<U>& Y)
         for (std::size_t k = 0; k < alpha.size(); ++k)
             E[k] = this->predict(X[k]) - Y[k];
         std::size_t i = rand() % alpha.size();
-        std::size_t j = 0;
-        double maxd = std::numeric_limits<double>::lowest
+        std::size_t j = -1;
+        double maxd = std::numeric_limits<double>::lowest();
         for (std::size_t k = 0; k < alpha.size(); ++k)
         {
             if (maxd < std::abs(E[i] - E[k]))
@@ -92,9 +95,9 @@ point_t<T> SMO(const std::vector<point_t<T>>& X, const std::vector<U>& Y)
                 j = k;
             }
         }
-        double U = (Y[i] * Y[j] < 0 ? std::max(0, alpha[j] - alpha[i]) : std::max(0, alpha[i] + alpha[j] - C));
+        double U = (Y[i] * Y[j] < 0 ? std::max(0.0, alpha[j] - alpha[i]) : std::max(0.0, alpha[i] + alpha[j] - this->C));
         double V = (Y[i] * Y[j] < 0 ? std::min(C, C + alpha[j] - alpha[i]) : std::max(C, alpha[i] + alpha[j]));
-        double K = X[i] * X[i] + X[j] * X[j] - 2 * X[i] * X[j];
+        double K = X[i] * X[i] + X[j] * X[j] - 2.0 * X[i] * X[j];
         double new_alpha_j = alpha[j] + Y[j] * (E[i] - E[j]) / K;
         if (alpha[j] > V) alpha[j] = V;
         else if (alpha[j] < U) alpha[j] = U;

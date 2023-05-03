@@ -247,7 +247,7 @@ point_t<T>& point_t<T>::operator+=(const point_t<T>& other)
 {
     if (this->size() != other.size())
 	{
-		std::cerr << "ERROR: a+=b: a.size(" << this->size() << ") != b.size(" << other.size() << "), return originally left point." << std::endl;
+		std::cerr << "ERROR: a+=b: a.size(" << this->size() << ") != b.size(" << other.size() << "), exit." << std::endl;
 		exit(1);
 	}
     for (size_t i = 0; i <= this->size(); ++i) { (*this)[i] += other[i]; }

@@ -2,6 +2,7 @@
 #include <memory>
 #include <cmath>
 #include <chrono>
+#include <cstring>
 #include "src/SVM.h"
 #include "../../include/Dataloader.h"
 #include "../../include/Datatransformer.h"
