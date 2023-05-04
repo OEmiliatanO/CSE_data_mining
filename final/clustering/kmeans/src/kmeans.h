@@ -11,19 +11,20 @@ class kmeans_t
 public:
     std::size_t k;
     double theta;
+	std::vector<point_t<T>> centers_;
     kmeans_t() = default;
     kmeans_t(std::size_t k_, double theta_): k{k_}, theta{theta_} {};
 
-    point_t<U> fit(const std::vector<point_t<T>>& X);
-    point_t<U> fit(const dataset_t<T, U>& dataset);
+    point_t<std::size_t> fit(const std::vector<point_t<T>>& X);
+    point_t<std::size_t> fit(const dataset_t<T, U>& dataset);
 private:
-    U assignment(const point_t<T>& x, const std::vector<point_t<T>> centers);
+	std::size_t assignment(const point_t<T>& x, const std::vector<point_t<T>>& centers);
 };
 
 template<typename T, typename U>
-U kmeans_t<T, U>::assignment(const point_t<T>& x, const std::vector<point_t<T>> centers)
+std::size_t kmeans_t<T, U>::assignment(const point_t<T>& x, const std::vector<point_t<T>>& centers)
 {
-    std::pair<double, U> p = std::make_pair(std::numeric_limits<double>::max(), -1);
+    std::pair<double, std::size_t> p = std::make_pair(std::numeric_limits<double>::max(), (std::size_t)0);
     for (std::size_t i = 0; i < centers.size(); ++i)
     {
         p = std::min(p, std::make_pair(euclidean_dist(x, centers[i]), i));
@@ -32,16 +33,18 @@ U kmeans_t<T, U>::assignment(const point_t<T>& x, const std::vector<point_t<T>> 
 }
 
 template<typename T, typename U>
-point_t<U> kmeans_t<T, U>::fit(const std::vector<point_t<T>>& X)
+point_t<std::size_t> kmeans_t<T, U>::fit(const std::vector<point_t<T>>& X)
 {
     // random initialize center
     std::vector<point_t<T>> centers;
     std::vector<point_t<T>> ncenters;
-    point_t<U> labels;
+    point_t<std::size_t> labels;
     std::vector<std::size_t> label_sizes;
     
     centers.resize(this->k);
+	for (auto& x : centers) x.resize(X.front().size());
     ncenters.resize(this->k);
+	for (auto& x : ncenters) x.resize(X.front().size());
     labels.resize(X.size());
     label_sizes.resize(this->k);
     for (std::size_t i = 0; i < this->k; ++i)
@@ -66,12 +69,11 @@ point_t<U> kmeans_t<T, U>::fit(const std::vector<point_t<T>>& X)
         for (auto& center : ncenters)
             center.fill0();
         for (std::size_t i = 0; i < X.size(); ++i)
-        {
             ncenters[labels[i]] += X[i];
-        }
-        for (std::size_t i = 0; i < labels.size(); ++i)
+        for (std::size_t i = 0; i < this->k; ++i)
         {
-            ncenters[i] /= label_sizes[i];
+			if (label_sizes[i] == 0) { std::cerr << "label(" << i << ") has zero member. exit..." << std::endl; exit(1); }
+            ncenters[i] /= (double)label_sizes[i];
         }
         std::swap(centers, ncenters);
 
@@ -82,13 +84,18 @@ point_t<U> kmeans_t<T, U>::fit(const std::vector<point_t<T>>& X)
         for (std::size_t j = 0; j < X.size(); ++j)
             WCSS += euclidean_dist(X[j], centers[labels[j]]);
         if ((WCSS - WCSS0) / WCSS0 <= this->theta)
-            break;
+		{
+			for (std::size_t i = 0; i < X.size(); ++i)
+				labels[i] = this->assignment(X[i], centers);
+			break;
+		}
     }
+	this->centers_ = std::move(centers);
     return labels;
 }
 
 template<typename T, typename U>
-point_t<U> kmeans_t<T, U>::fit(const dataset_t<T, U>& dataset)
+point_t<std::size_t> kmeans_t<T, U>::fit(const dataset_t<T, U>& dataset)
 {
     return this->fit(dataset.data);
 }
