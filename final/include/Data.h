@@ -117,6 +117,7 @@ public:
     friend point_t<T> operator* <> (T scale, const point_t<T>& a);
     friend point_t<T> operator/ <> (const point_t<T>& a, T scale);
     point_t<T>& operator*=(T scale);
+	point_t<T>& operator/=(T scale);
     // minus
     friend point_t<T> operator- <> (const point_t<T>& a, const point_t<T>& b);
     /**** operator ****/
@@ -295,6 +296,13 @@ point_t<T> operator/(const point_t<T>& a, T scale)
     for (auto& x : ret) x /= scale;
     return ret;
 }
+template<typename T> 
+point_t<T>& point_t<T>::operator/=(T scale)
+{
+	for (auto& y : this->x) y /= scale;
+	return *this;
+}
+
 template<typename T>
 point_t<T>& point_t<T>::operator*=(T scale)
 {

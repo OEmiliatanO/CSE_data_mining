@@ -22,11 +22,11 @@ public:
 
     Dataloader_t() = default;
 
-    void load(std::string_view& path, dataset_t<T, U>& dataset);
-    void load_test(std::string_view&& path);
-    void load_test(std::string_view& path);
-    void load_train(std::string_view&& path);
-    void load_train(std::string_view& path);
+    void load(std::string_view& path, dataset_t<T, U>& dataset, bool contain_labels = true);
+    void load_test(std::string_view&& path, bool contain_labels = true);
+    void load_test(std::string_view& path, bool contain_labels = true);
+    void load_train(std::string_view&& path, bool contain_labels = true);
+    void load_train(std::string_view& path, bool contain_labels = true);
 	
 	void load_train(const dataset_t<T, U>& dataset);
 	void load_train(dataset_t<T, U>&& dataset);
@@ -49,7 +49,7 @@ static std::vector<std::string_view> split(std::string_view s, char delimiter = 
 }
 
 template<typename T, typename U>
-void Dataloader_t<T, U>::load(std::string_view& path, dataset_t<T, U>& dataset)
+void Dataloader_t<T, U>::load(std::string_view& path, dataset_t<T, U>& dataset, bool contain_labels)
 {
     dataset.clear();
 
@@ -69,9 +69,13 @@ void Dataloader_t<T, U>::load(std::string_view& path, dataset_t<T, U>& dataset)
     {
         std::string_view rawdata{s};
         std::vector<std::string_view> alldata = split(rawdata, ',');
-
-        U label = std::atoi(alldata.back().data());
-        alldata.pop_back();
+		
+		U label = 0;
+		if (contain_labels)
+		{
+			label = std::atoi(alldata.back().data());
+        	alldata.pop_back();
+		}
 
         point_t<T> data;
         for (auto& s : alldata)
@@ -85,25 +89,25 @@ void Dataloader_t<T, U>::load(std::string_view& path, dataset_t<T, U>& dataset)
 }
 
 template<typename T, typename U>
-void Dataloader_t<T, U>::load_test(std::string_view& path)
+void Dataloader_t<T, U>::load_test(std::string_view& path, bool contain_labels)
 {
-    this->load(path, this->test_data);
+    this->load(path, this->test_data, contain_labels);
 }
 template<typename T, typename U>
-void Dataloader_t<T, U>::load_test(std::string_view&& path)
+void Dataloader_t<T, U>::load_test(std::string_view&& path, bool contain_labels)
 {
-    this->load(path, this->test_data);
+    this->load(path, this->test_data, contain_labels);
 }
 
 template<typename T, typename U>
-void Dataloader_t<T, U>::load_train(std::string_view& path)
+void Dataloader_t<T, U>::load_train(std::string_view& path, bool contain_labels)
 {
-    this->load(path, this->train_data);
+    this->load(path, this->train_data, contain_labels);
 }
 template<typename T, typename U>
-void Dataloader_t<T, U>::load_train(std::string_view&& path)
+void Dataloader_t<T, U>::load_train(std::string_view&& path, bool contain_labels)
 {
-    this->load(path, this->train_data);
+    this->load(path, this->train_data, contain_labels);
 }
 
 template<typename T, typename U>
