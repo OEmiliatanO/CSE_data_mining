@@ -13,7 +13,6 @@ template<typename T, typename U>
 class Dataloader_t
 {
 public:
-    // record the name of i-th field
     std::vector<std::string_view> tags;
     // data
     dataset_t<T, U> train_data, test_data;
@@ -61,10 +60,7 @@ void Dataloader_t<T, U>::load(std::string_view& path, dataset_t<T, U>& dataset, 
         std::cerr << "stop the process ..." << std::endl;
         exit(1);
     }
-    auto& tags = this->tags;
-    std::string s; fs >> s;
-    std::string_view rawlabels{s};
-    tags = split(rawlabels, ',');
+    std::string s;
     while (fs >> s)
     {
         std::string_view rawdata{s};
