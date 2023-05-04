@@ -26,9 +26,7 @@ std::size_t kmeans_t<T, U>::assignment(const point_t<T>& x, const std::vector<po
 {
     std::pair<double, std::size_t> p = std::make_pair(std::numeric_limits<double>::max(), (std::size_t)0);
     for (std::size_t i = 0; i < centers.size(); ++i)
-    {
         p = std::min(p, std::make_pair(euclidean_dist(x, centers[i]), i));
-    }
     return p.second;
 }
 
@@ -49,7 +47,8 @@ point_t<std::size_t> kmeans_t<T, U>::fit(const std::vector<point_t<T>>& X)
     label_sizes.resize(this->k);
     for (std::size_t i = 0; i < this->k; ++i)
         centers[i] = X[random() % X.size()];
-
+    
+    bool bk = false;
     while (true)
     {
         // assignment
@@ -76,7 +75,7 @@ point_t<std::size_t> kmeans_t<T, U>::fit(const std::vector<point_t<T>>& X)
             ncenters[i] /= (double)label_sizes[i];
         }
         std::swap(centers, ncenters);
-
+        if (bk) break;
         
         // calculate WCSS_t+1
         // if return rate <= theta, terminate
@@ -85,9 +84,7 @@ point_t<std::size_t> kmeans_t<T, U>::fit(const std::vector<point_t<T>>& X)
             WCSS += euclidean_dist(X[j], centers[labels[j]]);
         if ((WCSS - WCSS0) / WCSS0 <= this->theta)
 		{
-			for (std::size_t i = 0; i < X.size(); ++i)
-				labels[i] = this->assignment(X[i], centers);
-			break;
+            bk = true;
 		}
     }
 	this->centers_ = std::move(centers);
