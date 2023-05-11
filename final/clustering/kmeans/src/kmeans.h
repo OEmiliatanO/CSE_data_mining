@@ -15,28 +15,28 @@ public:
     kmeans_t() = default;
     kmeans_t(std::size_t k_, double theta_): k{k_}, theta{theta_} {};
 
-    point_t<std::size_t> fit(const std::vector<point_t<T>>& X);
-    point_t<std::size_t> fit(const dataset_t<T, U>& dataset);
+    point_t<U> fit(const std::vector<point_t<T>>& X);
+    point_t<U> fit(const dataset_t<T, U>& dataset);
 private:
-	std::size_t assignment(const point_t<T>& x, const std::vector<point_t<T>>& centers);
+	U assignment(const point_t<T>& x, const std::vector<point_t<T>>& centers);
 };
 
 template<typename T, typename U>
-std::size_t kmeans_t<T, U>::assignment(const point_t<T>& x, const std::vector<point_t<T>>& centers)
+U kmeans_t<T, U>::assignment(const point_t<T>& x, const std::vector<point_t<T>>& centers)
 {
-    std::pair<double, std::size_t> p = std::make_pair(std::numeric_limits<double>::max(), (std::size_t)0);
+    std::pair<double, U> p = std::make_pair(std::numeric_limits<double>::max(), (U)0);
     for (std::size_t i = 0; i < this->k; ++i)
-        p = std::min(p, std::make_pair(euclidean_dist(x, centers[i]), i));
+        p = std::min(p, std::make_pair(euclidean_dist(x, centers[i]), (U)i));
     return p.second;
 }
 
 template<typename T, typename U>
-point_t<std::size_t> kmeans_t<T, U>::fit(const std::vector<point_t<T>>& X)
+point_t<U> kmeans_t<T, U>::fit(const std::vector<point_t<T>>& X)
 {
     // random initialize center
     std::vector<point_t<T>> centers;
     std::vector<point_t<T>> ncenters;
-    point_t<std::size_t> labels;
+    point_t<U> labels;
     std::vector<std::size_t> label_sizes;
     
     centers.resize(this->k);
@@ -83,9 +83,7 @@ point_t<std::size_t> kmeans_t<T, U>::fit(const std::vector<point_t<T>>& X)
         for (std::size_t j = 0; j < X.size(); ++j)
             WCSS += euclidean_dist(X[j], centers[labels[j]]);
         if ((WCSS - WCSS0) / WCSS0 <= this->theta)
-		{
             bk = true;
-		}
     }
 
 	this->centers_ = std::move(centers);
@@ -96,7 +94,7 @@ point_t<std::size_t> kmeans_t<T, U>::fit(const std::vector<point_t<T>>& X)
 }
 
 template<typename T, typename U>
-point_t<std::size_t> kmeans_t<T, U>::fit(const dataset_t<T, U>& dataset)
+point_t<U> kmeans_t<T, U>::fit(const dataset_t<T, U>& dataset)
 {
     return this->fit(dataset.data);
 }

@@ -51,6 +51,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 	// KNN
 	Argparser.add("-KNN_k");
 	Argparser.add("-KNN_maxdis");
+	Argparser.add("-KNN_problim");
 	Argparser.add("-KNN_method");
 	Argparser.add("-KNN_ANNOY_maxpts");
 	Argparser.add("-KNN_ANNOY_bfs_threhold");
@@ -67,6 +68,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 	Argparser.add("-kmeans_k");
 	Argparser.add("-kmeans_converge_lim");
 
+    Argparser.parse(argc, argv);
 	auto& args = Argparser.args;
 
 	std::size_t repeats = std::stoi(args["-repeats"]);
@@ -85,27 +87,29 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
     // data is double, label is int
     Dataloader_t<data_t, label_t> dataloader;
     
-    //std::cerr << "Load the train data..." << std::endl;
+    std::cerr << "Load the train data..." << std::endl;
     dataloader.load_train(train_data_path);
     dataloader.load_train_label(train_label_path);
 
-    //std::cerr << "Load the test data..." << std::endl;
+    std::cerr << "Load the test data..." << std::endl;
     dataloader.load_test(test_data_path);
     dataloader.load_test_label(test_label_path);
-    //std::cerr << "Complete loading" << std::endl << std::endl;
+    std::cerr << "Complete loading" << std::endl << std::endl;
 	if (args["normalize"] == "true" or args["normalize"] == "1")
 	{
 		//std::cerr << "Normalize the dataset..." << std::endl;
 		dataloader.load_train(Datatransformer_t<data_t, label_t>::normalize(dataloader.train_data));
 		dataloader.load_test(Datatransformer_t<data_t, label_t>::normalize(dataloader.test_data));
 	}
-	//std::cerr << "===================================================================" << std::endl;
+	std::cerr << "===================================================================" << std::endl;
 	
 	std::chrono::steady_clock::time_point st = std::chrono::steady_clock::now();
 	for (std::size_t _ = 0; _ < repeats; ++_)
 	{
 		// "<classifying>-<clustering>, e.g. KNN-DBSCAN"
+        std::cerr << "classifying..." << std::endl;
         auto classifying_result = Fn[args["-classifying"]](args, dataloader, KNOWN_CNT);
+        std::cerr << "clustering..." << std::endl;
         auto clustering_result = Fn[args["-clustering"]](args, dataloader, KNOWN_CNT+UNKNOWN_CNT);
 	}
 	std::chrono::steady_clock::time_point ed = std::chrono::steady_clock::now();
@@ -122,9 +126,9 @@ point_t<label_t> KNN_predict(auto& args, const auto& dataloader, [[maybe_unused]
     double problim = std::stod(args["-KNN_problim"]);
 
 	KNN_t<data_t, label_t> KNN;
-	if (args["KNN_method"] == "brute")
+	if (args["-KNN_method"] == "brute")
 		KNN.set_knn_method(std::make_shared<brute_force<data_t, label_t>>());
-	else if (args["KNN_method"] == "annoy")
+	else if (args["-KNN_method"] == "annoy")
 	{
         std::size_t ANNOY_maxpts = (std::size_t)std::stoi(args["-KNN_ANNOY_maxpts"]);
 		double ANNOY_bfs_threhold = std::stod(args["-KNN_ANNOY_bfs_threhold"]);
@@ -135,7 +139,7 @@ point_t<label_t> KNN_predict(auto& args, const auto& dataloader, [[maybe_unused]
 	}
 	else
 	{
-		std::cerr << "no such search algorithm: " << args["KNN_method"] << std::endl;
+		std::cerr << "no such search algorithm: " << args["-KNN_method"] << std::endl;
 		exit(1);
 	}
 
@@ -146,8 +150,8 @@ point_t<label_t> KNN_predict(auto& args, const auto& dataloader, [[maybe_unused]
 
 point_t<label_t> DBSCAN_fit(auto& args, const auto& dataloader, [[maybe_unused]]std::size_t UNKNOWN_CNT)
 {
-	std::size_t minPts = std::stoi(args["DBSCAN_minPts"]);
-	double eps = std::stod(args["DBSCAN_eps"]);
+	std::size_t minPts = std::stoi(args["-DBSCAN_minPts"]);
+	double eps = std::stod(args["-DBSCAN_eps"]);
 
     DBSCAN_t<data_t, label_t> DBSCAN{minPts, eps};
 	return DBSCAN.fit(dataloader.test_data);
@@ -155,8 +159,8 @@ point_t<label_t> DBSCAN_fit(auto& args, const auto& dataloader, [[maybe_unused]]
 
 point_t<label_t> SVMs_predict(auto& args, const auto& dataloader, std::size_t KNOWN_CNT)
 {
-	double converge_lim = std::stod(args["SVM_converge_lim"]);
-	double punishment = std::stod(args["SVM_punishment"]);
+	double converge_lim = std::stod(args["-SVM_converge_lim"]);
+	double punishment = std::stod(args["-SVM_punishment"]);
     
     point_t<label_t> result;
     for (std::size_t i = 1; i <= KNOWN_CNT; ++i)

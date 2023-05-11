@@ -14,14 +14,14 @@ public:
     DBSCAN_t() = default;
     DBSCAN_t(std::size_t minPts_, double epsilon_): minPts{minPts_}, epsilon{epsilon_} {};
 
-    point_t<std::size_t> fit(const std::vector<point_t<T>>& X);
-    point_t<std::size_t> fit(const dataset_t<T, U>& dataset);
+    point_t<U> fit(const std::vector<point_t<T>>& X);
+    point_t<U> fit(const dataset_t<T, U>& dataset);
 };
 
 template<typename T, typename U>
-point_t<std::size_t> DBSCAN_t<T, U>::fit(const std::vector<point_t<T>>& X)
+point_t<U> DBSCAN_t<T, U>::fit(const std::vector<point_t<T>>& X)
 {
-    point_t<std::size_t> labels;
+    point_t<U> labels;
     std::size_t now_label = 0;
     std::vector<bool> vis;
     
@@ -70,7 +70,7 @@ point_t<std::size_t> DBSCAN_t<T, U>::fit(const std::vector<point_t<T>>& X)
 }
 
 template<typename T, typename U>
-point_t<std::size_t> DBSCAN_t<T, U>::fit(const dataset_t<T, U>& dataset)
+point_t<U> DBSCAN_t<T, U>::fit(const dataset_t<T, U>& dataset)
 {
     return this->fit(dataset.data);
 }

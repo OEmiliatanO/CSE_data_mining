@@ -1,5 +1,9 @@
+#ifndef __ARGPARSER_H__
+#define __ARGPARSER_H__
+
 #include <vector>
 #include <unordered_map>
+#include <iostream>
 #include <string>
 
 class argparser
@@ -32,3 +36,4 @@ void argparser::parse(std::size_t argc, char **argv)
 			}
 	}
 }
+#endif
