@@ -23,7 +23,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 	argparser Argparser;
 
 	// experiment
-	Argparser.add("-repeats")
+	Argparser.add("-repeats");
 
 	// data
 	Argparser.add("-train_path");
@@ -34,8 +34,8 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 	Argparser.add("-KNN_k");
 	Argparser.add("-KNN_maxdis");
 	Argparser.add("-KNN_method");
-	Argparser.add("-KNN_ANNOY_maxpts")
-	Argparser.add("-KNN_ANNOY_bfs_threhold")
+	Argparser.add("-KNN_ANNOY_maxpts");
+	Argparser.add("-KNN_ANNOY_bfs_threhold");
 
 	// SVM
 	Argparser.add("-SVM_converge_lim");
@@ -49,7 +49,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 	Argparser.add("-kmeans_k");
 	Argparser.add("-kmeans_converge_lim");
 
-	const auto& args = Argparser.args;
+	auto& args = Argparser.args;
 
 	std::size_t repeats = std::stoi(args["repeats"]);
 	
@@ -83,13 +83,13 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 		auto clustering_result = DBSCAN_fit(args, dataloader);
 	}
 	std::chrono::steady_clock::time_point ed = std::chrono::steady_clock::now();
-	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(ed - st).count() / 1000000.0 / repeat;
+	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(ed - st).count() / 1000000.0 / repeats;
 	std::cout << duration << std::endl;
 
     return 0;
 }
 
-point_t<label_t> KNN_predict(const auto& args, const auto& data)
+point_t<label_t> KNN_predict(const auto& args, const auto& dataloader)
 {
     std::size_t KNN_k = (std::size_t)std::atoi(args["-KNN_k"]);
 	double KNN_maxdis = std::stod(args["-KNN_maxdis"]);
@@ -113,16 +113,16 @@ point_t<label_t> KNN_predict(const auto& args, const auto& data)
 	}
 
 	KNN.train(dataloader.train_data);
-	return KNN.predict(dataloader.test_data, k);
+	return KNN.predict(dataloader.test_data, KNN_k);
 }
 
 
 point_t<label_t> DBSCAN_fit(const auto& args, const auto& dataloader)
 {
-	std::size_t DBSCAN_minPts = std::stoi(args["DBSCAN_minPts"]);
-	double DBSCAN_eps = std::stod(args["DBSCAN_eps"]);
+	std::size_t minPts = std::stoi(args["DBSCAN_minPts"]);
+	double eps = std::stod(args["DBSCAN_eps"]);
 
-    DBSCAN_t<data_t, label_t> DBSCAN{minPts, epsilon};
+    DBSCAN_t<data_t, label_t> DBSCAN{minPts, eps};
 	return DBSCAN.fit(dataloader.test_data);
 }
 
