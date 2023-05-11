@@ -4,6 +4,7 @@
 
 class argparser
 {
+public:
 	argparser() = default;
 	
 	std::vector<std::string> to_parse;
@@ -13,7 +14,7 @@ class argparser
 	void add(std::string arg);
 };
 
-void add(std::string arg)
+void argparser::add(std::string arg)
 {
 	to_parse.emplace_back(arg);
 }
