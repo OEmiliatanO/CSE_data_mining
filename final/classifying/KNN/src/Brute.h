@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <cstring>
 #include <utility>
-#include "../../include/Data.h"
+#include "Data.h"
 #include "KNN_Method.h"
 
 template<typename T, typename U>

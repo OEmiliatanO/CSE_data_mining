@@ -3,9 +3,9 @@
 #include <cmath>
 #include <chrono>
 #include <cstring>
-#include "src/SVM.h"
-#include "../../include/Dataloader.h"
-#include "../../include/Datatransformer.h"
+#include "SVM.h"
+#include "Dataloader.h"
+#include "Datatransformer.h"
 
 using data_t = double;
 using label_t = int;

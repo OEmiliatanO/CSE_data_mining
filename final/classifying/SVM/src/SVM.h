@@ -2,7 +2,7 @@
 #define __SVM_H__
 #include <vector>
 #include <cstdlib>
-#include "../../../include/Data.h"
+#include "Data.h"
 
 // U must be double or int
 // note that SVM::predict returns +1 or -1

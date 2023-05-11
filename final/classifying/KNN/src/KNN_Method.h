@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <vector>
 #include <map>
-#include "../../include/Data.h"
+#include "Data.h"
 
 template<typename T, typename U>
 class KNN_Method_t

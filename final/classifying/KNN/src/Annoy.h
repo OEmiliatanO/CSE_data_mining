@@ -1,6 +1,6 @@
 #ifndef __ANNOY_H__
 #define __ANNOY_H__
-#include "../../include/Data.h"
+#include "Data.h"
 #include <vector>
 #include <queue>
 #include <random>

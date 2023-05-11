@@ -2,11 +2,11 @@
 #include <memory>
 #include <cmath>
 #include <chrono>
-#include "src/KNN.h"
-#include "src/Brute.h"
-#include "src/Annoy.h"
-#include "../include/Dataloader.h"
-#include "../include/Datatransformer.h"
+#include "KNN.h"
+#include "Brute.h"
+#include "Annoy.h"
+#include "Dataloader.h"
+#include "Datatransformer.h"
 
 using data_t = double;
 using label_t = int;

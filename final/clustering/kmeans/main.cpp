@@ -3,9 +3,9 @@
 #include <cmath>
 #include <chrono>
 #include <cstring>
-#include "src/kmeans.h"
-#include "../../include/Dataloader.h"
-#include "../../include/Datatransformer.h"
+#include "kmeans.h"
+#include "Dataloader.h"
+#include "Datatransformer.h"
 
 using data_t = double;
 using label_t = std::size_t;

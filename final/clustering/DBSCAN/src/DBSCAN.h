@@ -3,7 +3,7 @@
 #include <vector>
 #include <limits>
 #include <cstdlib>
-#include "../../../include/Data.h"
+#include "Data.h"
 
 template<typename T, typename U>
 class DBSCAN_t
