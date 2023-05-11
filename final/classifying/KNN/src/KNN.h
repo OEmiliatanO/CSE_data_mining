@@ -44,12 +44,13 @@ public:
     {
         return this->KNN_Method->predict(this->train_data, test_data, k);
     }
+    point_t<U> predict_ex_maxdis_prob(const dataset_t<T, U>& test_data, std::size_t k, double maxdis, double problim)
+    {
+        return this->KNN_Method->predict_ex_maxdis_prob(this->train_data, test_data, k, maxdis, problim);
+    }
 	void set_knn_method(std::shared_ptr<KNN_Method_t<T, U>> km)
     {
     	this->KNN_Method = km;
     }
 };
-// KNN_t<T, U> KNN;
-// KNN.train(...);
-// KNN.predict(test_data, k);
 #endif

@@ -35,7 +35,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 	}
 	//std::cerr << "===================================================================" << std::endl;
 	
-    SVM_t<data_t, label_t> SVM{0.5, 1e-7};
+    SVM_t<data_t, label_t> SVM{5, 1e-7};
 	std::size_t repeat = (std::size_t)std::atoi(argv[4]);
 	double macc = 0.0;
 	double stand = 0.0;
@@ -44,6 +44,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 	for (std::size_t t = 0; t < repeat; ++t)
 	{
 		//std::cerr << "Train the SVM..." << t << std::endl;
+        for (auto& x : dataloader.train_data.label) x = (x == 0 ? -1 : x);
 		SVM.fit(dataloader.train_data);
 		//std::cerr << "Predict the test data..." << std::endl;
 		point_t<label_t> result = SVM.predict(dataloader.test_data);
@@ -56,6 +57,12 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 		macc += acc;
 		sum += acc;
 		sum2 += acc*acc;
+
+        result = SVM.predict(dataloader.train_data);
+        //for (auto& y : result) y = (y == -1 ? 0 : y);
+		auto validation_n = (int)score<label_t>(result, dataloader.train_data.label, correct);
+		double validacc = (double)validation_n/result.size()*100;
+        std::cerr << "valid acc = " << validacc << std::endl;
 	}
 	std::chrono::steady_clock::time_point ed = std::chrono::steady_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(ed - st).count() / 1000000.0 / repeat;
