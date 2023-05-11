@@ -17,18 +17,23 @@ public:
     // data
     dataset_t<T, U> train_data, test_data;
 
-    std::fstream fs;
-
     Dataloader_t() = default;
 
     void load(std::string_view& path, dataset_t<T, U>& dataset, bool contain_labels = true);
-    void load_test(std::string_view&& path, bool contain_labels = true);
+    
     void load_test(std::string_view& path, bool contain_labels = true);
-    void load_train(std::string_view&& path, bool contain_labels = true);
+    void load_test(std::string_view&& path, bool contain_labels = true);
+    
     void load_train(std::string_view& path, bool contain_labels = true);
+    void load_train(std::string_view&& path, bool contain_labels = true);
+
+    void load_label(std::string_view& path, dataset_t<T, U>& dataset);
+    void load_train_label(std::string_view& path);
+    void load_test_label(std::string_view& path);
 	
 	void load_train(const dataset_t<T, U>& dataset);
 	void load_train(dataset_t<T, U>&& dataset);
+
 	void load_test(const dataset_t<T, U>& dataset);
 	void load_test(dataset_t<T, U>&& dataset);
 };
@@ -69,7 +74,7 @@ void Dataloader_t<T, U>::load(std::string_view& path, dataset_t<T, U>& dataset, 
 		U label = 0;
 		if (contain_labels)
 		{
-			label = std::atoi(alldata.back().data());
+			label = (U)std::atoi(alldata.back().data());
         	alldata.pop_back();
 		}
 
@@ -77,7 +82,7 @@ void Dataloader_t<T, U>::load(std::string_view& path, dataset_t<T, U>& dataset, 
         for (auto& s : alldata)
         {
             char *end_;
-            T x = std::strtod(s.data(), &end_);
+            T x = (T)std::strtod(s.data(), &end_);
             data.emplace_back(std::move(x));
         }
         dataset.emplace_back(std::move(data), std::move(label));
@@ -127,5 +132,39 @@ void Dataloader_t<T, U>::load_train(dataset_t<T, U>&& dataset)
     this->train_data = std::move(dataset);
 }
 
+template<typename T, typename U>
+void Dataloader_t<T, U>::load_label(std::string_view& path, dataset_t<T, U>& dataset)
+{
+    std::fstream fs;
+    fs.open(path.data());
+    if (fs.fail())
+    {
+        std::cerr << "fail to open the file: " << path << std::endl;
+        std::cerr << "stop the process ..." << std::endl;
+        exit(1);
+    }
+    std::string s;
+    std::size_t i = 0;
+    while (fs >> s)
+    {
+        std::string_view rawdata{s};
+        std::vector<std::string_view> alldata = split(rawdata, ',');
+		
+		U label = 0;
+		label = (U)std::atoi(alldata.back().data());
+        dataset.label[i++] = label;
+    }
+}
 
+template<typename T, typename U>
+void Dataloader_t<T, U>::load_train_label(std::string_view& path)
+{
+    this->load_label(path, this->train_data);
+}
+
+template<typename T, typename U>
+void Dataloader_t<T, U>::load_test_label(std::string_view& path)
+{
+    this->load_label(path, this->test_data);
+}
 #endif
