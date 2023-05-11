@@ -25,7 +25,7 @@ template<typename T, typename U>
 std::size_t kmeans_t<T, U>::assignment(const point_t<T>& x, const std::vector<point_t<T>>& centers)
 {
     std::pair<double, std::size_t> p = std::make_pair(std::numeric_limits<double>::max(), (std::size_t)0);
-    for (std::size_t i = 0; i < centers.size(); ++i)
+    for (std::size_t i = 0; i < this->k; ++i)
         p = std::min(p, std::make_pair(euclidean_dist(x, centers[i]), i));
     return p.second;
 }
@@ -87,7 +87,11 @@ point_t<std::size_t> kmeans_t<T, U>::fit(const std::vector<point_t<T>>& X)
             bk = true;
 		}
     }
+
 	this->centers_ = std::move(centers);
+    this->centers_.insert(this->centers_.begin(), point_t<T>{});
+    for (auto& lb : labels) ++lb;
+
     return labels;
 }
 
