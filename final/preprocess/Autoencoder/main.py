@@ -22,6 +22,7 @@ epoch = 500
 
 input_dim = int(sys.argv[1])
 output_dim = int(sys.argv[2])
+print(f"in = {input_dim}, out = {output_dim}")
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print(f"read_csv:{sys.argv[3]}")
 rX = pd.read_csv(sys.argv[3]).to_numpy()
@@ -29,6 +30,8 @@ rX = np.nan_to_num(rX, nan = 0, posinf = 999999, neginf = -999999)
 print(f"read_csv:{sys.argv[4]}")
 rY = pd.read_csv(sys.argv[4]).to_numpy()
 
+print(rX.shape)
+print(rY.shape)
 X = np.array_split(rX, rX.shape[0]//batch_size)
 Y = np.array_split(rY, rY.shape[0]//batch_size)
 X = np.array(X, dtype = np.float64)
