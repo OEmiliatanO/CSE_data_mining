@@ -1,0 +1,3 @@
+KNOWN_LABEL = ["KIRC", "BRCA", "LUAD"]
+UNKNOWN_LABEL = ["COAD", "PRAD"]
+
