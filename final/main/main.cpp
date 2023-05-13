@@ -103,18 +103,55 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 	}
 	std::cerr << "===================================================================" << std::endl;
 	
+	double macc_ = 0, sum_ = 0, sum2_ = 0;
 	std::chrono::steady_clock::time_point st = std::chrono::steady_clock::now();
 	for (std::size_t _ = 0; _ < repeats; ++_)
 	{
 		// "<classifying>-<clustering>, e.g. KNN-DBSCAN"
         std::cerr << "classifying..." << std::endl;
         auto classifying_result = Fn[args["-classifying"]](args, dataloader, KNOWN_CNT);
-        std::cerr << "clustering..." << std::endl;
-        auto clustering_result = Fn[args["-clustering"]](args, dataloader, KNOWN_CNT+UNKNOWN_CNT);
+
+		dataset_t<data_t, label_t> unknown_data;
+		for (std::size_t i = 0; i < dataloader.test_data.size(); ++i)
+			if (classifying_result[i] == 0)
+				unknown_data.emplace_back(dataloader.test_data.data[i], dataloader.test_data.label[i]);
+
+		Dataloader_t unknown_dataloader;
+		unknown_dataloader.load_test(unknown_data);
+        
+		std::cerr << "clustering..." << std::endl;
+        auto clustering_result = Fn[args["-clustering"]](args, unknown_dataloader, UNKNOWN_CNT);
+
+		for (std::size_t i = 0, j = 0; j < dataloader.test_data.size(); ++i)
+			if (classifying_result[i] == 0)
+				classifying_result[i] = KNOWN_CNT + clustering_result[j++];
+
+		std::vector<label_t> mapping;
+		for (label_t i = KNOWN_CNT + 1; i <= KNOWN_CNT + UNKNOWN_CNT; ++i)
+			mapping.emplace_back(i);
+
+		do
+		{
+			long long sum = 0;
+			for (std::size_t i = 0; i < dataloader.test_data.size(); ++i)
+				sum += (classifying_result[i] > KNOWN_CNT && dataloader.test_data.label[i] == mapping[classifying_result[i] - KNOWN_CNT - 1]) | \
+					   (dataloader.test_data.label[i] == classifying_result[i]);
+			double acc = (double)sum/dataloader.test_data.size()*100;
+			final_acc = std::max(final_acc, acc);
+		} while (next_permutation(mapping.begin(), mapping.end()));
+
+		macc_ += final_acc;
+		sum_ += final_acc;
+		sum2_ += final_acc*final_acc;
 	}
+	
+	stand_ = sqrt(abs(sum2_*repeats - sum_*sum_))/repeats;
+	macc_ /= repeats;
+
 	std::chrono::steady_clock::time_point ed = std::chrono::steady_clock::now();
+	std::cout << "acc = " << macc << "(" << stand << ")" << std::endl;
 	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(ed - st).count() / 1000000.0 / repeats;
-	std::cout << duration << std::endl;
+	std::cout << "time: " << duration << std::endl;
 
     return 0;
 }
