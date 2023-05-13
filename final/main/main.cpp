@@ -116,7 +116,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 			if (classifying_result[i] == 0)
 				unknown_data.emplace_back(dataloader.test_data.data[i], dataloader.test_data.label[i]);
 
-		Dataloader_t unknown_dataloader;
+		Dataloader_t<data_t, label_t> unknown_dataloader;
 		unknown_dataloader.load_test(unknown_data);
         
 		std::cerr << "clustering..." << std::endl;
@@ -127,14 +127,15 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 				classifying_result[i] = KNOWN_CNT + clustering_result[j++];
 
 		std::vector<label_t> mapping;
-		for (label_t i = KNOWN_CNT + 1; i <= KNOWN_CNT + UNKNOWN_CNT; ++i)
+		for (label_t i = KNOWN_CNT + 1; i <= (label_t)KNOWN_CNT + (label_t)UNKNOWN_CNT; ++i)
 			mapping.emplace_back(i);
-
+		
+		double final_acc = 0;
 		do
 		{
 			long long sum = 0;
 			for (std::size_t i = 0; i < dataloader.test_data.size(); ++i)
-				sum += (classifying_result[i] > KNOWN_CNT && dataloader.test_data.label[i] == mapping[classifying_result[i] - KNOWN_CNT - 1]) | \
+				sum += (classifying_result[i] > (label_t)KNOWN_CNT && dataloader.test_data.label[i] == mapping[classifying_result[i] - (label_t)KNOWN_CNT - 1]) | \
 					   (dataloader.test_data.label[i] == classifying_result[i]);
 			double acc = (double)sum/dataloader.test_data.size()*100;
 			final_acc = std::max(final_acc, acc);
@@ -145,11 +146,11 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 		sum2_ += final_acc*final_acc;
 	}
 	
-	stand_ = sqrt(abs(sum2_*repeats - sum_*sum_))/repeats;
+	double stand_ = sqrt(abs(sum2_*repeats - sum_*sum_))/repeats;
 	macc_ /= repeats;
 
 	std::chrono::steady_clock::time_point ed = std::chrono::steady_clock::now();
-	std::cout << "acc = " << macc << "(" << stand << ")" << std::endl;
+	std::cout << "acc = " << macc_ << "(" << stand_ << ")" << std::endl;
 	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(ed - st).count() / 1000000.0 / repeats;
 	std::cout << "time: " << duration << std::endl;
 
