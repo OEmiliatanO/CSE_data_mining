@@ -65,7 +65,6 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 	Argparser.add("-DBSCAN_eps");
 
 	// kmeans
-	Argparser.add("-kmeans_k");
 	Argparser.add("-kmeans_converge_lim");
 
     Argparser.parse(argc, argv);
@@ -105,22 +104,29 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 	
 	double macc_ = 0, sum_ = 0, sum2_ = 0;
 	std::chrono::steady_clock::time_point st = std::chrono::steady_clock::now();
+	std::cout << "classifying algorithm: " << args["-classifying"] << std::endl;
+	std::cout << "clustering algorithm: " << args["-clustering"] << std::endl << std::endl;
+	std::cerr << "dataloader.test_data.size() = " << dataloader.test_data.size() << std::endl;
 	for (std::size_t _ = 0; _ < repeats; ++_)
 	{
-		// "<classifying>-<clustering>, e.g. KNN-DBSCAN"
         auto classifying_result = Fn[args["-classifying"]](args, dataloader, KNOWN_CNT);
-
+		
 		dataset_t<data_t, label_t> unknown_data;
+		auto zerocnt = 0;
 		for (std::size_t i = 0; i < dataloader.test_data.size(); ++i)
 			if (classifying_result[i] == 0)
+			{
 				unknown_data.emplace_back(dataloader.test_data.data[i], dataloader.test_data.label[i]);
+				++zerocnt;
+			}
+		std::cerr << "zero cnt = " << zerocnt << std::endl;
 
 		Dataloader_t<data_t, label_t> unknown_dataloader;
 		unknown_dataloader.load_test(unknown_data);
         
         auto clustering_result = Fn[args["-clustering"]](args, unknown_dataloader, UNKNOWN_CNT);
-
-		for (std::size_t i = 0, j = 0; j < dataloader.test_data.size(); ++i)
+		
+		for (std::size_t i = 0, j = 0; i < dataloader.test_data.size(); ++i)
 			if (classifying_result[i] == 0)
 				classifying_result[i] = KNOWN_CNT + clustering_result[j++];
 
@@ -199,11 +205,12 @@ point_t<label_t> SVMs_predict(auto& args, const auto& dataloader, std::size_t KN
 	double punishment = std::stod(args["-SVM_punishment"]);
     
     point_t<label_t> result;
+	result.resize(dataloader.test_data.size());
     for (std::size_t i = 1; i <= KNOWN_CNT; ++i)
     {
         dataset_t<data_t, label_t> dataset_{dataloader.train_data};
         for (auto& x : dataset_.label) x = (x == (label_t)i ? 1LL : -1LL);
-
+		
         SVM_t<data_t, label_t> SVM{punishment, converge_lim};
     	SVM.fit(dataloader.train_data);
     	point_t<label_t> result_ =  SVM.predict(dataloader.test_data);
@@ -215,7 +222,7 @@ point_t<label_t> SVMs_predict(auto& args, const auto& dataloader, std::size_t KN
 
 point_t<label_t> kmeans_fit(auto& args, const auto& dataloader, std::size_t k)
 {
-	double converge_lim = std::stod(args["kmeans_converge_lim"]);
+	double converge_lim = std::stod(args["-kmeans_converge_lim"]);
 
     kmeans_t<data_t, label_t> kmeans{k, converge_lim};
 	return kmeans.fit(dataloader.test_data);
