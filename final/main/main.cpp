@@ -108,7 +108,6 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 	for (std::size_t _ = 0; _ < repeats; ++_)
 	{
 		// "<classifying>-<clustering>, e.g. KNN-DBSCAN"
-        std::cerr << "classifying..." << std::endl;
         auto classifying_result = Fn[args["-classifying"]](args, dataloader, KNOWN_CNT);
 
 		dataset_t<data_t, label_t> unknown_data;
@@ -119,7 +118,6 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 		Dataloader_t<data_t, label_t> unknown_dataloader;
 		unknown_dataloader.load_test(unknown_data);
         
-		std::cerr << "clustering..." << std::endl;
         auto clustering_result = Fn[args["-clustering"]](args, unknown_dataloader, UNKNOWN_CNT);
 
 		for (std::size_t i = 0, j = 0; j < dataloader.test_data.size(); ++i)
