@@ -87,11 +87,11 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
     Dataloader_t<data_t, label_t> dataloader;
     
     std::cerr << "Load the train data..." << std::endl;
-    dataloader.load_train(train_data_path);
+    dataloader.load_train(train_data_path, false);
     dataloader.load_train_label(train_label_path);
 
     std::cerr << "Load the test data..." << std::endl;
-    dataloader.load_test(test_data_path);
+    dataloader.load_test(test_data_path, false);
     dataloader.load_test_label(test_label_path);
     std::cerr << "Complete loading" << std::endl << std::endl;
 	if (args["normalize"] == "true" or args["normalize"] == "1")
@@ -106,9 +106,9 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 	std::chrono::steady_clock::time_point st = std::chrono::steady_clock::now();
 	std::cout << "classifying algorithm: " << args["-classifying"] << std::endl;
 	std::cout << "clustering algorithm: " << args["-clustering"] << std::endl << std::endl;
-	std::cerr << "dataloader.test_data.size() = " << dataloader.test_data.size() << std::endl;
 	for (std::size_t _ = 0; _ < repeats; ++_)
 	{
+        std::cerr << "classifying" << std::endl;
         auto classifying_result = Fn[args["-classifying"]](args, dataloader, KNOWN_CNT);
 		
 		dataset_t<data_t, label_t> unknown_data;
