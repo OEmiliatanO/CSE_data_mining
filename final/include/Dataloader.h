@@ -145,7 +145,6 @@ void Dataloader_t<T, U>::load_label(std::string_view& path, dataset_t<T, U>& dat
     }
     std::string s;
     std::size_t i = 0;
-    std::cerr << "load label, path = " << path << std::endl;
     while (fs >> s)
     {
         std::string_view rawdata{s};
