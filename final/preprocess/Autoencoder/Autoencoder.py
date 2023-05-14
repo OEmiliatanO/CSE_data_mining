@@ -4,7 +4,7 @@ from torch import nn
 class encoder(nn.Module):
     def __init__(self, input_dim, output_dim):
         super().__init__()
-        """
+        
         self.net = nn.Sequential(
             nn.Linear(input_dim, 512),
             nn.ReLU(),
@@ -28,7 +28,7 @@ class encoder(nn.Module):
             nn.ReLU(),
             nn.Linear(2**7, output_dim)
         )
-
+        """
         self.flatten = nn.Flatten()
     def forward(self, x):
         return self.net(x)
@@ -36,6 +36,18 @@ class encoder(nn.Module):
 class decoder(nn.Module):
     def __init__(self, input_dim, output_dim):
         super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(input_dim, 64),
+            nn.ReLU(),
+            nn.Linear(64, 128),
+            nn.ReLU(),
+            nn.Linear(128, 256),
+            nn.ReLU(),
+            nn.Linear(256, 512),
+            nn.ReLU(),
+            nn.Linear(512, output_dim)
+        )
+        """
         self.net = nn.Sequential(
             nn.Linear(input_dim, 2**7),
             nn.ReLU(),
@@ -47,6 +59,7 @@ class decoder(nn.Module):
             nn.ReLU(),
             nn.Linear(2**10, output_dim),
         )
+        """
         self.flatten = nn.Flatten()
     def forward(self, x):
         return self.net(x)

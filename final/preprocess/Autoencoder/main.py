@@ -17,7 +17,7 @@ random.seed(seed)
 torch.backends.cudnn.benchmark = False
 torch.backends.cudnn.deterministic = True
 
-batch_size = 4
+batch_size = 1
 epoch = 500
 
 input_dim = int(sys.argv[1])
@@ -25,10 +25,10 @@ output_dim = int(sys.argv[2])
 print(f"in = {input_dim}, out = {output_dim}")
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print(f"read_csv:{sys.argv[3]}")
-rX = pd.read_csv(sys.argv[3]).to_numpy()
+rX = pd.read_csv(sys.argv[3], header = None).to_numpy()
 rX = np.nan_to_num(rX, nan = 0, posinf = 999999, neginf = -999999)
 print(f"read_csv:{sys.argv[4]}")
-rY = pd.read_csv(sys.argv[4]).to_numpy()
+rY = pd.read_csv(sys.argv[4], header = None).to_numpy()
 
 print(rX.shape)
 print(rY.shape)
@@ -65,15 +65,17 @@ plt.plot(losses)
 plt.savefig(sys.argv[-1])
 
 X = torch.Tensor(rX).to(device)
+print(X.shape)
 Z, decode = encoder(X)
 print(f"final loss = {loss_fn(X, decode)}")
 Z = Z.detach().cpu().numpy()
+print(Z.shape)
 print("save csv", sys.argv[7])
 np.savetxt(sys.argv[7], Z, delimiter = ',')
 
-rX = pd.read_csv(sys.argv[5]).to_numpy()
+rX = pd.read_csv(sys.argv[5], header = None).to_numpy()
 rX = np.nan_to_num(rX, nan = 0, posinf = 999999, neginf = -999999)
-rY = pd.read_csv(sys.argv[6]).to_numpy()
+rY = pd.read_csv(sys.argv[6], header = None).to_numpy()
 
 X = torch.Tensor(rX).to(device)
 Z, decode = encoder(X)
@@ -81,3 +83,5 @@ print(f"final loss = {loss_fn(X, decode)}")
 Z = Z.detach().cpu().numpy()
 print("save csv", sys.argv[8])
 np.savetxt(sys.argv[8], Z, delimiter = ',')
+
+torch.save(encoder.state_dict(), f"AE_{output_dim}.t7")
