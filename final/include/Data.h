@@ -220,6 +220,7 @@ public:
 	/**** operator ****/
 
     // utility
+    std::size_t data_dimension();
     point_t<T> extract(std::size_t column);
     auto extract_with_label(std::size_t column) -> decltype(auto);
 	double delta(const dataset_t<T, U>& other, const std::function<double(const U&, const U&)>& loss);
@@ -447,6 +448,12 @@ std::ostream& operator<<(std::ostream& os, const dataset_t<T, U>& a)
 }
 
 template<typename T, typename U>
+std::size_t dataset_t<T, U>::data_dimension()
+{
+    return this->data.front().size();
+}
+
+template<typename T, typename U>
 point_t<T> dataset_t<T, U>::extract(std::size_t column)
 {
     if (column >= this->size())
@@ -478,6 +485,7 @@ auto dataset_t<T, U>::extract_with_label(std::size_t column) -> decltype(auto)
     }
     return ret;
 }
+
 
 template<typename U>
 double score(const point_t<U>& a, const point_t<U>& b, const std::function<double(const U&, const U&)>& loss)
