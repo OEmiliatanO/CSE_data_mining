@@ -4,6 +4,7 @@
 #include <limits>
 #include <cstdlib>
 #include "Data.h"
+#include "utility.h"
 
 template<typename T, typename U>
 class kmeans_t
@@ -55,7 +56,7 @@ point_t<U> kmeans_t<T, U>::fit(const std::vector<point_t<T>>& X)
         for (auto& ls : label_sizes) ls = 0;
         for (std::size_t i = 0; i < X.size(); ++i)
         {
-            labels[i] = this->assignment(X[i], centers);
+            labels[i] = assign(X[i], centers);
             ++label_sizes[labels[i]];
         }
 
