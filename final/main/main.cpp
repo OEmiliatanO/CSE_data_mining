@@ -12,6 +12,7 @@
 #include "Dataloader.h"
 #include "Datatransformer.h"
 #include "argparser.h"
+#include "utility.h"
 
 using data_t = double;
 using label_t = long long;
@@ -106,28 +107,40 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 	std::chrono::steady_clock::time_point st = std::chrono::steady_clock::now();
 	std::cout << "classifying algorithm: " << args["-classifying"] << std::endl;
 	std::cout << "clustering algorithm: " << args["-clustering"] << std::endl << std::endl;
-
+    
 	for (std::size_t _ = 0; _ < repeats; ++_)
 	{
+        std::vector<point_t<data_t>> centers;
+        std::vector<std::size_t> kindscnt;
+        kindscnt.resize(KNOWN_CNT + 1);
+        centers.resize(UNKNOWN_CNT + KNOWN_CNT + 1);
+        for (auto& x : centers) x.resize(dataloader.test_data.data_dimension());
+
         std::cerr << "classifying" << std::endl;
         auto classifying_result = Fn[args["-classifying"]](args, dataloader, KNOWN_CNT);
 		
 		dataset_t<data_t, label_t> unknown_data;
-		auto zerocnt = 0, unknowncnt = 0, classify_correct = 0;
+		auto unknowncnt = 0, classify_correct = 0;
 		for (std::size_t i = 0; i < dataloader.test_data.size(); ++i)
         {
             if (classifying_result[i] == 0)
-			{
 				unknown_data.emplace_back(dataloader.test_data.data[i], dataloader.test_data.label[i]);
-				++zerocnt;
-			}
+            
             if (dataloader.test_data.label[i] > (label_t)KNOWN_CNT)
                 ++unknowncnt;
+
             if (classifying_result[i] == dataloader.test_data.label[i])
                 ++classify_correct;
+
+            centers[classifying_result[i]] += dataloader.test_data[i];
+            ++kindscnt[classifying_result[i]];
         }
+
+        for (std::size_t i = 1; i <= KNOWN_CNT; ++i)
+            centers[i] /= kindscnt[i];
+
         std::cerr << classifying_result << std::endl;
-        std::cerr << "classify unknown cnt = " << zerocnt << std::endl;
+        std::cerr << "classify unknown cnt = " << kindscnt[0] << std::endl;
         std::cerr << "truely unknown cnt = " << unknowncnt << std::endl;
         std::cerr << "classify acc = " << (double)classify_correct / (dataloader.test_data.size() - unknowncnt) << std::endl;
 
@@ -137,6 +150,12 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
         auto clustering_result = Fn[args["-clustering"]](args, unknown_dataloader, UNKNOWN_CNT);
         std::cerr << clustering_result << std::endl;
 		
+        for (std::size_t i = 0; i < unknown_dataloader.test_data.size(); ++i)
+        {
+            if (clustering_result[i] == 0)
+                clustering_result[i] = (label_t)assign(unknown_dataloader.test_data[i], centers);
+        }
+
 		for (std::size_t i = 0, j = 0; i < dataloader.test_data.size(); ++i)
 			if (classifying_result[i] == 0)
 				classifying_result[i] = KNOWN_CNT + clustering_result[j++];
@@ -223,7 +242,9 @@ point_t<label_t> SVMs_predict(auto& args, const auto& dataloader, std::size_t KN
         for (auto& x : dataset_.label) x = (x == (label_t)i ? 1LL : -1LL);
 		
         SVM_t<data_t, label_t> SVM{punishment, converge_lim};
+        std::cerr << "SVM fitting..." << std::endl;
     	SVM.fit(dataloader.train_data);
+        std::cerr << "SVM fitting completed" << std::endl;
     	point_t<label_t> result_ =  SVM.predict(dataloader.test_data);
         for (std::size_t j = 0; j < result_.size(); ++j)
             result[j] = (result_[j] == 1LL ? (label_t)i : 0LL);
