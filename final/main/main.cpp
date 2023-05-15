@@ -106,25 +106,36 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 	std::chrono::steady_clock::time_point st = std::chrono::steady_clock::now();
 	std::cout << "classifying algorithm: " << args["-classifying"] << std::endl;
 	std::cout << "clustering algorithm: " << args["-clustering"] << std::endl << std::endl;
+
 	for (std::size_t _ = 0; _ < repeats; ++_)
 	{
         std::cerr << "classifying" << std::endl;
         auto classifying_result = Fn[args["-classifying"]](args, dataloader, KNOWN_CNT);
 		
 		dataset_t<data_t, label_t> unknown_data;
-		auto zerocnt = 0;
+		auto zerocnt = 0, unknowncnt = 0, classify_correct = 0;
 		for (std::size_t i = 0; i < dataloader.test_data.size(); ++i)
-			if (classifying_result[i] == 0)
+        {
+            if (classifying_result[i] == 0)
 			{
 				unknown_data.emplace_back(dataloader.test_data.data[i], dataloader.test_data.label[i]);
 				++zerocnt;
 			}
-		std::cerr << "zero cnt = " << zerocnt << std::endl;
+            if (dataloader.test_data.label[i] > (label_t)KNOWN_CNT)
+                ++unknowncnt;
+            if (classifying_result[i] == dataloader.test_data.label[i])
+                ++classify_correct;
+        }
+        std::cerr << classifying_result << std::endl;
+        std::cerr << "classify unknown cnt = " << zerocnt << std::endl;
+        std::cerr << "truely unknown cnt = " << unknowncnt << std::endl;
+        std::cerr << "classify acc = " << (double)classify_correct / (dataloader.test_data.size() - unknowncnt) << std::endl;
 
 		Dataloader_t<data_t, label_t> unknown_dataloader;
 		unknown_dataloader.load_test(unknown_data);
         
         auto clustering_result = Fn[args["-clustering"]](args, unknown_dataloader, UNKNOWN_CNT);
+        std::cerr << clustering_result << std::endl;
 		
 		for (std::size_t i = 0, j = 0; i < dataloader.test_data.size(); ++i)
 			if (classifying_result[i] == 0)
@@ -217,6 +228,7 @@ point_t<label_t> SVMs_predict(auto& args, const auto& dataloader, std::size_t KN
         for (std::size_t j = 0; j < result_.size(); ++j)
             result[j] = (result_[j] == 1LL ? (label_t)i : 0LL);
     }
+    std::cerr << result << std::endl;
     return result;
 }
 
