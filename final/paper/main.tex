@@ -50,7 +50,7 @@
 \title{TBD}
 
 \author{Hsieh Cheng-Han, Hsu Ting-Hao, Sun Shih-Yu, Lu Che-Yuan, Huang Chia-Yen}
-\date{June 2023}
+\date{May 2023}
 \maketitle
 
 \section*{Abstract}
@@ -61,26 +61,73 @@
 \section{Related works}
 \label{sec:Related works}
 
+\subsection*{Data preprocess}
+
+\bf{Autoencoder (AE)}: \rm{Autoencoder}
+
+\bf{Principal components analysis (PCA)}: \rm{Principal components analysis}
+
+\subsection*{Classification algorithm}
+
+\bf{k-nearest neighbors (KNN) classification algorithm}: \rm{The} KNN classification algorithm is a supervised learning 
+method which is first developed by Fix and Hodges \cite{10.2307/1403797}. The idea of KNN is based on the idiom, 
+"birds of a feather flock together". By picking the $k$-nearest neighbors of a data point, the unkonwn class label 
+can be determined. Lots of works \cite{6528591} \cite{8276012} \cite{vijayan2014study} show the fact that KNN performs  
+well for prediction of diabetes disease.
+
+\bf{support vector machine (SVM)}: \rm{Given} a set of training datas, where each data is labeled as a binary class, such as 
+$0$ and $1$, SVM training algorithm creates a model that assigns new examples to the binay labels by making it a non-probabilistic 
+binary linear classifier. In addition, accroding to \cite{amari1999improving} \cite{hofmann2006support}, SVM can also use a 
+method called kernel trick to effectively perform non-linear classification by implicitly mapping its inputs into a high-dimensional 
+feature space.
+
+\bf{neural network}: \rm{Neural} network have been used in many fields to deal with intricate datas. With input layer, hidden 
+layer and output layer constructed by neurons, each data in dataset is processed while passing through neurons, layer by layer. 
+After the processing, the outcome can be used to predict.Using back propogation, the accuracy of predictions increase in each 
+training. In order to construct the hidden layer more efficient, NAS(Neural Arcitecture Searching) is used to search suitable 
+structure for hidden layer, increasing the accuracy.According to \cite{Gadekallu2020}\cite{Beghriche2021}, many neural network 
+have been constructed and trained already, with high efficiency and accuracy in prediction of diabetes.
+
+\subsection*{Clustering algorithm}
+
+\bf{DBSCAN}: \rm{DBSCAN}
+
+\bf{kmeans}: \rm{kmeans}
+
 \section{main section}
 
 \section{Experiment result}
   \begin{table*}[htb]
     \newcommand{\z}{\phantom{0}}
-    \caption{\textsc{Comparison of Classification Techniques.}}
+    \caption{\textsc{Comparison of Classification Techniques. (Arrhythmia data set)}}
       \vspace{-\baselineskip}
     \begin{tabular}{@{}lccccccl@{}}\toprule
-    Technique & Search (s)       & testA                              & testA-normalized             & testB                          & testB-normalized \\ \midrule
-    KNN-Brute-Force  & $0.009$   & $76.6169 \pm \z{0}$                & $\bf{80.597 \pm 0}$          & $78 \pm \z{0}$                 & $\bf{80 \pm \z{0}}$\\
-    KNN-ANNOY-DFS    & $0.003$   & $75.2438 \pm \z{1.8762}$           & $76.1294 \pm 2.0977$         & $74.9 \pm \z{2.5554}$          & $76.4 \pm \z{2.5377}$\\
-    KNN-ANNOY-BFS    & $0.012$   & $76.6567 \pm \z{0.5340}$           & $\bf{80.597 \pm 0}$          & $\bf{78.16 \pm \z{0.7310}}$    & $\bf{80 \pm \z{0}}$\\
-    decision tree    & $0.009$   & $74.1294 \pm \z{0}$                & $74.1294 \pm 0$              & $76 \pm \z{0}$                 & $77 \pm \z{0}$\\
-    random forest    & $0.004$   & $78.6965 \pm \z{1.7510}$           & $78.5373 \pm 1.452$          & $77.98 \pm \z{2.083}$          & $77.5 \pm \z{2.516}$\\
-    SVM-GA           & $1.846$   & $76.6616 \pm \z{4.0301}$           & $75.9219 \pm 2.736$          & $75 \pm \z{2}$                 & $75 \pm \z{4}$\\
-    Neural Network   & $3.2$     & $\bf{81.7910 \pm \z{2.0294}}$      & $80.2985 \pm 1.4106$         & $78 \pm \z{1.6733}$            & $77.5 \pm \z{1.892}$\\
-    Naive Bayes classifier-GA  & $14.29$ & $78.5353 \pm \z{0.0322}$   & $72.6866 \pm 0.0237$         & $77.4038 \pm \z{0.0626}$       & $71 \pm \z{0.0289}$\\
-    PLA-pocket       & $0.00052$ & $63.682 \pm \z{0}$                 & $3.162 \pm 0$                & $63 \pm \z{0}$                 & $3.162 \pm \z{0}$\\ \midrule
+    Method                    & Search (s) & acc                               & acc (normalized)             & acc (PCA-30)                   & acc (AE-30)\\ \midrule
+    KNN-Brute-Force + DBSCAN  & $0.009$   & $76.6169 \pm \z{0}$                & $\bf{80.597 \pm 0}$          & $78 \pm \z{0}$                 & $\bf{80 \pm \z{0}}$\\
+    KNN-ANNOY-BFS + DBSCAN    & $0.012$   & $76.6567 \pm \z{0.5340}$           & $\bf{80.597 \pm 0}$          & $\bf{78.16 \pm \z{0.7310}}$    & $\bf{80 \pm \z{0}}$\\
+    SVM + DBSCAN              & $1.846$   & $76.6616 \pm \z{0}$                & $75.9219 \pm 0$              & $75 \pm \z{2}$                 & $75 \pm \z{4}$\\
+    KNN-Brute-Force + kmeans  & $0.009$   & $76.6169 \pm \z{0}$                & $\bf{80.597 \pm 0}$          & $78 \pm \z{0}$                 & $\bf{80 \pm \z{0}}$\\
+    KNN-ANNOY-BFS + kmeans    & $0.012$   & $76.6567 \pm \z{0}$                & $\bf{80.597 \pm 0}$          & $\bf{78.16 \pm \z{0.7310}}$    & $\bf{80 \pm \z{0}}$\\
+    SVM + kmeans              & $1.846$   & $76.6616 \pm \z{0}$                & $75.9219 \pm 0$              & $75 \pm \z{2}$                 & $75 \pm \z{4}$\\
     \end{tabular}
-    \label{table:overall}
+    \label{table:Arrhythmia_result}
+      \vspace{-\baselineskip}
+  \end{table*}
+
+  \begin{table*}[htb]
+    \newcommand{\z}{\phantom{0}}
+    \caption{\textsc{Comparison of Classification Techniques. (gene expression cancer RNA-Seq data set)}}
+      \vspace{-\baselineskip}
+    \begin{tabular}{@{}lccccccl@{}}\toprule
+    Method                    & Search (s) & acc                               & acc (normalized)             & acc (PCA-30)                   & acc (AE-30)\\ \midrule
+    KNN-Brute-Force + DBSCAN  & $0.009$   & $76.6169 \pm \z{0}$                & $\bf{80.597 \pm 0}$          & $78 \pm \z{0}$                 & $\bf{80 \pm \z{0}}$\\
+    KNN-ANNOY-BFS + DBSCAN    & $0.012$   & $76.6567 \pm \z{0.5340}$           & $\bf{80.597 \pm 0}$          & $\bf{78.16 \pm \z{0.7310}}$    & $\bf{80 \pm \z{0}}$\\
+    SVM + DBSCAN              & $1.846$   & $76.6616 \pm \z{4.0301}$           & $75.9219 \pm 2.736$          & $75 \pm \z{2}$                 & $75 \pm \z{4}$\\
+    KNN-Brute-Force + kmeans  & $0.009$   & $76.6169 \pm \z{0}$                & $\bf{80.597 \pm 0}$          & $78 \pm \z{0}$                 & $\bf{80 \pm \z{0}}$\\
+    KNN-ANNOY-BFS + kmeans    & $0.012$   & $76.6567 \pm \z{0.5340}$           & $\bf{80.597 \pm 0}$          & $\bf{78.16 \pm \z{0.7310}}$    & $\bf{80 \pm \z{0}}$\\
+    SVM + kmeans              & $1.846$   & $76.6616 \pm \z{4.0301}$           & $75.9219 \pm 2.736$          & $75 \pm \z{2}$                 & $75 \pm \z{4}$\\
+    \end{tabular}
+    \label{table:gene_expression_result}
       \vspace{-\baselineskip}
   \end{table*}
   
