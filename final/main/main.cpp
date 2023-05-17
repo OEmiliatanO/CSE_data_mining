@@ -242,14 +242,11 @@ point_t<label_t> SVMs_predict(auto& args, const auto& dataloader, std::size_t KN
         for (auto& x : dataset_.label) x = (x == (label_t)i ? 1LL : -1LL);
 		
         SVM_t<data_t, label_t> SVM{punishment, converge_lim};
-        std::cerr << "SVM fitting..." << std::endl;
     	SVM.fit(dataloader.train_data);
-        std::cerr << "SVM fitting completed" << std::endl;
     	point_t<label_t> result_ =  SVM.predict(dataloader.test_data);
         for (std::size_t j = 0; j < result_.size(); ++j)
             result[j] = (result_[j] == 1LL ? (label_t)i : 0LL);
     }
-    std::cerr << result << std::endl;
     return result;
 }
 
