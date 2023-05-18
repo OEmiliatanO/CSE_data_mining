@@ -71,6 +71,7 @@ public:
 
 	// size
     std::size_t size() const noexcept { return this->x.size(); }
+    bool empty() const noexcept { return this->x.empty(); }
     void resize(std::size_t n) { this->x.resize(n); }
 
     // clear
