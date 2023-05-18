@@ -79,29 +79,30 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
     std::string_view test_data_path  = args["-test_data_path"];
     std::string_view train_label_path = args["-train_label_path"];
     std::string_view test_label_path  = args["-test_label_path"];
-    std::cerr << "Train data path is " << train_data_path << std::endl;
-    std::cerr << "Train label path is " << train_label_path << std::endl;
-    std::cerr << "Test data path is " << test_data_path << std::endl;
-    std::cerr << "Test label path is " << test_label_path << std::endl;
+	std::cout << "===================================================" << std::endl;
+    std::cout << "Train data: " << train_data_path << std::endl;
+    std::cout << "Train label: " << train_label_path << std::endl;
+    std::cout << "Test data: " << test_data_path << std::endl;
+    std::cout << "Test label: " << test_label_path << std::endl << std::endl;
 
     // data is double, label is int
     Dataloader_t<data_t, label_t> dataloader;
     
-    std::cerr << "Load the train data..." << std::endl;
+    std::cout << "Load the train data..." << std::endl;
     dataloader.load_train(train_data_path, false);
     dataloader.load_train_label(train_label_path);
 
-    std::cerr << "Load the test data..." << std::endl;
+    std::cout << "Load the test data..." << std::endl;
     dataloader.load_test(test_data_path, false);
     dataloader.load_test_label(test_label_path);
     std::cerr << "Complete loading" << std::endl << std::endl;
 	if (args["normalize"] == "true" or args["normalize"] == "1")
 	{
-		//std::cerr << "Normalize the dataset..." << std::endl;
+		std::cout << "Normalize the dataset..." << std::endl;
 		dataloader.load_train(Datatransformer_t<data_t, label_t>::normalize(dataloader.train_data));
 		dataloader.load_test(Datatransformer_t<data_t, label_t>::normalize(dataloader.test_data));
 	}
-	std::cerr << "===================================================================" << std::endl;
+	std::cout << "===================================================================" << std::endl;
 	
 	double macc_ = 0, sum_ = 0, sum2_ = 0;
 	std::chrono::steady_clock::time_point st = std::chrono::steady_clock::now();
@@ -110,13 +111,14 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
     
 	for (std::size_t _ = 0; _ < repeats; ++_)
 	{
+		std::cout << _ << "-th fitting...";
         std::vector<point_t<data_t>> centers;
         std::vector<std::size_t> kindscnt;
         kindscnt.resize(KNOWN_CNT + 1);
         centers.resize(UNKNOWN_CNT + KNOWN_CNT + 1);
         for (auto& x : centers) x.resize(dataloader.test_data.data_dimension());
 
-        std::cerr << "classifying" << std::endl;
+        std::cerr << "classifying..." << std::endl;
         auto classifying_result = Fn[args["-classifying"]](args, dataloader, KNOWN_CNT);
 		
 		dataset_t<data_t, label_t> unknown_data;
@@ -147,6 +149,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 		Dataloader_t<data_t, label_t> unknown_dataloader;
 		unknown_dataloader.load_test(unknown_data);
         
+		std::cerr << "clustering..." << std::endl;
         auto clustering_result = Fn[args["-clustering"]](args, unknown_dataloader, UNKNOWN_CNT);
         std::cerr << clustering_result << std::endl;
 		
