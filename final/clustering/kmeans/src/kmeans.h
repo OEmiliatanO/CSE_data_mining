@@ -30,17 +30,17 @@ point_t<U> kmeans_t<T, U>::fit(const std::vector<point_t<T>>& X)
 	auto try_cnt = 0;
 
 	point_t<U> labels;
+    if (X.size() < this->k) { labels.resize(X.size()); return labels; }
 	std::vector<point_t<T>> centers;
 	std::vector<point_t<T>> ncenters;
 	std::vector<std::size_t> label_sizes;
 
 	centers.resize(this->k);
 	for (auto& x : centers) x.resize(X.front().size());
-		ncenters.resize(this->k);
+	ncenters.resize(this->k);
 	for (auto& x : ncenters) x.resize(X.front().size());
 	labels.resize(X.size());
 	label_sizes.resize(this->k);
-
     std::vector<std::size_t> choosep;
     for (std::size_t i = 0; i < X.size(); ++i)
         choosep.emplace_back(i);
@@ -55,7 +55,7 @@ RETRY:
 
 		// random initialize center
 		for (std::size_t i = 0; i < this->k; ++i)
-            centers[i] = X[choosep[i]];
+            centers[i] = X[choosep[i % choosep.size()]];
 		
 		bool bk = false;
 		while (true)
