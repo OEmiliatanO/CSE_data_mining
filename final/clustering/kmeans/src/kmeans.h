@@ -3,6 +3,7 @@
 #include <vector>
 #include <limits>
 #include <cstdlib>
+#include <random>
 #include "Data.h"
 #include "utility.h"
 
@@ -23,6 +24,9 @@ public:
 template<typename T, typename U>
 point_t<U> kmeans_t<T, U>::fit(const std::vector<point_t<T>>& X)
 {
+    std::random_device rd;
+    std::default_random_engine gen(rd());
+
 	auto try_cnt = 0;
 
 	point_t<U> labels;
@@ -37,15 +41,21 @@ point_t<U> kmeans_t<T, U>::fit(const std::vector<point_t<T>>& X)
 	labels.resize(X.size());
 	label_sizes.resize(this->k);
 
+    std::vector<std::size_t> choosep;
+    for (std::size_t i = 0; i < X.size(); ++i)
+        choosep.emplace_back(i);
+
 RETRY:
 	while (try_cnt++ <= 10)
 	{
+        std::shuffle(choosep.begin(), choosep.end(), gen);
+
 		std::fill(label_sizes.begin(), label_sizes.end(), 0);
 		for (auto& x : ncenters) x.fill0();
-		
+
 		// random initialize center
 		for (std::size_t i = 0; i < this->k; ++i)
-			centers[i] = X[random() % X.size()];
+            centers[i] = X[choosep[i]];
 		
 		bool bk = false;
 		while (true)
