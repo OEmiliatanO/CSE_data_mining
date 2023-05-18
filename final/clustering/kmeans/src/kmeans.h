@@ -23,7 +23,6 @@ public:
 template<typename T, typename U>
 point_t<U> kmeans_t<T, U>::fit(const std::vector<point_t<T>>& X)
 {
-    // random initialize center
 	auto try_cnt = 0;
 
 	point_t<U> labels;
@@ -38,10 +37,13 @@ point_t<U> kmeans_t<T, U>::fit(const std::vector<point_t<T>>& X)
 	labels.resize(X.size());
 	label_sizes.resize(this->k);
 
-	while (try_cnt++ <= 1000)
+RETRY:
+	while (try_cnt++ <= 10)
 	{
 		std::fill(label_sizes.begin(), label_sizes.end(), 0);
 		for (auto& x : ncenters) x.fill0();
+		
+		// random initialize center
 		for (std::size_t i = 0; i < this->k; ++i)
 			centers[i] = X[random() % X.size()];
 		
@@ -68,7 +70,7 @@ point_t<U> kmeans_t<T, U>::fit(const std::vector<point_t<T>>& X)
 				ncenters[labels[i]] += X[i];
 			for (std::size_t i = 0; i < this->k; ++i)
 			{
-				if (label_sizes[i] == 0) { std::cerr << "label(" << i << ") has zero member. exit..." << std::endl; exit(1); }
+				if (label_sizes[i] == 0) goto RETRY;
 				ncenters[i] /= (double)label_sizes[i];
 			}
 			std::swap(centers, ncenters);

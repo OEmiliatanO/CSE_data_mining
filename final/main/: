@@ -111,7 +111,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
     
 	for (std::size_t _ = 0; _ < repeats; ++_)
 	{
-		std::cout << _ << "-th fitting..." << std::endl;
+		std::cout << _ << "-th fitting...";
         std::vector<point_t<data_t>> centers;
         std::vector<std::size_t> kindscnt;
         kindscnt.resize(KNOWN_CNT + 1);
@@ -187,7 +187,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 	macc_ /= repeats;
 
 	std::chrono::steady_clock::time_point ed = std::chrono::steady_clock::now();
-	std::cout << "acc = " << macc_ << "%(" << stand_ << ")" << std::endl;
+	std::cout << "acc = " << macc_ << "(" << stand_ << ")" << std::endl;
 	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(ed - st).count() / 1000000.0 / repeats;
 	std::cout << "time: " << duration << std::endl;
 
