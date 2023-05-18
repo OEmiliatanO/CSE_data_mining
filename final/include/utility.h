@@ -13,4 +13,7 @@ std::size_t assign(const U& x, const std::vector<T>& centers)
     return res.second;
 }
 
+template<typename T>
+double sign(T x) { return (x > 0 ? 1 : -1); }
+
 #endif
