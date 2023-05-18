@@ -25,19 +25,23 @@ point_t<U> kmeans_t<T, U>::fit(const std::vector<point_t<T>>& X)
 {
     // random initialize center
 	auto try_cnt = 0;
+
+	point_t<U> labels;
+	std::vector<point_t<T>> centers;
+	std::vector<point_t<T>> ncenters;
+	std::vector<std::size_t> label_sizes;
+
+	centers.resize(this->k);
+	for (auto& x : centers) x.resize(X.front().size());
+		ncenters.resize(this->k);
+	for (auto& x : ncenters) x.resize(X.front().size());
+	labels.resize(X.size());
+	label_sizes.resize(this->k);
+
 	while (try_cnt++ <= 1000)
 	{
-		std::vector<point_t<T>> centers;
-		std::vector<point_t<T>> ncenters;
-		point_t<U> labels;
-		std::vector<std::size_t> label_sizes;
-		
-		centers.resize(this->k);
-		for (auto& x : centers) x.resize(X.front().size());
-		ncenters.resize(this->k);
-		for (auto& x : ncenters) x.resize(X.front().size());
-		labels.resize(X.size());
-		label_sizes.resize(this->k);
+		std::fill(label_sizes.begin(), label_sizes.end(), 0);
+		for (auto& x : ncenters) x.fill0();
 		for (std::size_t i = 0; i < this->k; ++i)
 			centers[i] = X[random() % X.size()];
 		
@@ -85,6 +89,7 @@ point_t<U> kmeans_t<T, U>::fit(const std::vector<point_t<T>>& X)
 
 		return labels;
 	}
+	return labels;
 }
 
 template<typename T, typename U>
