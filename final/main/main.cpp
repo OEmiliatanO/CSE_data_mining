@@ -7,6 +7,7 @@
 #include "Brute.h"
 #include "Annoy.h"
 #include "SVM.h"
+#include "svm_kernel.h"
 #include "kmeans.h"
 #include "DBSCAN.h"
 #include "Dataloader.h"
@@ -177,7 +178,8 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 			double acc = (double)sum/dataloader.test_data.size()*100;
 			final_acc = std::max(final_acc, acc);
 		} while (next_permutation(mapping.begin(), mapping.end()));
-
+        
+        std::cout << "acc: " << final_acc << std::endl << std::endl;
 		macc_ += final_acc;
 		sum_ += final_acc;
 		sum2_ += final_acc*final_acc;
@@ -245,6 +247,7 @@ point_t<label_t> SVMs_predict(auto& args, const auto& dataloader, std::size_t KN
         for (auto& x : dataset_.label) x = (x == (label_t)i ? 1LL : -1LL);
 		
         SVM_t<data_t, label_t> SVM{punishment, converge_lim};
+        SVM.kernel = std::make_shared<sigmoid_kernel<data_t>>(0.000001, 1);
     	SVM.fit(dataloader.train_data);
     	point_t<label_t> result_ =  SVM.predict(dataloader.test_data);
         for (std::size_t j = 0; j < result_.size(); ++j)
@@ -258,6 +261,5 @@ point_t<label_t> kmeans_fit(auto& args, const auto& dataloader, std::size_t k)
 	double converge_lim = std::stod(args["-kmeans_converge_lim"]);
 
     kmeans_t<data_t, label_t> kmeans{k, converge_lim};
-	std::cerr << "kmeans fitting..." << std::endl;
 	return kmeans.fit(dataloader.test_data);
 }
