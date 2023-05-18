@@ -141,7 +141,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
         for (std::size_t i = 1; i <= KNOWN_CNT; ++i)
             centers[i] /= kindscnt[i];
 
-        std::cerr << classifying_result << std::endl;
+        //std::cerr << classifying_result << std::endl;
         std::cerr << "classify unknown cnt = " << kindscnt[0] << std::endl;
         std::cerr << "truely unknown cnt = " << unknowncnt << std::endl;
         std::cerr << "classify acc = " << (double)classify_correct / (dataloader.test_data.size() - unknowncnt) << std::endl;
@@ -151,7 +151,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
         
 		std::cerr << "clustering..." << std::endl;
         auto clustering_result = Fn[args["-clustering"]](args, unknown_dataloader, UNKNOWN_CNT);
-        std::cerr << clustering_result << std::endl;
+        //std::cerr << clustering_result << std::endl;
 		
         for (std::size_t i = 0; i < unknown_dataloader.test_data.size(); ++i)
         {
