@@ -86,7 +86,7 @@ template<typename T, typename Q>
 void SVM_t<T, Q>::SMO()
 {
     std::random_device rd;
-    std::default_random_engine gen(rd());
+    std::default_random_engine gen(0);
     std::uniform_real_distribution<> unid(0, this->C);
     alpha.clear();
     alpha.resize(X.size());
@@ -146,6 +146,11 @@ void SVM_t<T, Q>::SMO()
                 W1 -= 0.5*alpha[n]*alpha[m] * Y[n]*Y[m] * (*this->kernel)(X[n], X[m]);
         }
         //std::cerr << (W1 - W0) / W0 << std::endl;
+        if (not std::isfinite((W1 - W0) / W0))
+        {
+            std::cerr << "in SVM::SMO(): (W1 - W0) / W0 = " << (W1 - W0) / W0 << std::endl;
+            exit(1);
+        }
         if ((W1 - W0) / W0 < this->P)
             break;
     }
