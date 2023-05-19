@@ -61,6 +61,10 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 	// SVM
 	Argparser.add("-SVM_converge_lim");
 	Argparser.add("-SVM_punishment");
+    Argparser.add("-SVM_kernel");
+    Argparser.add("-SVM_kernel_gamma");
+    Argparser.add("-SVM_kernel_degree");
+    Argparser.add("-SVM_kernel_r");
 
 	// DBSCAN
 	Argparser.add("-DBSCAN_minPts");
@@ -97,7 +101,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
     dataloader.load_test(test_data_path, false);
     dataloader.load_test_label(test_label_path);
     std::cerr << "Complete loading" << std::endl << std::endl;
-	if (args["normalize"] == "true" or args["normalize"] == "1")
+	if (args["-normalize"] == "true" or args["-normalize"] == "1")
 	{
 		std::cout << "Normalize the dataset..." << std::endl;
 		dataloader.load_train(Datatransformer_t<data_t, label_t>::normalize(dataloader.train_data));
@@ -112,14 +116,14 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
     
 	for (std::size_t _ = 0; _ < repeats; ++_)
 	{
-		std::cout << _ << "-th fitting..." << std::endl;
+		//std::cout << _ << "-th fitting..." << std::endl;
         std::vector<point_t<data_t>> centers;
         std::vector<std::size_t> kindscnt;
         kindscnt.resize(KNOWN_CNT + 1);
         centers.resize(UNKNOWN_CNT + KNOWN_CNT + 1);
         for (auto& x : centers) x.resize(dataloader.test_data.data_dimension());
 
-        std::cerr << "classifying..." << std::endl;
+        //std::cerr << "classifying..." << std::endl;
         auto classifying_result = Fn[args["-classifying"]](args, dataloader, KNOWN_CNT);
 		
 		dataset_t<data_t, label_t> unknown_data;
@@ -142,7 +146,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
         for (std::size_t i = 1; i <= KNOWN_CNT; ++i)
             centers[i] /= kindscnt[i];
 
-        //std::cerr << classifying_result << std::endl;
+        std::cerr << classifying_result << std::endl;
         std::cerr << "classify unknown cnt = " << kindscnt[0] << std::endl;
         std::cerr << "truely unknown cnt = " << unknowncnt << std::endl;
         std::cerr << "classify acc = " << (double)classify_correct / (dataloader.test_data.size() - unknowncnt) << std::endl;
@@ -150,9 +154,9 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 		Dataloader_t<data_t, label_t> unknown_dataloader;
 		unknown_dataloader.load_test(unknown_data);
         
-		std::cerr << "clustering..." << std::endl;
+		//std::cerr << "clustering..." << std::endl;
         auto clustering_result = Fn[args["-clustering"]](args, unknown_dataloader, UNKNOWN_CNT);
-        //std::cerr << clustering_result << std::endl;
+        std::cerr << clustering_result << std::endl;
 		
         for (std::size_t i = 0; i < unknown_dataloader.test_data.size(); ++i)
         {
@@ -179,7 +183,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 			final_acc = std::max(final_acc, acc);
 		} while (next_permutation(mapping.begin(), mapping.end()));
         
-        std::cout << "acc: " << final_acc << std::endl << std::endl;
+        //std::cout << "acc: " << final_acc << "%" << std::endl << std::endl;
 		macc_ += final_acc;
 		sum_ += final_acc;
 		sum2_ += final_acc*final_acc;
@@ -247,7 +251,33 @@ point_t<label_t> SVMs_predict(auto& args, const auto& dataloader, std::size_t KN
         for (auto& x : dataset_.label) x = (x == (label_t)i ? 1LL : -1LL);
 		
         SVM_t<data_t, label_t> SVM{punishment, converge_lim};
-        SVM.kernel = std::make_shared<sigmoid_kernel<data_t>>(0.000001, 1);
+
+        if (args["-SVM_kernel"] == "linear")
+            SVM.kernel = std::make_shared<linear_kernel<data_t>>();
+        else if (args["-SVM_kernel"] == "poly")
+        {
+            double g = std::stod(args["-SVM_kernel_gamma"]);
+            double d = std::stod(args["-SVM_kernel_degree"]);
+            double r = std::stod(args["-SVM_kernel_r"]);
+            SVM.kernel = std::make_shared<poly_kernel<data_t>>(g, d, r);
+        }
+        else if (args["-SVM_kernel"] == "rbf")
+        {
+            double g = std::stod(args["-SVM_kernel_gamma"]);
+            SVM.kernel = std::make_shared<rbf_kernel<data_t>>(g);
+        }
+        else if (args["-SVM_kernel"] == "sigmoid")
+        {
+            double g = std::stod(args["-SVM_kernel_gamma"]);
+            double r = std::stod(args["-SVM_kernel_r"]);
+            SVM.kernel = std::make_shared<sigmoid_kernel<data_t>>(g, r);
+        }
+        else
+        {
+            std::cerr << "doesn't support such kernel: " << args["-SVM_kernel"] << std::endl;
+            exit(1);
+        }
+
     	SVM.fit(dataloader.train_data);
     	point_t<label_t> result_ =  SVM.predict(dataloader.test_data);
         for (std::size_t j = 0; j < result_.size(); ++j)
