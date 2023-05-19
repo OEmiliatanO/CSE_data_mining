@@ -24,8 +24,8 @@ public:
 template<typename T, typename U>
 point_t<U> kmeans_t<T, U>::fit(const std::vector<point_t<T>>& X)
 {
-    std::random_device rd;
-    std::default_random_engine gen(rd());
+    //std::random_device rd;
+    std::default_random_engine gen(0);
 
 	auto try_cnt = 0;
 
