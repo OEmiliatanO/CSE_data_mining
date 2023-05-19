@@ -45,7 +45,8 @@ static std::vector<std::string_view> split(std::string_view s, char delimiter = 
     std::size_t cur;
     while ((cur = s.find(delimiter)) != std::string_view::npos)
     {
-        ret.emplace_back(s.substr((size_t)0, cur));
+        if (cur == 0) ret.emplace_back("0");
+        else ret.emplace_back(s.substr((size_t)0, cur));
         s = s.substr(cur+1);
     }
     ret.emplace_back(s);
@@ -83,6 +84,7 @@ void Dataloader_t<T, U>::load(std::string_view& path, dataset_t<T, U>& dataset, 
         {
             char *end_;
             T x = (T)std::strtod(s.data(), &end_);
+            if (not std::isfinite(x)) { std::cerr << "x = " << x << std::endl; exit(1); }
             data.emplace_back(std::move(x));
         }
         dataset.emplace_back(std::move(data), std::move(label));

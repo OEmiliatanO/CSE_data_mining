@@ -65,7 +65,10 @@ dataset_t<T, U> Datatransformer_t<T, U>::normalize(const dataset_t<T, U>& datase
 
 	for (auto& data : dataset.data)
 		for (std::size_t i = 0; i < colinfo.size(); ++i)
-			data[i] = (data[i] - colinfo[i].mu) / colinfo[i].sigma;
+        {
+            data[i] = (data[i] - colinfo[i].mu) / colinfo[i].sigma;
+            data[i] = (std::isfinite(data[i]) ? data[i] : 0);
+        }
 
 	return dataset;
 }
