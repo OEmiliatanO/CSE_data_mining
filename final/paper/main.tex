@@ -47,25 +47,71 @@
 
 \begin{document}
 
-\title{TBD}
+\title{The Accuracy of KNN, SVM, neural network, naive Bayes classifier and DBSCAN, kmeans for Determining the Cancer by Gene-expression signatures}
 
 \author{Hsieh Cheng-Han, Hsu Ting-Hao, Sun Shih-Yu, Lu Che-Yuan, Huang Chia-Yen}
 \date{May 2023}
 \maketitle
 
 \section*{Abstract}
+Nowadays, using machine to give an early diagnosis of a cancer type is widely studied. 
+In this paper, based on the gene-expression dataset on Synapse.org, we compare the performance of machine 
+learning techniques, including data preprocessing, 
+e.g., Principal components analysis (PCA), Autoencoder (AE), classification, e.g., k-nearest neighbors (KNN), 
+support vector machine (SVM), neural network (NN), and clustering for dealing with unknown types, 
+e.g., k-means, density-based spatial clustering of applications with noise (DBSCAN). 
+The experiment results show that with PCA reducing the dimension of the dataset to 32, using KNN for classifying
+the known types, and finally use DBSCAN to cluster the unknown types, the accuracy of predicting can 
+reach about 94\%, which beats the other methods out.
+
+breast invasive carcinoma (BRCA)
+colon adenocarcinoma (COAD)
+kidney renal clear cell carcinoma (KIRC)
+lung adenocarcinoma (LUAD)
+prostate adenocarcinoma (PRAD)
 
 \section{Introduction}
 \label{sec:Introduction}
+Over the years, machine learning methods for early predict various disease are widely used in medical field. 
+\cite{kourou2015machine} \cite{cruz2006applications} From diabetes \cite{kavakiotis2017machine}, 
+heart disease \cite{learning2017heart}, to lung adenocarcinoma \cite{huang2020machine} etc., machine learning 
+methods is universally studied attributed to the promising perspective. With a well-built database of disease 
+and a well-choose combination of machine learning mathods, within seconds, a machine may determine the type of disease that 
+this person may have by collecting the data from the person, and thereby achieve the goal of personalized medicine. 
+As a result, machine learning methods have become a popular tool for medical researchers. 
+
+In real application, besides from the konwn cancers in the train data, there're numerous unkown types of cancers. 
+When a new type of cancer appears, how shall the machine results? In ideal situation, this new type of cancer should be 
+reported as an unkonwn type, which can be done by the combination of classification and clustering. 
+However, how to choose the proper machine learning methods is a hot potato, since the different combinations 
+of machine learning methods have different performance. 
+
+In this work, the dataset on Synapse.org is used, which contains 20531 RNA sequences and 3 types of cancer 
+in the train data, and 2 new types in test data. To find out which techniques is more suitable to predict 
+cancer by RNA sequence, this work examines the the accuracy of the combinations of some major machine 
+learning techniques, including PCA, AE, KNN, SVM, NN, k-means, DBSCAN. 
 
 \section{Related works}
 \label{sec:Related works}
 
 \subsection*{Data preprocess}
 
-\bf{Autoencoder (AE)}: \rm{Autoencoder}
+\bf{Autoencoder (AE)}: \rm{An} AE is a type of neural network used for unsupervised 
+learning and dimensionality reduction. It is designed to learn efficient representations or encodings of 
+input data by training the network to reconstruct its own inputs. The AE consists of an encoder 
+and a decoder. The encoder compresses the input data into a lower-dimensional representation, often called 
+the latent space or code. The decoder then aims to reconstruct the original input data from this compressed 
+representation. By learning a compact representation of the input data, AEs can capture important features 
+and discard noise or irrelevant information. This makes them effective in tasks such as image or 
+text classification, where reducing the dimensionality of the data can improve performance.
 
-\bf{Principal components analysis (PCA)}: \rm{Principal components analysis}
+\bf{Principal components analysis (PCA)}: \rm{PCA} is a statistical technique used for dimensionality 
+reduction and data exploration. It aims to transform a dataset with a large number of variables into 
+a lower-dimensional space while preserving the most important information. PCA accomplishes this by 
+identifying the principal components, which are linear combinations of the original variables. 
+Applications of PCA span various fields, including image and signal processing, finance, genetics, 
+and social sciences. It is particularly useful in scenarios where the dataset is high-dimensional 
+and the interpretation and visualization of the data are challenging.
 
 \subsection*{Classification algorithm}
 
@@ -81,18 +127,27 @@ binary linear classifier. In addition, accroding to \cite{amari1999improving} \c
 method called kernel trick to effectively perform non-linear classification by implicitly mapping its inputs into a high-dimensional 
 feature space.
 
-\bf{neural network}: \rm{Neural} network have been used in many fields to deal with intricate datas. With input layer, hidden 
+\bf{neural network (NN)}: \rm{Neural} network have been used in many fields to deal with intricate datas. With input layer, hidden 
 layer and output layer constructed by neurons, each data in dataset is processed while passing through neurons, layer by layer. 
 After the processing, the outcome can be used to predict.Using back propogation, the accuracy of predictions increase in each 
 training. In order to construct the hidden layer more efficient, NAS(Neural Arcitecture Searching) is used to search suitable 
-structure for hidden layer, increasing the accuracy.According to \cite{Gadekallu2020}\cite{Beghriche2021}, many neural network 
+structure for hidden layer, increasing the accuracy. According to \cite{Gadekallu2020}\cite{Beghriche2021}, many neural network 
 have been constructed and trained already, with high efficiency and accuracy in prediction of diabetes.
 
 \subsection*{Clustering algorithm}
 
-\bf{DBSCAN}: \rm{DBSCAN}
+\bf{k-means}: \rm{k-means} is a popular and easily implemented clustering method in machine learning and data analysis. With $n$
+data points in a dataset, k-means algorithm partition them into $k$ distinct clusters. The algorithm works iteratively and 
+converges to a solution by minimizing the sum of squared distance between the data points and the center of their cluster. 
+K-means is a useful algorithm for clustering data, which is widely applied on many researches, e.g. \cite{oyelade2010application}, 
+\cite{NIDHEESH2017213}, \cite{kadhm2018accurate}.
 
-\bf{kmeans}: \rm{kmeans}
+\bf{Density-based spatial clustering of applications with noise (DBSCAN)}: \rm{DBSCAN} is a data clustering algorithm proposed by
+Ester et al. \cite{10.5555/3001460.3001507} DBSCAN is particularly effective in discovering clusters of arbitrary shapes and 
+handling noise in the data. Unlike k-means need user specify how many clusters, DBSCAN determine the clusters and noise 
+automatically by the density of data points. This characteristic makes it particularly useful when addressing the datasets 
+where the number of cluster is unkonwn. DBSCAN is the major clustering algorithm in machine learning field, since the ability to 
+discover the number of clusters automatically. And the variants of DBSCAN \cite{6814687} is also developed widely. 
 
 \section{main section}
 
@@ -101,14 +156,19 @@ have been constructed and trained already, with high efficiency and accuracy in 
     \newcommand{\z}{\phantom{0}}
     \caption{\textsc{Comparison of Classification Techniques. (Arrhythmia data set)}}
       \vspace{-\baselineskip}
-    \begin{tabular}{@{}lccccccl@{}}\toprule
-    Method                    & Search (s) & acc                               & acc (normalized)             & acc (PCA-30)                   & acc (AE-30)\\ \midrule
-    KNN-Brute-Force + DBSCAN  & $0.009$   & $76.6169 \pm \z{0}$                & $\bf{80.597 \pm 0}$          & $78 \pm \z{0}$                 & $\bf{80 \pm \z{0}}$\\
-    KNN-ANNOY-BFS + DBSCAN    & $0.012$   & $76.6567 \pm \z{0.5340}$           & $\bf{80.597 \pm 0}$          & $\bf{78.16 \pm \z{0.7310}}$    & $\bf{80 \pm \z{0}}$\\
-    SVM + DBSCAN              & $1.846$   & $76.6616 \pm \z{0}$                & $75.9219 \pm 0$              & $75 \pm \z{2}$                 & $75 \pm \z{4}$\\
-    KNN-Brute-Force + kmeans  & $0.009$   & $76.6169 \pm \z{0}$                & $\bf{80.597 \pm 0}$          & $78 \pm \z{0}$                 & $\bf{80 \pm \z{0}}$\\
-    KNN-ANNOY-BFS + kmeans    & $0.012$   & $76.6567 \pm \z{0}$                & $\bf{80.597 \pm 0}$          & $\bf{78.16 \pm \z{0.7310}}$    & $\bf{80 \pm \z{0}}$\\
-    SVM + kmeans              & $1.846$   & $76.6616 \pm \z{0}$                & $75.9219 \pm 0$              & $75 \pm \z{2}$                 & $75 \pm \z{4}$\\
+    \begin{tabular}{@{}lccccccccl@{}}\toprule
+    Method                    & Search (s) & acc                               & acc (normalized)             & acc (PCA-32)                & acc (PCA-32-normalized)    & acc (AE-32)            & acc (AE-32-normalized) \\ \midrule
+    KNN-Brute-Force + DBSCAN  & $0.014$    & $44.3038 \pm \z{0}$               & $46.2025 \pm \z{0}$          & $38.6076 \pm \z{0}$         & $42.4051\pm\z{0}$          & $34.8101 \pm \z{0}$    & $44.3038 \pm \z{0}$\\
+    SVM (linear) + DBSCAN     & $1.048$    & $25.9494 \pm \z{0}$               & $35.4430 \pm \z{0}$          & $32.2785 \pm \z{0}$         & $29.7468 \pm \z{0}$        & $31.6456 \pm \z{0}$    & $27.8481 \pm \z{0}$\\
+    SVM (polynomial) + DBSCAN & $0.765$    & $25.9494 \pm \z{0}$               & $25.3165 \pm \z{0}$          & $1.2658 \pm \z{0}$          & $33.5443 \pm \z{0}$        & $30.3797 \pm \z{0}$    & $30.2785 \pm \z{0}$\\
+    SVM (RBF) + DBSCAN        & $5.298$    & $25.9494 \pm \z{0}$               & $22.7848 \pm \z{0}$          & $0.6329 \pm \z{0}$          & $30.3797 \pm \z{0}$        & $22.1519 \pm \z{0}$    & $34.1772 \pm \z{0}$\\
+    SVM (sigmoid) + DBSCAN    & $2.298$    & $28.4810 \pm \z{0}$               & $20.2532 \pm \z{0}$          & $30.3797 \pm \z{0}$         & $36.0759 \pm \z{0}$        & $22.1519 \pm \z{0}$    & $24.6835 \pm \z{0}$\\
+    KNN-Brute-Force + kmeans  & $0.014$    & $44.3038 \pm \z{0}$               & $41.7722 \pm \z{0}$          & $43.0380 \pm \z{0}$         & $43.0380 \pm \z{0}$        & $36.0759 \pm \z{0}$    & $41.7722 \pm \z{0}$\\
+    SVM (linear) + kmeans     & $X$        & $X \pm \z{0}$                     & $X \pm \z{0}$           & $X \pm \z{0}$                  & $X \pm \z{0}$         & $0 \pm \z{0}$                    & $0 \pm \z{0}$\\
+    SVM (polynomial) + kmeans & $X$        & $X \pm \z{0}$                     & $X \pm \z{0}$           & $X \pm \z{0}$                  & $X \pm \z{0}$         & $0 \pm \z{0}$                    & $0 \pm \z{0}$\\
+    SVM (linear) + kmeans     & $X$        & $X \pm \z{0}$                     & $X \pm \z{0}$           & $X \pm \z{0}$                  & $X \pm \z{0}$         & $0 \pm \z{0}$                    & $0 \pm \z{0}$\\
+    SVM (sigmoid) + kmeans    & $X$        & $X \pm \z{0}$                     & $X \pm \z{0}$           & $X \pm \z{0}$                  & $X \pm \z{0}$         & $0 \pm \z{0}$                    & $0 \pm \z{0}$\\
+    \bottomrule
     \end{tabular}
     \label{table:Arrhythmia_result}
       \vspace{-\baselineskip}
@@ -118,14 +178,19 @@ have been constructed and trained already, with high efficiency and accuracy in 
     \newcommand{\z}{\phantom{0}}
     \caption{\textsc{Comparison of Classification Techniques. (gene expression cancer RNA-Seq data set)}}
       \vspace{-\baselineskip}
-    \begin{tabular}{@{}lccccccl@{}}\toprule
-    Method                    & Search (s) & acc                               & acc (normalized)             & acc (PCA-30)                   & acc (AE-30)\\ \midrule
-    KNN-Brute-Force + DBSCAN  & $0.009$   & $76.6169 \pm \z{0}$                & $\bf{80.597 \pm 0}$          & $78 \pm \z{0}$                 & $\bf{80 \pm \z{0}}$\\
-    KNN-ANNOY-BFS + DBSCAN    & $0.012$   & $76.6567 \pm \z{0.5340}$           & $\bf{80.597 \pm 0}$          & $\bf{78.16 \pm \z{0.7310}}$    & $\bf{80 \pm \z{0}}$\\
-    SVM + DBSCAN              & $1.846$   & $76.6616 \pm \z{4.0301}$           & $75.9219 \pm 2.736$          & $75 \pm \z{2}$                 & $75 \pm \z{4}$\\
-    KNN-Brute-Force + kmeans  & $0.009$   & $76.6169 \pm \z{0}$                & $\bf{80.597 \pm 0}$          & $78 \pm \z{0}$                 & $\bf{80 \pm \z{0}}$\\
-    KNN-ANNOY-BFS + kmeans    & $0.012$   & $76.6567 \pm \z{0.5340}$           & $\bf{80.597 \pm 0}$          & $\bf{78.16 \pm \z{0.7310}}$    & $\bf{80 \pm \z{0}}$\\
-    SVM + kmeans              & $1.846$   & $76.6616 \pm \z{4.0301}$           & $75.9219 \pm 2.736$          & $75 \pm \z{2}$                 & $75 \pm \z{4}$\\
+    \begin{tabular}{@{}lccccccccl@{}}\toprule
+    Method                    & Search (s) & acc                               & acc (normalized)             & acc (PCA-30)                & acc (PCA-30-normalized)    & acc (AE-30)            & acc (AE-30-normalized)\\ \midrule
+    KNN-Brute-Force + DBSCAN  & $4.317$    & $59.0361 \pm \z{0}$               & $66.5663 \pm \z{0}$          & $94.5783 \pm \z{0}$         & $78.3133 \pm \z{0}$        & $64.4578 \pm \z{0}$    & $59.3373 \pm \z{0}$\\
+    SVM (linear) + DBSCAN     & $131.809$  & $61.7470 \pm \z{0}$               & $9.9398 \pm \z{0}$           & $9.9398 \pm \z{0}$          & $10.5422 \pm \z{0}$         & $63.2530 \pm \z{0}$    & $13.5542 \pm \z{0}$\\
+    SVM (polynomial) + DBSCAN & $31.221$   & $61.7470 \pm \z{0}$               & $1.2048 \pm \z{0}$           & $64.4578 \pm \z{0}$         & $61.1446 \pm \z{0}$        & $63.2530 \pm \z{0}$    & $50.3012 \pm \z{0}$\\
+    SVM (RBF) + DBSCAN        & $3.988$    & $X$                               & $X$                          & $9.9398 \pm \z{0}$          & $63.2530 \pm \z{0}$        & $40.3614 \pm \z{0}$    & $49.6988 \pm \z{0}$\\
+    SVM (sigmoid) + DBSCAN    & $0.446$    & $X$                               & $X$                          & $71.6867 \pm \z{0}$         & $65.9639 \pm \z{0}$        & $44.2771 \pm \z{0}$    & $38.2530 \pm \z{0}$\\
+    KNN-Brute-Force + kmeans  & $4.859$    & $74.0964 \pm \z{0}$               & $53.6145 \pm \z{0}$          & $94.8795 \pm \z{0}$         & $84.9398 \pm \z{0}$        & $42.1687 \pm \z{0}$    & $65.9639 \pm \z{0}$\\
+    SVM (linear) + kmeans     & $X$        & $X \pm \z{0}$                     & $X \pm \z{0}$           & $X \pm \z{0}$                  & $X \pm \z{0}$         & $0 \pm \z{0}$                    & $0 \pm \z{0}$\\
+    SVM (polynomial) + kmeans & $X$        & $X \pm \z{0}$                     & $X \pm \z{0}$           & $X \pm \z{0}$                  & $X \pm \z{0}$         & $0 \pm \z{0}$                    & $0 \pm \z{0}$\\
+    SVM (linear) + kmeans     & $X$        & $X \pm \z{0}$                     & $X \pm \z{0}$           & $X \pm \z{0}$                  & $X \pm \z{0}$         & $0 \pm \z{0}$                    & $0 \pm \z{0}$\\
+    SVM (sigmoid) + kmeans    & $X$        & $X \pm \z{0}$                     & $X \pm \z{0}$           & $X \pm \z{0}$                  & $X \pm \z{0}$         & $0 \pm \z{0}$                    & $0 \pm \z{0}$\\
+    \bottomrule
     \end{tabular}
     \label{table:gene_expression_result}
       \vspace{-\baselineskip}

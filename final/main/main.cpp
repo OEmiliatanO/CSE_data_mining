@@ -40,6 +40,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 	Argparser.add("-repeats");
     Argparser.add("-classifying");
     Argparser.add("-clustering");
+    Argparser.add("-verbose");
 
 	// data
 	Argparser.add("-train_data_path");
@@ -84,35 +85,46 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
     std::string_view test_data_path  = args["-test_data_path"];
     std::string_view train_label_path = args["-train_label_path"];
     std::string_view test_label_path  = args["-test_label_path"];
-	std::cout << "===================================================" << std::endl;
-    std::cout << "Train data: " << train_data_path << std::endl;
-    std::cout << "Train label: " << train_label_path << std::endl;
-    std::cout << "Test data: " << test_data_path << std::endl;
-    std::cout << "Test label: " << test_label_path << std::endl << std::endl;
+    if (args["-verbose"] == "true")
+    {
+        std::cout << "===================================================" << std::endl;
+        std::cout << "Train data: " << train_data_path << std::endl;
+        std::cout << "Train label: " << train_label_path << std::endl;
+        std::cout << "Test data: " << test_data_path << std::endl;
+        std::cout << "Test label: " << test_label_path << std::endl << std::endl;
+    }
 
     // data is double, label is int
     Dataloader_t<data_t, label_t> dataloader;
     
-    std::cout << "Load the train data..." << std::endl;
+    if (args["-verbose"] == "true")
+        std::cout << "Load the train data..." << std::endl;
     dataloader.load_train(train_data_path, false);
     dataloader.load_train_label(train_label_path);
 
-    std::cout << "Load the test data..." << std::endl;
+    if (args["-verbose"] == "true")
+        std::cout << "Load the test data..." << std::endl;
+
     dataloader.load_test(test_data_path, false);
     dataloader.load_test_label(test_label_path);
-    std::cerr << "Complete loading" << std::endl << std::endl;
+    
+    if (args["-verbose"] == "true") std::cerr << "Complete loading" << std::endl << std::endl;
+
 	if (args["-normalize"] == "true" or args["-normalize"] == "1")
 	{
-		std::cout << "Normalize the dataset..." << std::endl;
+        if (args["-verbose"] == "true")
+            std::cout << "Normalize the dataset..." << std::endl;
 		dataloader.load_train(Datatransformer_t<data_t, label_t>::normalize(dataloader.train_data));
 		dataloader.load_test(Datatransformer_t<data_t, label_t>::normalize(dataloader.test_data));
 	}
-	std::cout << "===================================================================" << std::endl;
 	
 	double macc_ = 0, sum_ = 0, sum2_ = 0;
 	std::chrono::steady_clock::time_point st = std::chrono::steady_clock::now();
-	std::cout << "classifying algorithm: " << args["-classifying"] << std::endl;
-	std::cout << "clustering algorithm: " << args["-clustering"] << std::endl << std::endl;
+    if (args["-verbose"] == "true")
+    {
+        std::cout << "classifying algorithm: " << args["-classifying"] << std::endl;
+    	std::cout << "clustering algorithm: " << args["-clustering"] << std::endl << std::endl;
+    }
     
 	for (std::size_t _ = 0; _ < repeats; ++_)
 	{
@@ -146,17 +158,21 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
         for (std::size_t i = 1; i <= KNOWN_CNT; ++i)
             centers[i] /= kindscnt[i];
 
-        std::cerr << classifying_result << std::endl;
-        std::cerr << "classify unknown cnt = " << kindscnt[0] << std::endl;
-        std::cerr << "truely unknown cnt = " << unknowncnt << std::endl;
-        std::cerr << "classify acc = " << (double)classify_correct / (dataloader.test_data.size() - unknowncnt) << std::endl;
+        if (args["-verbose"] == "true")
+        {
+            std::cerr << classifying_result << std::endl;
+            std::cerr << "classify unknown cnt = " << kindscnt[0] << std::endl;
+            std::cerr << "truely unknown cnt = " << unknowncnt << std::endl;
+            std::cerr << "classify acc = " << (double)classify_correct / (dataloader.test_data.size() - unknowncnt) << std::endl;
+        }
 
 		Dataloader_t<data_t, label_t> unknown_dataloader;
 		unknown_dataloader.load_test(unknown_data);
         
 		//std::cerr << "clustering..." << std::endl;
         auto clustering_result = Fn[args["-clustering"]](args, unknown_dataloader, UNKNOWN_CNT);
-        std::cerr << clustering_result << std::endl;
+        if (args["-verbose"] == "true")
+            std::cerr << clustering_result << std::endl;
 		
         for (std::size_t i = 0; i < unknown_dataloader.test_data.size(); ++i)
         {
@@ -195,7 +211,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 	std::chrono::steady_clock::time_point ed = std::chrono::steady_clock::now();
 	std::cout << "acc = " << macc_ << "%(" << stand_ << ")" << std::endl;
 	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(ed - st).count() / 1000000.0 / repeats;
-	std::cout << "time: " << duration << std::endl;
+	std::cout << "time: " << duration << std::endl << std::endl;;
 
     return 0;
 }
