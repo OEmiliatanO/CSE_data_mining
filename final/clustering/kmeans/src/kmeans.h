@@ -91,7 +91,7 @@ RETRY:
 			double WCSS = 0;
 			for (std::size_t j = 0; j < X.size(); ++j)
 				WCSS += euclidean_dist(X[j], centers[labels[j]]);
-			if ((WCSS - WCSS0) / WCSS0 <= this->theta)
+			if (not std::isfinite((WCSS - WCSS0) / WCSS0) or (WCSS - WCSS0) / WCSS0 <= this->theta)
 				bk = true;
 		}
 
