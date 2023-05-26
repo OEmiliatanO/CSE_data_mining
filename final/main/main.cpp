@@ -211,7 +211,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 	std::chrono::steady_clock::time_point ed = std::chrono::steady_clock::now();
 	std::cout << "acc = " << macc_ << "%(" << stand_ << ")" << std::endl;
 	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(ed - st).count() / 1000000.0 / repeats;
-	std::cout << "time: " << duration << std::endl << std::endl;;
+	std::cout << "time: " << duration << std::endl << std::endl;
 
     return 0;
 }
