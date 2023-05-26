@@ -7,16 +7,17 @@ ACCFILE="KNN-DBSCAN"
 
 echo "======================== dataset: arrhythmia ====================="
 echo "original"
-./main.elf -repeats 10 -classifying KNN -clustering DBSCAN -train_data_path $DATASET1/train_data.csv -train_label_path $DATASET1/train_label.csv -test_data_path $DATASET1/test_data.csv -test_label_path $DATASET1/test_label.csv -normalize false -KNOWN_CNT 8 -UNKNOWN_CNT 5 -KNN_k 11 -KNN_maxdis 120 -KNN_problim 0.7 -KNN_method brute -DBSCAN_minPts 10 -DBSCAN_eps 260 -verbose false #> $ACCFILE-$DATASETA-original.acc
+./main.elf -repeats 10 -classifying KNN -clustering DBSCAN -train_data_path $DATASET1/train_data.csv -train_label_path $DATASET1/train_label.csv -test_data_path $DATASET1/test_data.csv -test_label_path $DATASET1/test_label.csv -normalize false -KNOWN_CNT 8 -UNKNOWN_CNT 5 -KNN_k 2 -KNN_maxdis 170.001 -KNN_problim 0.883498 -KNN_method brute -DBSCAN_minPts 64 -DBSCAN_eps 10000000000000 -verbose false #> $ACCFILE-$DATASETA-original.acc
 echo "original, nor"
 ./main.elf -repeats 10 -classifying KNN -clustering DBSCAN -train_data_path $DATASET1/train_data.csv -train_label_path $DATASET1/train_label.csv -test_data_path $DATASET1/test_data.csv -test_label_path $DATASET1/test_label.csv -normalize true -KNOWN_CNT 8 -UNKNOWN_CNT 5 -KNN_k 13 -KNN_maxdis 15 -KNN_problim 0.7 -KNN_method brute -DBSCAN_minPts 20 -DBSCAN_eps 50 -verbose false #> $ACCFILE-$DATASETA-original-nor.acc
+
 echo "AE 32"
-./main.elf -repeats 10 -classifying KNN -clustering DBSCAN -train_data_path $DATASET1/AE_train_data_32.csv -train_label_path $DATASET1/train_label.csv -test_data_path $DATASET1/AE_test_data_32.csv -test_label_path $DATASET1/test_label.csv -normalize false -KNOWN_CNT 8 -UNKNOWN_CNT 5 -KNN_k 11 -KNN_maxdis 20 -KNN_problim 0.8 -KNN_method brute -DBSCAN_minPts 9 -DBSCAN_eps 10 -verbose false #> $ACCFILE-$DATASETA-AE_32.acc
+./main.elf -repeats 10 -classifying KNN -clustering DBSCAN -train_data_path $DATASET1/AE_train_data_32.csv -train_label_path $DATASET1/train_label.csv -test_data_path $DATASET1/AE_test_data_32.csv -test_label_path $DATASET1/test_label.csv -normalize false -KNOWN_CNT 8 -UNKNOWN_CNT 5 -KNN_k 2 -KNN_maxdis 48.884 -KNN_problim 0.596628 -KNN_method brute -DBSCAN_minPts 21 -DBSCAN_eps 4.58958 -verbose false #> $ACCFILE-$DATASETA-AE_32.acc
 echo "AE 32, nor"
 ./main.elf -repeats 10 -classifying KNN -clustering DBSCAN -train_data_path $DATASET1/AE_train_data_32.csv -train_label_path $DATASET1/train_label.csv -test_data_path $DATASET1/AE_test_data_32.csv -test_label_path $DATASET1/test_label.csv -normalize true -KNOWN_CNT 8 -UNKNOWN_CNT 5 -KNN_k 11 -KNN_maxdis 15 -KNN_problim 0.7 -KNN_method brute -DBSCAN_minPts 5 -DBSCAN_eps 5 -verbose false #> $ACCFILE-$DATASETA-AE_32-nor.acc
 
 echo "PCA 32"
-./main.elf -repeats 10 -classifying KNN -clustering DBSCAN -train_data_path $DATASET1/PCA_train_data_32.csv -train_label_path $DATASET1/train_label.csv -test_data_path $DATASET1/PCA_test_data_32.csv -test_label_path $DATASET1/test_label.csv -normalize false -KNOWN_CNT 8 -UNKNOWN_CNT 5 -KNN_k 21 -KNN_maxdis 500 -KNN_problim 0.7 -KNN_method brute -DBSCAN_minPts 5 -DBSCAN_eps 500 -verbose false #> $ACCFILE-$DATASETA-PCA_32.acc
+./main.elf -repeats 10 -classifying KNN -clustering DBSCAN -train_data_path $DATASET1/PCA_train_data_32.csv -train_label_path $DATASET1/train_label.csv -test_data_path $DATASET1/PCA_test_data_32.csv -test_label_path $DATASET1/test_label.csv -normalize false -KNOWN_CNT 8 -UNKNOWN_CNT 5 -KNN_k 2 -KNN_maxdis 126.745 -KNN_problim 0.883498 -KNN_method brute -DBSCAN_minPts 49 -DBSCAN_eps 10000000000000 -verbose false #> $ACCFILE-$DATASETA-PCA_32.acc
 echo "PCA 32, nor"
 ./main.elf -repeats 10 -classifying KNN -clustering DBSCAN -train_data_path $DATASET1/PCA_train_data_32.csv -train_label_path $DATASET1/train_label.csv -test_data_path $DATASET1/PCA_test_data_32.csv -test_label_path $DATASET1/test_label.csv -normalize true -KNOWN_CNT 8 -UNKNOWN_CNT 5 -KNN_k 5 -KNN_maxdis 20 -KNN_problim 0.9 -KNN_method brute -DBSCAN_minPts 5 -DBSCAN_eps 17 -verbose false #> $ACCFILE-$DATASETA-PCA_32-nor.acc
 
