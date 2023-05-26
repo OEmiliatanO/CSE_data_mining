@@ -156,20 +156,22 @@ discover the number of clusters automatically. And the variants of DBSCAN \cite{
     \newcommand{\z}{\phantom{0}}
     \caption{\textsc{Comparison of Classification Techniques. (Arrhythmia data set)}}
       \vspace{-\baselineskip}
-    \begin{tabular}{@{}lccccccccl@{}}\toprule
-    Method                    & Search (s) & acc                               & acc (normalized)             & acc (PCA-32)                & acc (PCA-32-normalized)    & acc (AE-32)            & acc (AE-32-normalized) \\ \midrule
-    KNN-Brute-Force + DBSCAN  & $0.014$    & $44.3038 \pm \z{0}$               & $46.2025 \pm \z{0}$          & $38.6076 \pm \z{0}$         & $42.4051\pm\z{0}$          & $34.8101 \pm \z{0}$    & $44.3038 \pm \z{0}$\\
-    SVM (linear) + DBSCAN     & $1.048$    & $25.9494 \pm \z{0}$               & $35.4430 \pm \z{0}$          & $32.2785 \pm \z{0}$         & $29.7468 \pm \z{0}$        & $31.6456 \pm \z{0}$    & $27.8481 \pm \z{0}$\\
-    SVM (polynomial) + DBSCAN & $0.765$    & $25.9494 \pm \z{0}$               & $25.3165 \pm \z{0}$          & $1.2658 \pm \z{0}$          & $33.5443 \pm \z{0}$        & $30.3797 \pm \z{0}$    & $30.2785 \pm \z{0}$\\
-    SVM (RBF) + DBSCAN        & $5.298$    & $25.9494 \pm \z{0}$               & $22.7848 \pm \z{0}$          & $0.6329 \pm \z{0}$          & $30.3797 \pm \z{0}$        & $22.1519 \pm \z{0}$    & $34.1772 \pm \z{0}$\\
-    SVM (sigmoid) + DBSCAN    & $2.298$    & $28.4810 \pm \z{0}$               & $20.2532 \pm \z{0}$          & $30.3797 \pm \z{0}$         & $36.0759 \pm \z{0}$        & $22.1519 \pm \z{0}$    & $24.6835 \pm \z{0}$\\
-    KNN-Brute-Force + kmeans  & $0.014$    & $44.3038 \pm \z{0}$               & $41.7722 \pm \z{0}$          & $43.0380 \pm \z{0}$         & $43.0380 \pm \z{0}$        & $36.0759 \pm \z{0}$    & $41.7722 \pm \z{0}$\\
-    SVM (linear) + kmeans     & $X$        & $X \pm \z{0}$                     & $X \pm \z{0}$           & $X \pm \z{0}$                  & $X \pm \z{0}$         & $0 \pm \z{0}$                    & $0 \pm \z{0}$\\
-    SVM (polynomial) + kmeans & $X$        & $X \pm \z{0}$                     & $X \pm \z{0}$           & $X \pm \z{0}$                  & $X \pm \z{0}$         & $0 \pm \z{0}$                    & $0 \pm \z{0}$\\
-    SVM (linear) + kmeans     & $X$        & $X \pm \z{0}$                     & $X \pm \z{0}$           & $X \pm \z{0}$                  & $X \pm \z{0}$         & $0 \pm \z{0}$                    & $0 \pm \z{0}$\\
-    SVM (sigmoid) + kmeans    & $X$        & $X \pm \z{0}$                     & $X \pm \z{0}$           & $X \pm \z{0}$                  & $X \pm \z{0}$         & $0 \pm \z{0}$                    & $0 \pm \z{0}$\\
-    \bottomrule
-    \end{tabular}
+    \resizebox{\textwidth}{!}{
+      \begin{tabular}{@{}lccccccccl@{}}\toprule
+      Method                    & Search (s) & acc                               & acc (normalized)             & acc (PCA-32)                & acc (PCA-32-normalized)    & acc (AE-32)            & acc (AE-32-normalized) \\ \midrule
+      KNN-Brute-Force + DBSCAN  & $0.014$    & $44.3038 \pm 0$                   & $46.8354 \pm 0$              & $38.6076 \pm 0$             & $42.4051\pm 0$             & $34.8101 \pm 0$        & $44.3038 \pm 0$\\
+      SVM (linear) + DBSCAN     & $1.048$    & $25.9494 \pm 0$                   & $35.4430 \pm 0$              & $32.2785 \pm 0$             & $29.7468 \pm 0$            & $31.6456 \pm 0$        & $27.8481 \pm 0$\\
+      SVM (polynomial) + DBSCAN & $0.765$    & $25.9494 \pm 0$                   & $25.3165 \pm 0$              & $1.2658 \pm 0$              & $33.5443 \pm 0$            & $30.3797 \pm 0$        & $30.2785 \pm 0$\\
+      SVM (RBF) + DBSCAN        & $5.298$    & $25.9494 \pm 0$                   & $22.7848 \pm 0$              & $0.6329 \pm 0$              & $30.3797 \pm 0$            & $22.1519 \pm 0$        & $34.1772 \pm 0$\\
+      SVM (sigmoid) + DBSCAN    & $2.298$    & $28.4810 \pm 0$                   & $20.2532 \pm 0$              & $30.3797 \pm 0$             & $36.0759 \pm 0$            & $22.1519 \pm 0$        & $24.6835 \pm 0$\\
+      KNN-Brute-Force + kmeans  & $0.014$    & $53.1646 \pm 0$                   & $50.6329 \pm 0$              & $43.0380 \pm 0$             & $43.0380 \pm 0$            & $36.0759 \pm 0$        & $41.7722 \pm 0$\\
+      SVM (linear) + kmeans     & $X$        & $25.3165 \pm 0$                   & $37.9747 \pm 0$              & $25.3165 \pm 0$             & $27.8481 \pm 0$            & $24.0506 \pm 0$        & $20.2532 \pm 0$\\
+      SVM (polynomial) + kmeans & $X$        & $25.3165 \pm 0$                   & $26.5823 \pm 0$              & $14.5570 \pm 0$             & $28.4810 \pm 0$            & $24.0506 \pm 0$        & $25.3165 \pm 0$\\
+      SVM (RBF) + kmeans        & $X$        & $8.8608 \pm 0$                    & $29.7468 \pm 0$              & $0.6329 \pm 0$              & $1.2658 \pm 0$             & $22.7848 \pm 0$        & $27.2152 \pm 0$\\
+      SVM (sigmoid) + kmeans    & $X$        & $22.6582 \pm 0$                   & $17.7848 \pm 0$              & $25.3165 \pm 0$             & $12.0253 \pm 0$            & $17.7215 \pm 0$        & $28.4810 \pm 0$\\
+      \bottomrule
+      \end{tabular}
+    }
     \label{table:Arrhythmia_result}
       \vspace{-\baselineskip}
   \end{table*}
@@ -178,20 +180,22 @@ discover the number of clusters automatically. And the variants of DBSCAN \cite{
     \newcommand{\z}{\phantom{0}}
     \caption{\textsc{Comparison of Classification Techniques. (gene expression cancer RNA-Seq data set)}}
       \vspace{-\baselineskip}
-    \begin{tabular}{@{}lccccccccl@{}}\toprule
-    Method                    & Search (s) & acc                               & acc (normalized)             & acc (PCA-30)                & acc (PCA-30-normalized)    & acc (AE-30)            & acc (AE-30-normalized)\\ \midrule
-    KNN-Brute-Force + DBSCAN  & $4.317$    & $59.0361 \pm \z{0}$               & $66.5663 \pm \z{0}$          & $94.5783 \pm \z{0}$         & $78.3133 \pm \z{0}$        & $64.4578 \pm \z{0}$    & $59.3373 \pm \z{0}$\\
-    SVM (linear) + DBSCAN     & $131.809$  & $61.7470 \pm \z{0}$               & $9.9398 \pm \z{0}$           & $9.9398 \pm \z{0}$          & $10.5422 \pm \z{0}$         & $63.2530 \pm \z{0}$    & $13.5542 \pm \z{0}$\\
-    SVM (polynomial) + DBSCAN & $31.221$   & $61.7470 \pm \z{0}$               & $1.2048 \pm \z{0}$           & $64.4578 \pm \z{0}$         & $61.1446 \pm \z{0}$        & $63.2530 \pm \z{0}$    & $50.3012 \pm \z{0}$\\
-    SVM (RBF) + DBSCAN        & $3.988$    & $X$                               & $X$                          & $9.9398 \pm \z{0}$          & $63.2530 \pm \z{0}$        & $40.3614 \pm \z{0}$    & $49.6988 \pm \z{0}$\\
-    SVM (sigmoid) + DBSCAN    & $0.446$    & $X$                               & $X$                          & $71.6867 \pm \z{0}$         & $65.9639 \pm \z{0}$        & $44.2771 \pm \z{0}$    & $38.2530 \pm \z{0}$\\
-    KNN-Brute-Force + kmeans  & $4.859$    & $74.0964 \pm \z{0}$               & $53.6145 \pm \z{0}$          & $94.8795 \pm \z{0}$         & $84.9398 \pm \z{0}$        & $42.1687 \pm \z{0}$    & $65.9639 \pm \z{0}$\\
-    SVM (linear) + kmeans     & $X$        & $X \pm \z{0}$                     & $X \pm \z{0}$           & $X \pm \z{0}$                  & $X \pm \z{0}$         & $0 \pm \z{0}$                    & $0 \pm \z{0}$\\
-    SVM (polynomial) + kmeans & $X$        & $X \pm \z{0}$                     & $X \pm \z{0}$           & $X \pm \z{0}$                  & $X \pm \z{0}$         & $0 \pm \z{0}$                    & $0 \pm \z{0}$\\
-    SVM (linear) + kmeans     & $X$        & $X \pm \z{0}$                     & $X \pm \z{0}$           & $X \pm \z{0}$                  & $X \pm \z{0}$         & $0 \pm \z{0}$                    & $0 \pm \z{0}$\\
-    SVM (sigmoid) + kmeans    & $X$        & $X \pm \z{0}$                     & $X \pm \z{0}$           & $X \pm \z{0}$                  & $X \pm \z{0}$         & $0 \pm \z{0}$                    & $0 \pm \z{0}$\\
-    \bottomrule
-    \end{tabular}
+    \resizebox{\textwidth}{!}{
+      \begin{tabular}{@{}lccccccccl@{}}\toprule
+      Method                    & Search (s) & acc                               & acc (normalized)             & acc (PCA-30)                & acc (PCA-30-normalized)    & acc (AE-30)            & acc (AE-30-normalized)\\ \midrule
+      KNN-Brute-Force + DBSCAN  & $4.317$    & $59.0361 \pm 0$                   & $66.5663 \pm 0$              & $94.5783 \pm 0$             & $78.3133 \pm 0$            & $64.4578 \pm 0$        & $59.3373 \pm 0$\\
+      SVM (linear) + DBSCAN     & $131.809$  & $61.7470 \pm 0$                   & $9.9398 \pm 0$               & $9.9398 \pm 0$              & $10.5422 \pm 0$            & $63.2530 \pm 0$        & $13.5542 \pm 0$\\
+      SVM (polynomial) + DBSCAN & $31.221$   & $61.7470 \pm 0$                   & $1.2048 \pm 0$               & $64.4578 \pm 0$             & $61.1446 \pm 0$            & $63.2530 \pm 0$        & $50.3012 \pm 0$\\
+      SVM (RBF) + DBSCAN        & $3.988$    & $X$                               & $X$                          & $9.9398 \pm 0$              & $63.2530 \pm 0$            & $40.3614 \pm 0$        & $49.6988 \pm 0$\\
+      SVM (sigmoid) + DBSCAN    & $0.446$    & $X$                               & $X$                          & $71.6867 \pm 0$             & $65.9639 \pm 0$            & $44.2771 \pm 0$        & $38.2530 \pm 0$\\
+      KNN-Brute-Force + kmeans  & $4.859$    & $74.0964 \pm 0$                   & $53.6145 \pm 0$              & $94.8795 \pm 0$             & $84.9398 \pm 0$            & $42.1687 \pm 0$        & $65.9639 \pm 0$\\
+      SVM (linear) + kmeans     & $X$        & $X \pm 0$                         & $X \pm 0$                    & $X \pm 0$                   & $X \pm 0$         & $0 \pm 0$                    & $0 \pm 0$\\
+      SVM (polynomial) + kmeans & $X$        & $X \pm 0$                         & $X \pm 0$                    & $X \pm 0$                   & $X \pm 0$         & $0 \pm 0$                    & $0 \pm 0$\\
+      SVM (linear) + kmeans     & $X$        & $X \pm 0$                         & $X \pm 0$                    & $X \pm 0$                   & $X \pm 0$         & $0 \pm 0$                    & $0 \pm 0$\\
+      SVM (sigmoid) + kmeans    & $X$        & $X \pm 0$                         & $X \pm 0$                    & $X \pm 0$                   & $X \pm 0$         & $0 \pm 0$                    & $0 \pm 0$\\
+      \bottomrule
+      \end{tabular}
+    }
     \label{table:gene_expression_result}
       \vspace{-\baselineskip}
   \end{table*}
