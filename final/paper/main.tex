@@ -52,7 +52,7 @@
 
 \begin{document}
 
-\title{The Accuracy of KNN, SVM, neural network, naive Bayes classifier and DBSCAN, kmeans for Determining the Cancer by Gene-expression signatures And the Arrhythmia Types}
+\title{The Accuracy of KNN, SVM, SVDD, neural network and DBSCAN, k-means for Determining the Cancer by Gene-expression Signatures And the Arrhythmia Types}
 
 \author{Hsieh Cheng-Han, Hsu Ting-Hao, Sun Shih-Yu, Lu Che-Yuan, Huang Chia-Yen}
 \date{May 2023}
@@ -135,7 +135,17 @@ binary class, such as $0$ and $1$, SVM training algorithm creates a model that a
 the binay labels by making it a non-probabilistic binary linear classifier. In addition, accroding to 
 \cite{amari1999improving} \cite{hofmann2006support}, SVM can also use a method called kernel trick to 
 effectively perform non-linear classification by implicitly mapping its inputs into a high-dimensional 
-feature space.
+feature space. 
+The idea of kernel trick is transform the data into higher dimension. In ideal situation, the dataset 
+which is not linear separable becomes linear separable. Fig~\ref{fig:SVM_kernel_trick} illurates this 
+case. 
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[scale=0.25]{assets/SVM_kernel_trick.png}
+    \caption{An example of SVM kernel trick}
+    \label{fig:SVM_kernel_trick}
+\end{figure}
 
 \bf{neural network (NN)}: \rm{Neural} network have been used in many fields to deal with intricate datas. 
 With input layer, hidden layer and output layer constructed by neurons, each data in dataset is processed 
@@ -164,7 +174,8 @@ is unkonwn. DBSCAN is the major clustering algorithm in machine learning field, 
 discover the number of clusters automatically. And the variants of DBSCAN \cite{6814687} is also developed widely. 
 
 \section{Main Process}
-  The main algorithm to process the dataset is shown as below:
+  The pesudo code of the proposed algorithm to process the dataset is shown below and Fig~\ref{fig:Main_Algo} 
+  illurates the process of this algorithm:
   \begin{algorithm}
     \caption{The Main Algorithm}\label{alg:main}
     \begin{algorithmic}[1]
@@ -176,6 +187,13 @@ discover the number of clusters automatically. And the variants of DBSCAN \cite{
       \State $\text{Accuracy} \gets \text{calacc}((\text{Konwns}, \text{Clusters}), \text{Labels})$
     \end{algorithmic}
   \end{algorithm}
+
+  \begin{figure}[htb]
+    \centering
+    \includegraphics[scale=0.20]{assets/Main_Algo.pdf}
+    \caption{A figure about the main algorithm}
+    \label{fig:Main_Algo}
+  \end{figure}
 
   First, preprocess the dataset, e.g. normalize, apply PCA, apply AE. Second, classify the data after preprocessing. 
   In the experiment, we use PCA and AE to reduce the dimension down to 32 and 30 in arrhythmia dataset and gene 
@@ -242,14 +260,14 @@ discover the number of clusters automatically. And the variants of DBSCAN \cite{
   The experiment result of arrhythmia dataset is shown in Table~\ref{table:Arrhythmia_result}. And the result of gene 
   expression cancer RNA-Seq data set is in Table~\ref{table:gene_expression_result}. 
 
-  From the result, the fact that SVM performs worse than KNN can be seen. The main reason is because the multiple 
+  From the result, the fact that SVM performs worse than KNN can be seen. The main reason is because the mult- 
   classification SVMs method designed here can't separate well in most of types. Fig~\ref{fig:SVM_fail} illurates the 
   situation. For type 1 SVM, the negative/positive classification makes the data hard to separate, and also for type 
   2, 3, etc. This happens even when the kernel trick is applied, though the kernel trick sometimes ease the pain. 
   \begin{figure}[htb]
     \centering
     \includegraphics[scale=0.15]{assets/SVM_fail.pdf}
-    \caption{An example that multiple SVMs fail}
+    \caption{An example that mult-classification SVMs fail}
     \label{fig:SVM_fail}
   \end{figure}
 
@@ -311,6 +329,18 @@ discover the number of clusters automatically. And the variants of DBSCAN \cite{
   \end{table*}
   
 \section{Conclusion}
+In this study, we present a framework of algorithm to deal with the dataset containing 
+out-of-knowledge data. And with in this algorithm, multiple major machine learning 
+techniques are used, e.g., for preprocess, PCA, AE, normalization; for classification, 
+KNN, SVM, SVDD, NN, as for clustering, DBSCAN, k-means, NN-chain. Among the various 
+combinations, PCA + KNN + k-means performs outstanding in gene expression cancer RNA-Seq 
+dataset, and raw data + KNN + k-means performs the best in arrhythmia dataset. Accidently, 
+SVM performs bad in these two dataset. The main cause is the defect of the multi-classification 
+SVMs design, which make some SVMs hard to separate the target types. However, by customize 
+the kernel for each SVMs, the problem may ease. In the same time, the increasing number of 
+parameters can be fine-tuned by metaheuristic algorithms, e.g., simulated annealing, genetic 
+algorithm, etc. We will develope a refinement design on multi-classification SVMs, to enhance 
+the accuracy on these datasets.
 
 \section{Contribution}
 \begin{itemize}
