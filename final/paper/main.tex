@@ -178,7 +178,9 @@ discover the number of clusters automatically. And the variants of DBSCAN \cite{
   \end{algorithm}
 
   First, preprocess the dataset, e.g. normalize, apply PCA, apply AE. Second, classify the data after preprocessing. 
-  With this step the konwn types and the unknown types will be separated by a certain criterion. This criterions will 
+  In the experiment, we use PCA and AE to reduce the dimension down to 32 and 30 in arrhythmia dataset and gene 
+  expression cancer RNA-Seq dataset, respectively. 
+  With this step, the konwn types and the unknown types will be separated by a certain criterion. This criterions will 
   be varied depending on the classification algorithm. For KNN, the criterion is distance and probability. More specifically, 
   assume a data point $x$, and the k-nearest data points are $p_1,...,p_k$. Only those points whose distance between 
   $x$ smaller than $L$ will be marked valid. Denote the valid data points as $p'_1,...p'_n$, and the corresponding 
@@ -218,6 +220,21 @@ discover the number of clusters automatically. And the variants of DBSCAN \cite{
     \end{algorithmic}
   \end{algorithm}
 
+  On the other hands, neural network classifier has another criterion. First, train a neural network that classify the 
+  "konwn" and "unknown". Here "kown" means the types in train data, and "unkown" means the reverse. Then train the other 
+  neural network to classify the "konwn" data. The detail is in Algo~\ref{alg:NN}.
+  \begin{algorithm}[tb]
+    \caption{Neural Network Classification}\label{alg:NN}
+    \begin{algorithmic}[1]
+      \Require $\text{Train Data, Labels, Test Data}$
+      \Assume $\text{Length}(\text{Train Data})=\text{Length}(\text{Labels})=N,\text{Length}(\text{Test Data})=M$
+      \State{$\text{Binary NN}.\text{train(Train Data, Labels)}$}
+      \State{$\text{Mutli-Classification NN}.\text{train(Train Data, Labels)}$}
+      \State{$\text{Just Knowns, Unkonwns}=\text{Binary NN}.\text{predict}(\text{Test Data})$}
+      \State{$\text{Knowns}=\text{Mutli-Classification NN}.\text{predict}(\text{Just Knowns})$}
+    \end{algorithmic}
+  \end{algorithm}
+
   After classifying, the konwn types and unkonwn types are separated. The data marked as unkonwn types will be thrown 
   into clustering algorithm, e.g., DBSCAN, k-means. Subsequently, the process is completed.
 
@@ -235,12 +252,13 @@ discover the number of clusters automatically. And the variants of DBSCAN \cite{
     \caption{An example that multiple SVMs fail}
     \label{fig:SVM_fail}
   \end{figure}
+
   In the other hand, KNN performs extraordinarily. In arrhythmia dataset, KNN with k-means in raw data gets 53.1646\% 
   accuracy, which is the highest accuracy comparing to others methods. And in gene expression cancer RNA-Seq dataset, 
   KNN with k-means in PCA data gets 94.8795\%. And KNN with DBSCAN performs well too. This method shows similar performance 
   in these two datasets, which also gets 94.5783\% in gene expression cancer RNA-Seq dataset PCA data. 
 
-  \begin{table*}[htb]
+  \begin{table*}[tb]
     \newcommand{\z}{\phantom{0}}
     \caption{\textsc{Comparison of Classification Techniques. (Arrhythmia dataset)}}
       \vspace{-\baselineskip}
@@ -266,7 +284,7 @@ discover the number of clusters automatically. And the variants of DBSCAN \cite{
       \vspace{-\baselineskip}
   \end{table*}
 
-  \begin{table*}[htb]
+  \begin{table*}[tb]
     \newcommand{\z}{\phantom{0}}
     \caption{\textsc{Comparison of Classification Techniques. (gene expression cancer RNA-Seq dataset)}}
       \vspace{-\baselineskip}
