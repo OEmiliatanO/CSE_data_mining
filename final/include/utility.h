@@ -16,4 +16,21 @@ std::size_t assign(const U& x, const std::vector<T>& centers)
 template<typename T>
 double sign(T x) { return (x > 0 ? 1 : -1); }
 
+template<typename T>
+std::size_t argmax(std::vector<T> arr)
+{
+    if (arr.empty()) return 0;
+    
+    T maxx = std::numeric_limits<T>::min();
+    std::size_t maxi = 0;
+    for (std::size_t i = 0; i < arr.size(); ++i)
+        if (arr[i] > maxx)
+        {
+            maxx = arr[i];
+            maxi = i;
+        }
+
+    return maxi;
+}
+
 #endif
