@@ -261,44 +261,83 @@ point_t<label_t> SVMs_predict(auto& args, const auto& dataloader, std::size_t KN
     
     point_t<label_t> result;
 	result.resize(dataloader.test_data.size());
-    for (std::size_t i = 1; i <= KNOWN_CNT; ++i)
+    std::vector<std::vector<size_t>> votes;
+    votes.resize(dataloader.test_data.size());
+    for (auto& x : votes) x.resize(KNOWN_CNT);
+
+    for (std::size_t i = 1; i <= KNOWN_CNT; ++i) // +1
     {
-        dataset_t<data_t, label_t> dataset_{dataloader.train_data};
-        for (auto& x : dataset_.label) x = (x == (label_t)i ? 1LL : -1LL);
-		
-        SVM_t<data_t, label_t> SVM{punishment, converge_lim};
+        for (std::size_t j = i + 1; j <= KNOWN_CNT; ++j) // -1
+        {
+            SVM_t<data_t, label_t> SVM{punishment, converge_lim};
+            dataset_t<data_t, label_t> dataset_;
 
-        if (args["-SVM_kernel"] == "linear")
-            SVM.kernel = std::make_shared<linear_kernel<data_t>>();
-        else if (args["-SVM_kernel"] == "poly")
-        {
-            double g = std::stod(args["-SVM_kernel_gamma"]);
-            double d = std::stod(args["-SVM_kernel_degree"]);
-            double r = std::stod(args["-SVM_kernel_r"]);
-            SVM.kernel = std::make_shared<poly_kernel<data_t>>(g, d, r);
-        }
-        else if (args["-SVM_kernel"] == "rbf")
-        {
-            double g = std::stod(args["-SVM_kernel_gamma"]);
-            SVM.kernel = std::make_shared<rbf_kernel<data_t>>(g);
-        }
-        else if (args["-SVM_kernel"] == "sigmoid")
-        {
-            double g = std::stod(args["-SVM_kernel_gamma"]);
-            double r = std::stod(args["-SVM_kernel_r"]);
-            SVM.kernel = std::make_shared<sigmoid_kernel<data_t>>(g, r);
-        }
-        else
-        {
-            std::cerr << "doesn't support such kernel: " << args["-SVM_kernel"] << std::endl;
-            exit(1);
-        }
+            for (std::size_t k = 0; k < dataloader.train_data.size(); ++k)
+            {
+                if (dataloader.train_data.label[k] == (label_t)i)
+                {
+                    dataset_.emplace_back(dataloader.train_data.data[k], (label_t)+1);
+                }
+                else if(dataloader.train_data.label[k] == (label_t)j)
+                {
+                    dataset_.emplace_back(dataloader.train_data.data[k], (label_t)-1);
+                }
+            }
 
-    	SVM.fit(dataloader.train_data);
-    	point_t<label_t> result_ =  SVM.predict(dataloader.test_data);
-        for (std::size_t j = 0; j < result_.size(); ++j)
-            result[j] = (result_[j] == 1LL ? (label_t)i : 0LL);
+            if (args["-SVM_kernel"] == "linear")
+                SVM.kernel = std::make_shared<linear_kernel<data_t>>();
+            else if (args["-SVM_kernel"] == "poly")
+            {
+                double g = std::stod(args["-SVM_kernel_gamma"]);
+                double d = std::stod(args["-SVM_kernel_degree"]);
+                double r = std::stod(args["-SVM_kernel_r"]);
+                SVM.kernel = std::make_shared<poly_kernel<data_t>>(g, d, r);
+            }
+            else if (args["-SVM_kernel"] == "rbf")
+            {
+                double g = std::stod(args["-SVM_kernel_gamma"]);
+                SVM.kernel = std::make_shared<rbf_kernel<data_t>>(g);
+            }
+            else if (args["-SVM_kernel"] == "sigmoid")
+            {
+                double g = std::stod(args["-SVM_kernel_gamma"]);
+                double r = std::stod(args["-SVM_kernel_r"]);
+                SVM.kernel = std::make_shared<sigmoid_kernel<data_t>>(g, r);
+            }
+            else
+            {
+                std::cerr << "doesn't support such kernel: " << args["-SVM_kernel"] << std::endl;
+                exit(1);
+            }
+            SVM.fit(dataset_);
+            point_t<label_t> result_ = SVM.predict(dataloader.test_data);
+            for (std::size_t k = 0; k < result_.size(); ++k)
+                ++votes[k][(result_[k] == (label_t)+1 ? i : j)];
+        }
     }
+
+    //std::cerr << "==================" << std::endl;
+    for (std::size_t i = 0; i < result.size(); ++i)
+    {
+
+        double sum = 0;
+        for (auto x : votes[i]) sum += x;
+        double mean = sum / (votes[i].size() - 1);
+        double var = 0;
+        for (auto x : votes[i]) var += (x-mean)*(x-mean);
+        var /= (votes[i].size() - 1);
+
+        for (auto x : votes[i])
+            std::cerr << x << ' ';
+        std::cerr << "var = " << var << " , true label = ";
+        if (dataloader.test_data.label[i] > (label_t)KNOWN_CNT)
+            std::cerr << "UNKONWN" << std::endl;
+        else
+            std::cerr << dataloader.test_data.label[i] << std::endl;
+        result[i] = argmax(votes[i]);
+    }
+    //std::cerr << "==================" << std::endl;
+
     return result;
 }
 
