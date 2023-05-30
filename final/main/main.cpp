@@ -263,7 +263,7 @@ point_t<label_t> SVMs_predict(auto& args, const auto& dataloader, std::size_t KN
 	result.resize(dataloader.test_data.size());
     std::vector<std::vector<size_t>> votes;
     votes.resize(dataloader.test_data.size());
-    for (auto& x : votes) x.resize(KNOWN_CNT);
+    for (auto& x : votes) x.resize(KNOWN_CNT + 1);
 
     for (std::size_t i = 1; i <= KNOWN_CNT; ++i) // +1
     {
@@ -283,9 +283,11 @@ point_t<label_t> SVMs_predict(auto& args, const auto& dataloader, std::size_t KN
                     dataset_.emplace_back(dataloader.train_data.data[k], (label_t)-1);
                 }
             }
-
+            
             if (args["-SVM_kernel"] == "linear")
+            {
                 SVM.kernel = std::make_shared<linear_kernel<data_t>>();
+            }
             else if (args["-SVM_kernel"] == "poly")
             {
                 double g = std::stod(args["-SVM_kernel_gamma"]);
@@ -327,6 +329,7 @@ point_t<label_t> SVMs_predict(auto& args, const auto& dataloader, std::size_t KN
         for (auto x : votes[i]) var += (x-mean)*(x-mean);
         var /= (votes[i].size() - 1);
 
+        /*
         for (auto x : votes[i])
             std::cerr << x << ' ';
         std::cerr << "var = " << var << " , true label = ";
@@ -334,7 +337,9 @@ point_t<label_t> SVMs_predict(auto& args, const auto& dataloader, std::size_t KN
             std::cerr << "UNKONWN" << std::endl;
         else
             std::cerr << dataloader.test_data.label[i] << std::endl;
+        */
         result[i] = argmax(votes[i]);
+        if (var > 4.3) result[i] = 0;
     }
     //std::cerr << "==================" << std::endl;
 
