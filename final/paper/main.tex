@@ -156,6 +156,11 @@ hidden layer, increasing the accuracy. According to \cite{Gadekallu2020}\cite{Be
 network have been constructed and trained already, with high efficiency and accuracy in prediction of 
 diabetes.
 
+\bf{naive bayes classifier}: \rm{naive Bayes classifier} as its name suggest, is a machine learning method base on Bayesian 
+theorem, this model will statistic each data and find all conditional probability of each event occurring if each outcome holds. 
+And finally when it is asked to predict the result, the model will evaluate the data which requist provide and find the most 
+likely outcome according to the conditional probability it just recorded. 
+
 \subsection*{Clustering algorithm}
 
 \bf{k-means}: \rm{K-means} is a popular and easily implemented clustering method in machine learning and 
@@ -253,6 +258,12 @@ discover the number of clusters automatically. And the variants of DBSCAN \cite{
     \end{algorithmic}
   \end{algorithm}
 
+  When it comes to Naive Bayes classifier, Assume there are N known types. Denotes the N Bayes classifiers recognizing each
+  type of known types as BC_1, BC_2, ..., BC_N. For each test data, let BC_1 determine whether it belongs to     type 1, if
+  it does, mark it as type 1 and try classifying next test data, otherwise, BC_2 will determine whether it belongs to class_2
+  or not, and so on. If all Bayes classifiers results false, namely, the data doesn't belong to     any known types, marks it
+  as unknown type.
+  
   After classifying, the konwn types and unkonwn types are separated. The data marked as unkonwn types will be thrown 
   into clustering algorithm, e.g., DBSCAN, k-means. Subsequently, the process is completed.
 
@@ -348,7 +359,7 @@ the accuracy on these datasets.
   \item Hsu Ting-Hao: 
   \item Sun Shih-Yu: SVM, k-means, paper
   \item Lu Che-Yuan: 
-  \item Huang Chia-Yen: 
+  \item Huang Chia-Yen: Bayes, paper, poster
 \end{itemize}
 
 \bibliographystyle{IEEEtran}
