@@ -265,10 +265,10 @@ discover the number of clusters automatically. And the variants of DBSCAN \cite{
   \end{algorithm}
   During the known-unknown classification, the SVDD is used. First define a model , input every data into it to get the outcome, then use the mean of the outcome as the center of the hypersphere. Then, train the model to make every data in the dataset approach to the center of the hypersphere as close as possible. After training, we can get the radius of the hypersphere, which can be define according to the outcome of the model. Using the radius, we can classify the data to "known", if the distance between the center and the data is less than or equal to the radius, or to "unknown" otherwise.
 
-  When it comes to Naive Bayes classifier, Assume there are N known types. Denotes the N Bayes classifiers recognizing each
-  type of known types as BC_1, BC_2, ..., BC_N. For each test data, let BC_1 determine whether it belongs to     type 1, if
-  it does, mark it as type 1 and try classifying next test data, otherwise, BC_2 will determine whether it belongs to class_2
-  or not, and so on. If all Bayes classifiers results false, namely, the data doesn't belong to     any known types, marks it
+  As for Naive Bayes classifier, first assume there are $N$ known types. Denotes the $N$ Bayes classifiers recognizing each 
+  type of known types as $B_1, B_2, ..., B_N$. For each test data, let $B_1$ determine whether it belongs to type 1, if 
+  it does, mark it as type 1 and try classifying next test data, otherwise, $B_2$ will determine whether it belongs to type 2 
+  or not, and so on. If all Bayes classifiers results false, namely, the data doesn't belong to any known types, marks it 
   as unknown type.
   
   After classifying, the konwn types and unkonwn types are separated. The data marked as unkonwn types will be thrown 
@@ -289,14 +289,15 @@ discover the number of clusters automatically. And the variants of DBSCAN \cite{
     \label{fig:SVM_fail}
   \end{figure}
 
-  In the other hand, KNN performs extraordinarily. In arrhythmia dataset, KNN with k-means in raw data gets 53.1646\% 
+  On the other hand, KNN performs extraordinarily. In arrhythmia dataset, KNN with k-means in raw data gets 53.1646\% 
   accuracy, which is the highest accuracy comparing to others methods. And in gene expression cancer RNA-Seq dataset, 
   KNN with k-means in PCA data gets 94.8795\%. And KNN with DBSCAN performs well too. This method shows similar performance 
   in these two datasets, which also gets 94.5783\% in gene expression cancer RNA-Seq dataset PCA data. 
 
-  For the NN part, SVDD cannot be trained with data only processed interpolation. The hypersphere that the SVDD defines will include all the data in the test dataset, which make the clustering impossible. On the other hand, NN classifying can achieve accuracy 100 percent correctness, so the accuracy of Interpolation~NN with gene expression cancer RNA-Seq dataset will be 64.45 percent, in which only known class is predicted correctly.
-
-  On the other hand,SVDD can be trained with PCA-100-dimension data with accuracy up to 98 percent. With the NN with 100 percent accuracy and clustering algorithm NN-chain processing gene expression cancer RNA-Seq dataset,the accuray can achieve 75 percent correctness.
+  For the SVDD + NN with NN-chain, the performance is not as good as KNN, since SVDD cannot be trained with data augmented by 
+  interpolation. The hypersphere that defined by SVDD includes all data points in the test dataset, which makes 
+  clustering impossible. Therefore, though NN classifying achieves 100\% correctness on the known types, 
+  the accuracy of SVDD + NN with NN-chain can only reach 64.45\% in gene expression cancer RNA-Seq dataset. 
 
   \begin{table*}[tb]
     \newcommand{\z}{\phantom{0}}
@@ -316,7 +317,8 @@ discover the number of clusters automatically. And the variants of DBSCAN \cite{
       SVM (linear) + kmeans       & $1.7719$   & $25.3165 \pm 0$                & $37.9747$  & $37.9747 \pm 0$     & $0.2317$   & $25.3165 \pm 0$      & $0.8932$   & $27.8481 \pm 0$          & $0.2331$   & $24.0506 \pm 0$      & $0.1596$   & $20.2532 \pm 0$\\
       SVM (polynomial) + kmeans   & $1.0456$   & $25.3165 \pm 0$                & $1.4942$   & $26.5823 \pm 0$     & $0.2326$   & $14.5570 \pm 0$      & $0.4094$   & $28.4810 \pm 0$          & $0.2033$   & $24.0506 \pm 0$      & $0.4884$   & $25.3165 \pm 0$\\
       SVM (RBF) + kmeans          & $34.5382$  & $\z{8.8608} \pm 0$             & $43.0936$  & $29.7468 \pm 0$     & $110.589$  & $\z{0.6329} \pm 0$   & $112.945$  & $\z{1.2658} \pm 0$       & $38.7497$  & $22.7848 \pm 0$      & $14.1561$  & $27.2152 \pm 0$\\
-      SVM (sigmoid) + kmeans      & $4.0277$   & $22.6582 \pm 0$                & $8.0918$   & $17.7848 \pm 0$     & $0.7529$   & $25.3165 \pm 0$      & $0.7967$   & $12.0253 \pm 0$          & $0.6921$   & $17.7215 \pm 0$      & $0.4013$   & $28.4810 \pm 0$\\     
+      SVM (sigmoid) + kmeans      & $4.0277$   & $22.6582 \pm 0$                & $8.0918$   & $17.7848 \pm 0$     & $0.7529$   & $25.3165 \pm 0$      & $0.7967$   & $12.0253 \pm 0$          & $0.6921$   & $17.7215 \pm 0$      & $0.4013$   & $28.4810 \pm 0$\\
+      Bayes-GA + kmeans           & $0.1342$   & $13.2911 \pm 0$                & $X$        & $X$                 & $0.0294$   & $14.5570 \pm 0$      & $0.0400$   & $31.6456 \pm 0$          & $0.0297$   & $15.8228 \pm 0$      & $0.0399$   & $31.6456 \pm 0$\\
       \bottomrule
       \end{tabular}
     }
@@ -343,6 +345,7 @@ discover the number of clusters automatically. And the variants of DBSCAN \cite{
       SVM (polynomial) + kmeans & $81.4276$  & $61.7470 \pm 0$   & $81.1669$  & $63.8554 \pm 0$       & $0.2003$   & $64.4578 \pm 0$              & $0.2167$   & $25.3012 \pm 0$          & $0.1780$   & $63.2530 \pm 0$      & $0.1930$   & $50.3012 \pm 0$\\
       SVM (RBF) + kmeans        & $1772.32$  & $\z{9.9398} \pm 0$& $1800.6$   & $\z{9.9398} \pm 0$    & $1.3625$   & $\z{9.9398} \pm 0$           & $1.3848$   & $\z{9.9398} \pm 0$       & $11.1729$  & $39.7590 \pm 0$      & $4.7882$   & $28.6145 \pm 0$\\
       SVM (sigmoid) + kmeans    & $190.866$  & $26.5060 \pm 0$   & $81.7487$  & $63.8554 \pm 0$       & $0.8287$   & $65.9639 \pm 0$              & $0.4269$   & $65.9639 \pm 0$          & $0.9908$   & $28.9157 \pm 0$      & $0.2360$   & $39.4578 \pm 0$\\
+      Bayes-GA + kmeans         & $2.231$    & $43.6746$         & $X$        & $X$                   & $0.0327$   & $34.0361 \pm 0$              & $0.0364$   & $16.8675 \pm 0$          & $0.0338$   & $27.7946 \pm 0$      & $0.0427$   & $16.8674 \pm 0$\\
       \bottomrule
       \end{tabular}
     }
@@ -362,15 +365,18 @@ SVMs design, which make some SVMs hard to separate the target types. However, by
 the kernel for each SVM, the problem may ease. In the same time, the increasing number of 
 parameters can be fine-tuned by metaheuristic algorithms, e.g., simulated annealing, genetic 
 algorithm, etc. We will develope a refinement design on multi-classification SVMs, to enhance 
-the accuracy on these datasets.
+the accuracy on these datasets. Another issue is SVDD, in 32 dimension PCA data, it can not 
+separate the known and unkonwn types well. The reason behind is that in a lower dimension, 
+the distance between known and unknown types are so close that SVDD can not separate them. 
+If reduce the dataset to a relatively larger dimension, the problem may be solved.
 
 \section{Contribution}
 \begin{itemize}
   \item Hsieh Cheng-Han: KNN, SVM, DBSCAN, paper, ppt
   \item Hsu Ting-Hao: NN, SVDD, NN-Chain, paper, ppt
   \item Sun Shih-Yu: SVM, k-means, paper
-  \item Lu Che-Yuan: 
-  \item Huang Chia-Yen: Bayes, paper, poster
+  \item Lu Che-Yuan: naive Bayes classifier
+  \item Huang Chia-Yen: naive Bayes classifier, paper, poster
 \end{itemize}
 
 \bibliographystyle{IEEEtran}
