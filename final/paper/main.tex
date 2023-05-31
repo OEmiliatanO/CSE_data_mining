@@ -52,7 +52,7 @@
 
 \begin{document}
 
-\title{The Accuracy of KNN, SVM, Bayes classifier, SVDD, neural network with DBSCAN, k-means, NN-chain for Determining the Cancer by Gene-expression Signatures And the Arrhythmia Types}
+\title{The Accuracy of KNN, SVM, SVDD, neural network and DBSCAN, k-means for Determining the Cancer by Gene-expression Signatures And the Arrhythmia Types}
 
 \author{Hsieh Cheng-Han, Hsu Ting-Hao, Sun Shih-Yu, Lu Che-Yuan, Huang Chia-Yen}
 \date{May 2023}
@@ -63,9 +63,8 @@ Nowadays, using machine to give an early diagnosis of a cancer type is widely st
 In this paper, based on the gene-expression dataset on Synapse.org, we compare the performance of machine 
 learning techniques, including data preprocessing, e.g., Principal components analysis (PCA), Autoencoder 
 (AE), classification, e.g., k-nearest neighbors (KNN), support vector machine (SVM), neural network (NN), 
-Support Vector Data Description (SVDD), naive Bayes classifier; 
 and clustering for dealing with unknown types, e.g., k-means, density-based spatial clustering of 
-applications with noise (DBSCAN) and nearest-neighbor chain (NN-chain).
+applications with noise (DBSCAN). 
 
 The result of gene dataset shows that, with PCA reducing the dimension of the dataset to 32, use KNN for 
 classifying the known types, and finally apply DBSCAN on the remaining data, the accuracy of predicting 
@@ -123,6 +122,8 @@ and signal processing \cite{6497960} \cite{castells2007principal}, genetics \cit
 \cite{novembre2008interpreting}. It is particularly useful in scenarios where the dataset is 
 high-dimensional and the interpretation and visualization of the data are challenging.
 
+\bf{Standardization and Interpolation}: \rm{With} simple interpolation, the dataset size can be easily increased. To ensure that the new produced data would not lower the correctness and precsion of the dataset, standardization to the origin dataset is required.\cite{chen2022doublemix} has used simple interpolation to achieve data augmentation with great outcome. With standardization and interpolation, we earn enough data for the latter machine learning.
+
 \subsection*{Classification algorithm}
 
 \bf{k-nearest neighbors (KNN) classification algorithm}: \rm{The} KNN classification algorithm is a 
@@ -157,7 +158,8 @@ hidden layer, increasing the accuracy. According to \cite{Gadekallu2020}\cite{Be
 network have been constructed and trained already, with high efficiency and accuracy in prediction of 
 diabetes.
 
-\bf{naive Bayes classifier}: \rm{naive Bayes classifier} as its name suggest, is a machine learning method base on Bayesian 
+
+\bf{naive bayes classifier}: \rm{naive Bayes classifier} as its name suggest, is a machine learning method base on Bayesian 
 theorem, this model will statistic each data and find all conditional probability of each event occurring if each outcome holds. 
 And finally when it is asked to predict the result, the model will evaluate the data which requist provide and find the most 
 likely outcome according to the conditional probability it just recorded. 
@@ -179,6 +181,9 @@ This characteristic makes it particularly useful when addressing the datasets wh
 is unkonwn. DBSCAN is the major clustering algorithm in machine learning field, since the ability to 
 discover the number of clusters automatically. And the variants of DBSCAN \cite{6814687} is also developed widely. 
 
+\bf{Support Vector Data Description(SVDD)}:  \rm{SVDD} is an unsupervised learning algorithm used for one-class classification or outlier detection. It defines a hypersphere in the feature space to include some specific data to classify one class from other classes. With Deep SVDD, which is the variant of the SVDD which utilize the deep learning, more precise classification can be achieved providing only one class data.\cite{perera2021oneclass} give us the precise explanation how to train a model to classify data with only one class.
+
+\bf{Nearest neighbor chain(NN-Chain)}: \rm{NN-Chain} is data clustering algorithm developed by Jean-Paul Benzécri and J. Juan\cite{Benzécri1982}. This method cluster the data by merge mutual nearest neighbors nodes to one node, and repeat the same action until the goal clustering number is achieved. While the distance can be earned by the normal Euclidean distance, some distance approach is used in the algorithm as well to suit some specific data.\cite{10.1093/comjnl/26.4.354}\cite{müllner2011modern}. NN-Chain is one of the hierarchical clustering algorithm which is likely to be presented in tree-like data structure.
 \section{Main Process}
   The pesudo code of the proposed algorithm to process the dataset is shown below and Fig~\ref{fig:Main_Algo} 
   illurates the process of this algorithm:
@@ -258,11 +263,12 @@ discover the number of clusters automatically. And the variants of DBSCAN \cite{
       \State{$\text{Knowns}=\text{Mutli-Classification NN}.\text{predict}(\text{Just Knowns})$}
     \end{algorithmic}
   \end{algorithm}
+  During the known-unknown classification, the SVDD is used. First define a model , input every data into it to get the outcome, then use the mean of the outcome as the center of the hypersphere. Then, train the model to make every data in the dataset approach to the center of the hypersphere as close as possible. After training, we can get the radius of the hypersphere, which can be define according to the outcome of the model. Using the radius, we can classify the data to "known", if the distance between the center and the data is less than or equal to the radius, or to "unknown" otherwise.
 
-  As for Naive Bayes classifier, first assume there are $N$ known types. Denotes the $N$ Bayes classifiers recognizing each 
-  type of known types as $B_1, B_2, ..., B_N$. For each test data, let $B_1$ determine whether it belongs to type 1, if 
-  it does, mark it as type 1 and try classifying next test data, otherwise, $B_2$ will determine whether it belongs to type 2 
-  or not, and so on. If all Bayes classifiers results false, namely, the data doesn't belong to any known types, marks it 
+  When it comes to Naive Bayes classifier, Assume there are N known types. Denotes the N Bayes classifiers recognizing each
+  type of known types as BC_1, BC_2, ..., BC_N. For each test data, let BC_1 determine whether it belongs to     type 1, if
+  it does, mark it as type 1 and try classifying next test data, otherwise, BC_2 will determine whether it belongs to class_2
+  or not, and so on. If all Bayes classifiers results false, namely, the data doesn't belong to     any known types, marks it
   as unknown type.
   
   After classifying, the konwn types and unkonwn types are separated. The data marked as unkonwn types will be thrown 
@@ -288,6 +294,10 @@ discover the number of clusters automatically. And the variants of DBSCAN \cite{
   KNN with k-means in PCA data gets 94.8795\%. And KNN with DBSCAN performs well too. This method shows similar performance 
   in these two datasets, which also gets 94.5783\% in gene expression cancer RNA-Seq dataset PCA data. 
 
+  For the NN part, SVDD cannot be trained with data only processed interpolation. The hypersphere that the SVDD defines will include all the data in the test dataset, which make the clustering impossible. On the other hand, NN classifying can achieve accuracy 100 percent correctness, so the accuracy of Interpolation~NN with gene expression cancer RNA-Seq dataset will be 64.45 percent, in which only known class is predicted correctly.
+
+  On the other hand,SVDD can be trained with PCA-100-dimension data with accuracy up to 98 percent. With the NN with 100 percent accuracy and clustering algorithm NN-chain processing gene expression cancer RNA-Seq dataset,the accuray can achieve 75 percent correctness.
+
   \begin{table*}[tb]
     \newcommand{\z}{\phantom{0}}
     \caption{\textsc{Comparison of Classification Techniques. (Arrhythmia dataset)}}
@@ -306,8 +316,7 @@ discover the number of clusters automatically. And the variants of DBSCAN \cite{
       SVM (linear) + kmeans       & $1.7719$   & $25.3165 \pm 0$                & $37.9747$  & $37.9747 \pm 0$     & $0.2317$   & $25.3165 \pm 0$      & $0.8932$   & $27.8481 \pm 0$          & $0.2331$   & $24.0506 \pm 0$      & $0.1596$   & $20.2532 \pm 0$\\
       SVM (polynomial) + kmeans   & $1.0456$   & $25.3165 \pm 0$                & $1.4942$   & $26.5823 \pm 0$     & $0.2326$   & $14.5570 \pm 0$      & $0.4094$   & $28.4810 \pm 0$          & $0.2033$   & $24.0506 \pm 0$      & $0.4884$   & $25.3165 \pm 0$\\
       SVM (RBF) + kmeans          & $34.5382$  & $\z{8.8608} \pm 0$             & $43.0936$  & $29.7468 \pm 0$     & $110.589$  & $\z{0.6329} \pm 0$   & $112.945$  & $\z{1.2658} \pm 0$       & $38.7497$  & $22.7848 \pm 0$      & $14.1561$  & $27.2152 \pm 0$\\
-      SVM (sigmoid) + kmeans      & $4.0277$   & $22.6582 \pm 0$                & $8.0918$   & $17.7848 \pm 0$     & $0.7529$   & $25.3165 \pm 0$      & $0.7967$   & $12.0253 \pm 0$          & $0.6921$   & $17.7215 \pm 0$      & $0.4013$   & $28.4810 \pm 0$\\
-      Bayes-GA + kmeans           & $X$        & $X$                            & $X$        & $X$                 & $0.0294$   & $14.5570 \pm 0$      & $X$        & $X$                      & $0.0297$   & $15.8228 \pm 0$      & $X$        & $X$            \\
+      SVM (sigmoid) + kmeans      & $4.0277$   & $22.6582 \pm 0$                & $8.0918$   & $17.7848 \pm 0$     & $0.7529$   & $25.3165 \pm 0$      & $0.7967$   & $12.0253 \pm 0$          & $0.6921$   & $17.7215 \pm 0$      & $0.4013$   & $28.4810 \pm 0$\\     
       \bottomrule
       \end{tabular}
     }
@@ -334,7 +343,6 @@ discover the number of clusters automatically. And the variants of DBSCAN \cite{
       SVM (polynomial) + kmeans & $81.4276$  & $61.7470 \pm 0$   & $81.1669$  & $63.8554 \pm 0$       & $0.2003$   & $64.4578 \pm 0$              & $0.2167$   & $25.3012 \pm 0$          & $0.1780$   & $63.2530 \pm 0$      & $0.1930$   & $50.3012 \pm 0$\\
       SVM (RBF) + kmeans        & $1772.32$  & $\z{9.9398} \pm 0$& $1800.6$   & $\z{9.9398} \pm 0$    & $1.3625$   & $\z{9.9398} \pm 0$           & $1.3848$   & $\z{9.9398} \pm 0$       & $11.1729$  & $39.7590 \pm 0$      & $4.7882$   & $28.6145 \pm 0$\\
       SVM (sigmoid) + kmeans    & $190.866$  & $26.5060 \pm 0$   & $81.7487$  & $63.8554 \pm 0$       & $0.8287$   & $65.9639 \pm 0$              & $0.4269$   & $65.9639 \pm 0$          & $0.9908$   & $28.9157 \pm 0$      & $0.2360$   & $39.4578 \pm 0$\\
-      Bayes-GA + kmeans         & $X$        & $X$               & $X$        & $X$                   & $X$        & $X$                          & $X$        & $X$                      & $0.0338$   & $27.7946 \pm 0$      & $X$        & $X$            \\
       \bottomrule
       \end{tabular}
     }
@@ -346,7 +354,7 @@ discover the number of clusters automatically. And the variants of DBSCAN \cite{
 In this study, we present a framework of algorithm to deal with the dataset containing 
 out-of-knowledge data. And with in this algorithm, multiple major machine learning 
 techniques are used, e.g., for preprocess, PCA, AE, normalization; for classification, 
-KNN, SVM, SVDD, NN, Bayes classifier, as for clustering, DBSCAN, k-means, NN-chain. Among the various 
+KNN, SVM, SVDD, NN, as for clustering, DBSCAN, k-means, NN-chain. Among the various 
 combinations, PCA + KNN + k-means performs outstanding in gene expression cancer RNA-Seq 
 dataset, and raw data + KNN + k-means performs the best in arrhythmia dataset. Accidently, 
 SVM performs bad in these two dataset. The main cause is the defect of the multi-classification 
@@ -359,10 +367,10 @@ the accuracy on these datasets.
 \section{Contribution}
 \begin{itemize}
   \item Hsieh Cheng-Han: KNN, SVM, DBSCAN, paper, ppt
-  \item Hsu Ting-Hao: 
+  \item Hsu Ting-Hao: NN, SVDD, NN-Chain, paper, ppt
   \item Sun Shih-Yu: SVM, k-means, paper
   \item Lu Che-Yuan: 
-  \item Huang Chia-Yen: naive Bayes classifier, paper, poster
+  \item Huang Chia-Yen: Bayes, paper, poster
 \end{itemize}
 
 \bibliographystyle{IEEEtran}
