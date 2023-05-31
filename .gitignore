@@ -11,3 +11,6 @@
 __pycache__/
 *.pyc
 *.t7
+*.xdv
+*.fls
+*.fdb_latexmk
