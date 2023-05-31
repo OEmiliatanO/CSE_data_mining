@@ -62,9 +62,9 @@
 Nowadays, using machine to give an early diagnosis of a cancer type is widely studied. 
 In this paper, based on the gene-expression dataset on Synapse.org, we compare the performance of machine 
 learning techniques, including data preprocessing, e.g., Principal components analysis (PCA), Autoencoder 
-(AE), classification, e.g., k-nearest neighbors (KNN), support vector machine (SVM), neural network (NN), 
-and clustering for dealing with unknown types, e.g., k-means, density-based spatial clustering of 
-applications with noise (DBSCAN). 
+(AE), classification, e.g., k-nearest neighbors (KNN), support vector machine (SVM), support vector data 
+description (SVDD), neural network (NN) and naive Bayes classifier; and clustering for dealing with unknown 
+types, e.g., k-means, density-based spatial clustering of applications with noise (DBSCAN). 
 
 The result of gene dataset shows that, with PCA reducing the dimension of the dataset to 32, use KNN for 
 classifying the known types, and finally apply DBSCAN on the remaining data, the accuracy of predicting 
@@ -96,7 +96,8 @@ lung adenocarcinoma (LUAD), and 2 new types in test data, i.e., colon adenocarci
 prostate adenocarcinoma (PRAD). And also, the dataset of arrhythmia is included, which caintains
 8 types in train data, and 5 new types in test data. To find out which techniques is more suitable to fit 
 these two datasets, this work examines the the accuracy of the combinations of some major machine 
-learning techniques, including PCA, AE, KNN, SVM, NN, k-means, DBSCAN. 
+learning techniques, including PCA, AE, KNN, SVM, SVDD, NN, naive Bayes classifier, NN-chain, k-means, 
+DBSCAN. 
 
 \section{Related works}
 \label{sec:Related works}
