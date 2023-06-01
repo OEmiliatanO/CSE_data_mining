@@ -154,6 +154,7 @@ void SA(auto& args, double T, double Rt, double EndT, std::size_t n)
     set_arg(args, now_ss_d, now_ss_i);
     
     double e = E(args);
+    std::cerr << "init E = " << e << std::endl;
     best_acc = e;
     while (T > EndT)
     {
@@ -166,10 +167,12 @@ void SA(auto& args, double T, double Rt, double EndT, std::size_t n)
             neighbor(args, now_ss_d, now_ss_i, nex_ss_d, nex_ss_i);
             set_arg(args, nex_ss_d, nex_ss_i);
             double e1 = E(args);
+            //std::cerr << "new e = " << e1 << std::endl;
             double dt = e1 - e;
             if (e1 > best_acc)
             {
                 best_acc = e1;
+                std::cerr << best_acc << std::endl;
                 memcpy(best_ss_d, nex_ss_d, sizeof(nex_ss_d));
                 memcpy(best_ss_i, nex_ss_i, sizeof(nex_ss_i));
             }
