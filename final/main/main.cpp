@@ -85,6 +85,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
     std::string_view test_data_path  = args["-test_data_path"];
     std::string_view train_label_path = args["-train_label_path"];
     std::string_view test_label_path  = args["-test_label_path"];
+
     if (args["-verbose"] == "true")
     {
         std::cout << "===================================================" << std::endl;
@@ -126,6 +127,9 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
     	std::cout << "clustering algorithm: " << args["-clustering"] << std::endl << std::endl;
     }
     
+    label_t label_;
+    point_t<label_t> outer_classifying_result;
+    while (std::cin >> label_) outer_classifying_result.emplace_back(label_);
 	for (std::size_t _ = 0; _ < repeats; ++_)
 	{
 		//std::cout << _ << "-th fitting..." << std::endl;
@@ -134,10 +138,11 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
         kindscnt.resize(KNOWN_CNT + 1);
         centers.resize(UNKNOWN_CNT + KNOWN_CNT + 1);
         for (auto& x : centers) x.resize(dataloader.test_data.data_dimension());
-
+        
         //std::cerr << "classifying..." << std::endl;
-        auto classifying_result = Fn[args["-classifying"]](args, dataloader, KNOWN_CNT);
-		
+        //auto classifying_result = Fn[args["-classifying"]](args, dataloader, KNOWN_CNT);
+		auto classifying_result = outer_classifying_result;
+
 		dataset_t<data_t, label_t> unknown_data;
 		auto unknowncnt = 0, classify_correct = 0;
 		for (std::size_t i = 0; i < dataloader.test_data.size(); ++i)
@@ -165,7 +170,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
             std::cerr << "truely unknown cnt = " << unknowncnt << std::endl;
             std::cerr << "classify acc = " << (double)classify_correct / (dataloader.test_data.size() - unknowncnt) << std::endl;
         }
-
+        
 		Dataloader_t<data_t, label_t> unknown_dataloader;
 		unknown_dataloader.load_test(unknown_data);
         
@@ -199,7 +204,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 			final_acc = std::max(final_acc, acc);
 		} while (next_permutation(mapping.begin(), mapping.end()));
         
-        //std::cout << "acc: " << final_acc << "%" << std::endl << std::endl;
+        std::cout << "acc: " << final_acc << "%" << std::endl << std::endl;
 		macc_ += final_acc;
 		sum_ += final_acc;
 		sum2_ += final_acc*final_acc;
