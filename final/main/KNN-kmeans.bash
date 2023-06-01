@@ -7,7 +7,6 @@ ACCFILE="KNN-kmeans"
 
 echo "======================== dataset: arrhythmia ====================="
 
-
 echo "original"
 ./main.elf -repeats 10 -classifying KNN -clustering kmeans -train_data_path $DATASET1/train_data.csv -train_label_path $DATASET1/train_label.csv -test_data_path $DATASET1/test_data.csv -test_label_path $DATASET1/test_label.csv -normalize false -KNOWN_CNT 8 -UNKNOWN_CNT 5 -KNN_k 2 -KNN_maxdis 164.233 -KNN_problim 0.883498 -KNN_method brute -kmeans_converge_lim 1e-7 -verbose false #> $ACCFILE-$DATASETA-original.acc
 echo "original, nor"
@@ -37,3 +36,8 @@ echo "PCA 32"
 ./main.elf -repeats 10 -classifying KNN -clustering kmeans -train_data_path $DATASET2/PCA_train_data_30.csv -train_label_path $DATASET2/train_label.csv -test_data_path $DATASET2/PCA_test_data_30.csv -test_label_path $DATASET2/test_label.csv -normalize false -KNOWN_CNT 3 -UNKNOWN_CNT 2 -KNN_k 7 -KNN_maxdis 90 -KNN_problim 0.6 -KNN_method brute -kmeans_converge_lim 1e-7 -verbose false #> $ACCFILE-$DATASETB-PCA_30.acc
 echo "PCA 32, nor"
 ./main.elf -repeats 10 -classifying KNN -clustering kmeans -train_data_path $DATASET2/PCA_train_data_30.csv -train_label_path $DATASET2/train_label.csv -test_data_path $DATASET2/PCA_test_data_30.csv -test_label_path $DATASET2/test_label.csv -normalize true -KNOWN_CNT 3 -UNKNOWN_CNT 2 -KNN_k 7 -KNN_maxdis 25 -KNN_problim 1 -KNN_method brute -kmeans_converge_lim 1e-7 -verbose false #> $ACCFILE-$DATASETB-PCA_30-nor.acc
+
+echo "PCA 100"
+./main.elf -repeats 10 -classifying KNN -clustering kmeans -train_data_path $DATASET2/PCA_train_data_100.csv -train_label_path $DATASET2/train_label.csv -test_data_path $DATASET2/PCA_test_data_100.csv -test_label_path $DATASET2/test_label.csv -normalize false -KNOWN_CNT 3 -UNKNOWN_CNT 2 -KNN_k 2 -KNN_maxdis  111.431 -KNN_problim 0.882419 -KNN_method brute -kmeans_converge_lim 1e-7 -verbose false #> $ACCFILE-$DATASETB-PCA_30.acc
+echo "PCA 100, nor"
+./main.elf -repeats 10 -classifying KNN -clustering kmeans -train_data_path $DATASET2/PCA_train_data_100.csv -train_label_path $DATASET2/train_label.csv -test_data_path $DATASET2/PCA_test_data_100.csv -test_label_path $DATASET2/test_label.csv -normalize true -KNOWN_CNT 3 -UNKNOWN_CNT 2 -KNN_k 7 -KNN_maxdis 25 -KNN_problim 1 -KNN_method brute -kmeans_converge_lim 1e-7 -verbose false #> $ACCFILE-$DATASETB-PCA_30-nor.acc
