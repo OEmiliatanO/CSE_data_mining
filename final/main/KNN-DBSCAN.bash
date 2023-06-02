@@ -6,6 +6,7 @@ DATASETB="gene"
 ACCFILE="KNN-DBSCAN"
 
 echo "======================== dataset: arrhythmia ====================="
+
 echo "original"
 ./main.elf -repeats 10 -classifying KNN -clustering DBSCAN -train_data_path $DATASET1/train_data.csv -train_label_path $DATASET1/train_label.csv -test_data_path $DATASET1/test_data.csv -test_label_path $DATASET1/test_label.csv -normalize false -KNOWN_CNT 8 -UNKNOWN_CNT 5 -KNN_k 2 -KNN_maxdis 170.001 -KNN_problim 0.883498 -KNN_method brute -DBSCAN_minPts 64 -DBSCAN_eps 10000000000000 -verbose false #> $ACCFILE-$DATASETA-original.acc
 echo "original, nor"

@@ -11,6 +11,7 @@ echo "original"
 ./main.elf -repeats 10 -classifying KNN -clustering kmeans -train_data_path $DATASET1/train_data.csv -train_label_path $DATASET1/train_label.csv -test_data_path $DATASET1/test_data.csv -test_label_path $DATASET1/test_label.csv -normalize false -KNOWN_CNT 8 -UNKNOWN_CNT 5 -KNN_k 2 -KNN_maxdis 164.233 -KNN_problim 0.883498 -KNN_method brute -kmeans_converge_lim 1e-7 -verbose false #> $ACCFILE-$DATASETA-original.acc
 echo "original, nor"
 ./main.elf -repeats 1 -classifying KNN -clustering kmeans -train_data_path $DATASET1/train_data.csv -train_label_path $DATASET1/train_label.csv -test_data_path $DATASET1/test_data.csv -test_label_path $DATASET1/test_label.csv -normalize true -KNOWN_CNT 8 -UNKNOWN_CNT 5 -KNN_k 13 -KNN_maxdis 15 -KNN_problim 0.7 -KNN_method brute -DBSCAN_minPts 20 -DBSCAN_eps 50 -kmeans_converge_lim 1e-7 -verbose false #> $ACCFILE-$DATASETA-original-nor.acc
+
 echo "AE 32"
 ./main.elf -repeats 10 -classifying KNN -clustering kmeans -train_data_path $DATASET1/AE_train_data_32.csv -train_label_path $DATASET1/train_label.csv -test_data_path $DATASET1/AE_test_data_32.csv -test_label_path $DATASET1/test_label.csv -normalize false -KNOWN_CNT 8 -UNKNOWN_CNT 5 -KNN_k 11 -KNN_maxdis 20.1121 -KNN_problim 0.815425 -KNN_method brute -kmeans_converge_lim 1e-7 -verbose false #> $ACCFILE-$DATASETA-AE_32.acc
 echo "AE 32, nor"

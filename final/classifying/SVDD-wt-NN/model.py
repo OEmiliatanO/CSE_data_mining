@@ -1,0 +1,45 @@
+import torch
+import torch.nn as F
+import math
+class SVDD(torch.nn.Module):
+    def __init__(self,input_dim,output_dim):
+        super(SVDD,self).__init__()
+        lower_bound = 2**4
+        self.base = 2 # 2**math.floor(math.log2(input_dim))//2**9
+        if self.base < lower_bound:
+            self.base = lower_bound
+        # self.layer_nums = [input_dim]+[self.base,self.base*2]+[self.base*4 for i in range(0)]+[self.base*2,self.base]+[output_dim]
+        # self.layer_nums = [input_dim]+[1000]+[1000]+[output_dim] #32 PCA100
+        self.layer_nums = [input_dim]+[32]+[output_dim]
+        self.li=[F.Linear(self.layer_nums[i],self.layer_nums[i+1],bias=0) for i in range(len(self.layer_nums)-1)]
+        self.bn=[F.BatchNorm1d(i) for i in self.layer_nums[1:]]
+        self.lin = F.ModuleList(self.li)
+        self.bnn = F.ModuleList(self.bn)
+        self.acti = F.ReLU()
+        self.dropout = F.Dropout(p=0.3)
+        self.r = None
+    def forward(self,x):
+        for i in range(len(self.bn)-1):
+            # x = self.dropout(x)
+            x = self.lin[i](x)
+           # x = self.bnn[i](x)
+            x = self.acti(x)
+        return self.lin[-1](x)
+    def set_r(self,r):
+        self.r = r
+        
+class DNN(torch.nn.Module):
+    def __init__(self,input_dim,output_dim):
+        super(DNN,self).__init__()
+        base = 2**math.floor(math.log2(input_dim))//32
+        lower_bound = 4  #//32 for aug
+        if base  < lower_bound:
+            base = lower_bound
+        self.layer_nums = [input_dim]+[base,base*2]+[base*4 for i in range(0)]+[base*2,base]+[output_dim]
+        self.nn = F.ModuleList([torch.nn.Linear(self.layer_nums[i],self.layer_nums[i+1]) for i in range(len(self.layer_nums)-1)])
+        self.acti = F.ReLU()
+    def forward(self,x):
+        for f in self.nn[:-1]:
+            x = f(x)
+            x = self.acti(x)
+        return self.nn[-1](x)
