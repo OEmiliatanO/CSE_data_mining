@@ -299,7 +299,8 @@ discover the number of clusters automatically. And the variants of DBSCAN \cite{
   interpolation. The hypersphere that defined by SVDD includes all data points in the test dataset, which makes 
   clustering impossible. Therefore, though NN classifying achieves 100\% correctness on the known types, 
   the accuracy of SVDD with NN + NN-chain can only reach 64.45\% in gene expression cancer RNA-Seq dataset with PCA-30. 
-  However, when in PCA-100, SVDD with NN + k-means and DBSCAN can have 98.4940\% and 97.8916\% respectively.
+  However, as Table~\ref{table:gene_expression_result_PCA_100} shown, when in PCA-100, SVDD with NN + k-means and DBSCAN can 
+  have 98.1928\% and 98.1928\% respectively. 
 
   \begin{table*}[tb]
     \newcommand{\z}{\phantom{0}}
@@ -320,8 +321,7 @@ discover the number of clusters automatically. And the variants of DBSCAN \cite{
       SVM (polynomial) + kmeans   & $1.0456$   & $25.3165 \pm 0$                & $1.4942$   & $26.5823 \pm 0$     & $0.2326$   & $14.5570 \pm 0$      & $0.4094$   & $28.4810 \pm 0$          & $0.2033$   & $24.0506 \pm 0$      & $0.4884$   & $25.3165 \pm 0$\\
       SVM (RBF) + kmeans          & $34.5382$  & $\z{8.8608} \pm 0$             & $43.0936$  & $29.7468 \pm 0$     & $110.589$  & $\z{0.6329} \pm 0$   & $112.945$  & $\z{1.2658} \pm 0$       & $38.7497$  & $22.7848 \pm 0$      & $14.1561$  & $27.2152 \pm 0$\\
       SVM (sigmoid) + kmeans      & $4.0277$   & $22.6582 \pm 0$                & $8.0918$   & $17.7848 \pm 0$     & $0.7529$   & $25.3165 \pm 0$      & $0.7967$   & $12.0253 \pm 0$          & $0.6921$   & $17.7215 \pm 0$      & $0.4013$   & $28.4810 \pm 0$\\
-      Bayes-GA + kmeans           & $0.1342$   & $13.2911 \pm 0$                & $X$        & $\text{not converge}$& $0.0294$  & $14.5570 \pm 0$      & $0.0400$   & $31.6456 \pm 0$          & $0.0297$   & $15.8228 \pm 0$      & $0.0399$   & $31.6456 \pm 0$\\
-      SVDD w.t. NN + NN-Chain     & $0.6338$   & $31.6456 \pm 0$                & $0.633 $   & $29.7468 \pm 0$     & $0.9358$   & $31.6456 \pm 0$      & $0.8370$   & $30.3797 \pm 0$          & $1.0540$   & $29.7468 \pm 0$      & $1.0540$   & $29.7468 \pm 0$\\
+      Bayes-GA + kmeans           & $0.0957$   & $\z{9.9367} \pm 0.0041$        & $0.1416$   & $\z{8.9241} \pm 0.0019$ & $0.0315$   & $\z{8.7975} \pm 0.0019$  & $0.0336$   & $\z{8.5443} \pm 0.0042$  & $0.0325$   & $\z{3.7975} \pm 0$   & $0.0332$   & $\z{4.4304} \pm 0$\\
       \bottomrule
       \end{tabular}
     }
@@ -335,30 +335,53 @@ discover the number of clusters automatically. And the variants of DBSCAN \cite{
       \vspace{-\baselineskip}
     \resizebox{\textwidth}{!}{
       \begin{tabular}{@{}lcccccccccccc@{}}\toprule
-        Method                  & \multicolumn{2}{c}{Raw}        & \multicolumn{2}{c}{Normalized}     & \multicolumn{2}{c}{PCA-30}                & \multicolumn{2}{c}{PCA-30 Normalized} & \multicolumn{2}{c}{PCA-100} & \multicolumn{2}{c}{PCA-100 Normalized} & \multicolumn{2}{c}{AE-30}         & \multicolumn{2}{c}{AE-30 Normalized} \\ 
-        \cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}\cmidrule(lr){10-11}\cmidrule(lr){12-13}\cmidrule(lr){14-15}\cmidrule(lr){16-17}
-                                & Search (s) & acc               & Search (s) & acc                   & Search (s) & acc                          & Search (s) & acc                                                                                             & Search (s) & acc                  & Search (s) & acc            \\ \midrule
-      KNN-Brute-Force + DBSCAN  & $14.5101$  & $59.0361 \pm 0$   & $10.3013$  & $\bf{66.5663} \pm 0$  & $0.0224$   & $94.5783 \pm 0$              & $0.0237$   & $78.3133 \pm 0$          & $0.0518$   & $91.2651 \pm 0$& $0.0494$   & $69.8795 \pm 0$           & $0.0258$   & $\bf{64.4578} \pm 0$ & $0.0235$   & $59.3373 \pm 0$\\
-      SVM (linear) + DBSCAN     & $124.593$  & $61.7470 \pm 0$   & $610.6730$ & $\z{9.9398} \pm 0$    & $0.6466$   & $\z{9.9398} \pm 0$           & $0.1193$   & $10.5422 \pm 0$          & $4.3810$   & $9.9398 \pm 0$ & $0.5112$   & $9.9398 \pm 0$            & $0.1407$   & $63.2530 \pm 0$      & $0.1122$   & $13.5542 \pm 0$\\
-      SVM (polynomial) + DBSCAN & $81.6495$  & $61.7470 \pm 0$   & $86.6406$  & $\z{1.2048} \pm 0$    & $0.2585$   & $64.4578 \pm 0$              & $0.3012$   & $61.1446 \pm 0$          & $0.4586$   & $64.4578 \pm 0$& $0.4612$   & $61.747 \pm 0$            & $0.2013$   & $63.2530 \pm 0$      & $0.2056$   & $50.3012 \pm 0$\\
-      SVM (RBF) + DBSCAN        & $X$        & $\text{not converge}$ & $X$    & $\text{not converge}$ & $12.5077$  & $\z{9.9398} \pm 0$           & $3.8838$   & $63.2530 \pm 0$          & $21.3767$  & $9.9398 \pm 0$ & $3.3378$   & $9.6386 \pm 0$            & $5.0461$   & $40.3614 \pm 0$      & $11.4194$  & $49.6988 \pm 0$\\
-      SVM (sigmoid) + DBSCAN    & $X$        & $\text{not converge}$ & $X$    & $\text{not converge}$ & $0.6372$   & $71.6867 \pm 0$              & $0.8222$   & $65.9639 \pm 0$          & $0.9179$   & $71.9880 \pm 0$& $1.6702$   & $61.4458 \pm 0$           & $0.6236$   & $44.2771 \pm 0$      & $0.2273$   & $38.2530 \pm 0$\\
-      KNN-Brute-Force + kmeans  & $22.754$   & $\bf{74.0964} \pm 0$& $6.36577$& $53.6145 \pm 0$       & $0.0212$   & $\bf{94.8795} \pm 0$         & $0.0214$   & $\bf{84.9398} \pm 0$     & $0.0374$   & $91.8675 \pm 0$& $0.0404$   & $75.6024 \pm 0$           & $0.0214$   & $42.1687 \pm 0$      & $0.0220$   & $\bf{65.9639} \pm 0$\\
-      SVM (linear) + kmeans     & $136.408$  & $61.7470 \pm 0$   & $664.2860$ & $\z{9.9398} \pm 0$    & $0.5914$   & $\z{9.9398} \pm 0$           & $0.1077$   & $10.5422 \pm 0$          & $2.3938$   & $9.9398 \pm 0$ & $0.5174$   & $9.9398 \pm 0$            & $0.1274$   & $63.2530 \pm 0$      & $0.1084$   & $13.2530 \pm 0$\\
-      SVM (polynomial) + kmeans & $81.4276$  & $61.7470 \pm 0$   & $81.1669$  & $63.8554 \pm 0$       & $0.2003$   & $64.4578 \pm 0$              & $0.2167$   & $25.3012 \pm 0$          & $0.4698$   & $64.4578 \pm 0$& $5.4048$   & $9.9398 \pm 0$            & $0.1780$   & $63.2530 \pm 0$      & $0.1930$   & $50.3012 \pm 0$\\
-      SVM (RBF) + kmeans        & $1772.32$  & $\z{9.9398} \pm 0$& $1800.6$   & $\z{9.9398} \pm 0$    & $1.3625$   & $\z{9.9398} \pm 0$           & $1.3848$   & $\z{9.9398} \pm 0$       & $3.1693$   & $9.9398 \pm 0$ & $5.1415$   & $9.9398 \pm 0$            & $11.1729$  & $39.7590 \pm 0$      & $4.7882$   & $28.6145 \pm 0$\\
-      SVM (sigmoid) + kmeans    & $190.866$  & $26.5060 \pm 0$   & $81.7487$  & $63.8554 \pm 0$       & $0.8287$   & $65.9639 \pm 0$              & $0.4269$   & $65.9639 \pm 0$          & $1.1448$   & $71.9880 \pm 0$& $1.3232$   & $61.4458 \pm 0$           & $0.9908$   & $28.9157 \pm 0$      & $0.2360$   & $39.4578 \pm 0$\\
-      Bayes-GA + kmeans         & $2.231$    & $43.6746 \pm 0$   & $X$        & $\text{not converge}$ & $0.0327$   & $34.0361 \pm 0$              & $0.0364$   & $16.8675 \pm 0$          & $X$        & $X \pm 0$      & $X$        & $X \pm 0$           & $0.0338$   & $27.7946 \pm 0$      & $0.0427$   & $16.8674 \pm 0$\\
-      SVDD w.t. NN + NN-Chain   & $163.359$  & $40.9600 \pm 0$   & $169.031$  & $41.2651 \pm 0$       & $1.1779$   & $35.5421 \pm 0$              & $1.1170$   & $40.9600 \pm 0$          & $X$        & $X \pm 0$      & $X$        & $X \pm 0$           & $0.9979$   & $16.4634 \pm 0$      & $1.0220$   & $41.2651 \pm 0$\\
-      SVDD w.t. NN + DBSCAN     & $163.359$  & $40.9600 \pm 0$   & $169.031$  & $41.2651 \pm 0$       & $1.1779$   & $35.5421 \pm 0$              & $1.1170$   & $40.9600 \pm 0$          & $X$        & $98.4940 \pm 0$& $X$        & $X \pm 0$           & $0.9979$   & $16.4634 \pm 0$      & $1.0220$   & $41.2651 \pm 0$\\
-      SVDD w.t. NN + k-means    & $163.359$  & $40.9600 \pm 0$   & $169.031$  & $41.2651 \pm 0$       & $1.1779$   & $35.5421 \pm 0$              & $1.1170$   & $40.9600 \pm 0$          & $X$        & $97.8916 \pm 0$& $X$        & $X \pm 0$           & $0.9979$   & $16.4634 \pm 0$      & $1.0220$   & $41.2651 \pm 0$\\
+        Method                  & \multicolumn{2}{c}{Raw}        & \multicolumn{2}{c}{Normalized}     & \multicolumn{2}{c}{PCA-30}                & \multicolumn{2}{c}{PCA-30 Normalized} &  \multicolumn{2}{c}{AE-30}        & \multicolumn{2}{c}{AE-30 Normalized} \\ 
+        \cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}\cmidrule(lr){10-11}\cmidrule(lr){12-13}
+                                & Search (s) & acc               & Search (s) & acc                   & Search (s) & acc                          & Search (s) & acc                      & Search (s) & acc                  & Search (s) & acc            \\ \midrule
+      KNN-Brute-Force + DBSCAN  & $14.5101$  & $59.0361 \pm 0$   & $10.3013$  & $\bf{66.5663} \pm 0$  & $0.0224$   & $94.5783 \pm 0$              & $0.0237$   & $78.3133 \pm 0$          & $0.0258$   & $\bf{64.4578} \pm 0$ & $0.0235$   & $59.3373 \pm 0$\\
+      SVM (linear) + DBSCAN     & $124.593$  & $61.7470 \pm 0$   & $610.6730$ & $\z{9.9398} \pm 0$    & $0.6466$   & $\z{9.9398} \pm 0$           & $0.1193$   & $10.5422 \pm 0$          & $0.1407$   & $63.2530 \pm 0$      & $0.1122$   & $13.5542 \pm 0$\\
+      SVM (polynomial) + DBSCAN & $81.6495$  & $61.7470 \pm 0$   & $86.6406$  & $\z{1.2048} \pm 0$    & $0.2585$   & $64.4578 \pm 0$              & $0.3012$   & $61.1446 \pm 0$          & $0.2013$   & $63.2530 \pm 0$      & $0.2056$   & $50.3012 \pm 0$\\
+      SVM (RBF) + DBSCAN        & $X$        & $\text{not converge}$ & $X$    & $\text{not converge}$ & $12.5077$  & $\z{9.9398} \pm 0$           & $3.8838$   & $63.2530 \pm 0$          & $5.0461$   & $40.3614 \pm 0$      & $11.4194$  & $49.6988 \pm 0$\\
+      SVM (sigmoid) + DBSCAN    & $X$        & $\text{not converge}$ & $X$    & $\text{not converge}$ & $0.6372$   & $71.6867 \pm 0$              & $0.8222$   & $65.9639 \pm 0$          & $0.6236$   & $44.2771 \pm 0$      & $0.2273$   & $38.2530 \pm 0$\\
+      KNN-Brute-Force + kmeans  & $22.754$   & $\bf{74.0964} \pm 0$& $6.36577$& $53.6145 \pm 0$       & $0.0212$   & $\bf{94.8795} \pm 0$         & $0.0214$   & $\bf{84.9398} \pm 0$     & $0.0214$   & $42.1687 \pm 0$      & $0.0220$   & $\bf{65.9639} \pm 0$\\
+      SVM (linear) + kmeans     & $136.408$  & $61.7470 \pm 0$   & $664.2860$ & $\z{9.9398} \pm 0$    & $0.5914$   & $\z{9.9398} \pm 0$           & $0.1077$   & $10.5422 \pm 0$          & $0.1274$   & $63.2530 \pm 0$      & $0.1084$   & $13.2530 \pm 0$\\
+      SVM (polynomial) + kmeans & $81.4276$  & $61.7470 \pm 0$   & $81.1669$  & $63.8554 \pm 0$       & $0.2003$   & $64.4578 \pm 0$              & $0.2167$   & $25.3012 \pm 0$          & $0.1780$   & $63.2530 \pm 0$      & $0.1930$   & $50.3012 \pm 0$\\
+      SVM (RBF) + kmeans        & $1772.32$  & $\z{9.9398} \pm 0$& $1800.6$   & $\z{9.9398} \pm 0$    & $1.3625$   & $\z{9.9398} \pm 0$           & $1.3848$   & $\z{9.9398} \pm 0$       & $11.1729$  & $39.7590 \pm 0$      & $4.7882$   & $28.6145 \pm 0$\\
+      SVM (sigmoid) + kmeans    & $190.866$  & $26.5060 \pm 0$   & $81.7487$  & $63.8554 \pm 0$       & $0.8287$   & $65.9639 \pm 0$              & $0.4269$   & $65.9639 \pm 0$          & $0.9908$   & $28.9157 \pm 0$      & $0.2360$   & $39.4578 \pm 0$\\
+      Bayes-GA + kmeans         & $X$        & $\text{not converge}$ & $X$    & $\text{not converge}$ & $0.0314$   & $37.0482 \pm 5.5511$         & $0.0406$   & $60.2410 \pm 1.1102$     & $0.0391$   & $33.1325 \pm 0$      & $0.0303$   & $31.3253 \pm 0$\\
       \bottomrule
       \end{tabular}
     }
     \label{table:gene_expression_result}
       \vspace{-\baselineskip}
   \end{table*}
-  
+
+  \begin{table*}
+    \centering
+    \newcommand{\z}{\phantom{0}}
+    \caption{\textsc{Comparison of Classification Techniques. (gene expression cancer RNA-Seq dataset)}}
+      \begin{tabular}{@{}lcc@{}}\toprule
+        Method                  & \multicolumn{2}{c}{PCA-100} \\ 
+        \cmidrule(lr){2-3}
+                                & Search (s) & acc            \\ \midrule
+      KNN-Brute-Force + DBSCAN  & $0.0518$   & $91.2651 \pm 0$\\
+      SVM (linear) + DBSCAN     & $4.3810$   & $\z{9.9398}  \pm 0$\\
+      SVM (polynomial) + DBSCAN & $0.4586$   & $64.4578 \pm 0$\\
+      SVM (RBF) + DBSCAN        & $21.3767$  & $\z{9.9398}  \pm 0$\\
+      SVM (sigmoid) + DBSCAN    & $0.9179$   & $71.9880 \pm 0$\\
+      KNN-Brute-Force + kmeans  & $0.0374$   & $91.8675 \pm 0$\\
+      SVM (linear) + kmeans     & $2.3938$   & $\z{9.9398}  \pm 0$\\
+      SVM (polynomial) + kmeans & $0.4698$   & $64.4578 \pm 0$\\
+      SVM (RBF) + kmeans        & $3.1693$   & $\z{9.9398}  \pm 0$\\
+      SVM (sigmoid) + kmeans    & $1.1448$   & $71.9880 \pm 0$\\
+      SVDD w.t. NN + DBSCAN     & $1.218$    & $\bf{98.1928} \pm 0$\\
+      SVDD w.t. NN + k-means    & $1.267$    & $\bf{98.1928} \pm 0$\\
+      \bottomrule
+      \end{tabular}
+    \label{table:gene_expression_result_PCA_100}
+      \vspace{-\baselineskip}
+  \end{table*}
+
 \section{Conclusion}
 In this study, we present a framework of algorithm to deal with the dataset containing 
 out-of-knowledge data. And with in this algorithm, multiple major machine learning 
@@ -377,6 +400,7 @@ and unkonwn with 98\% accuracy. The reason behind is because that in a lower dim
 the distance between known and unknown types are so close that SVDD can not separate them. 
 If reduce the dataset to a relatively larger dimension, the problem can be solved. 
 
+\newpage
 \section{Contribution}
 \begin{itemize}
   \item Hsieh Cheng-Han: KNN, SVM, DBSCAN, paper, ppt
