@@ -4,7 +4,7 @@ DATASETA="Arrhythmia"
 DATASET2="../data/gene_expression_cancer_RNA-Seq_data_set"
 DATASETB="gene"
 ACCFILE="SVM-DBSCAN"
-<<a
+
 echo "======================== dataset: arrhythmia ====================="
 echo "original, linear"
 ./main.elf -repeats 1 -classifying SVM -clustering DBSCAN -train_data_path $DATASET1/train_data.csv -train_label_path $DATASET1/train_label.csv -test_data_path $DATASET1/test_data.csv -test_label_path $DATASET1/test_label.csv -normalize false -KNOWN_CNT 8 -UNKNOWN_CNT 5 -SVM_converge_lim 1e-7 -SVM_punishment 0.1 -SVM_kernel linear -SVM_kernel_gamma 2 -SVM_kernel_degree 2 -SVM_kernel_r 1 -DBSCAN_minPts 10 -DBSCAN_eps 300 -verbose false #> $ACCFILE-$DATASETA-original-linear.acc
@@ -108,7 +108,7 @@ echo "PCA 30, sigmoid"
 ./main.elf -repeats 1 -classifying SVM -clustering DBSCAN -train_data_path $DATASET2/PCA_train_data_30.csv -train_label_path $DATASET2/train_label.csv -test_data_path $DATASET2/PCA_test_data_30.csv -test_label_path $DATASET2/test_label.csv -normalize false -KNOWN_CNT 3 -UNKNOWN_CNT 2 -SVM_converge_lim 1e-7 -SVM_punishment 1 -SVM_kernel sigmoid -SVM_kernel_gamma 0.0000165 -SVM_kernel_degree 2 -SVM_kernel_r 0.001 -DBSCAN_minPts 10 -DBSCAN_eps 460 -kmeans_converge_lim 1e-7 -verbose false
 echo "PCA 30, sigmoid, nor"
 ./main.elf -repeats 1 -classifying SVM -clustering DBSCAN -train_data_path $DATASET2/PCA_train_data_30.csv -train_label_path $DATASET2/train_label.csv -test_data_path $DATASET2/PCA_test_data_30.csv -test_label_path $DATASET2/test_label.csv -normalize true -KNOWN_CNT 3 -UNKNOWN_CNT 2 -SVM_converge_lim 1e-7 -SVM_punishment 1 -SVM_kernel sigmoid -SVM_kernel_gamma 2 -SVM_kernel_degree 2 -SVM_kernel_r 0.001 -DBSCAN_minPts 10 -DBSCAN_eps 460 -kmeans_converge_lim 1e-7 -verbose false
-a
+
 echo "PCA 100, linear"
 ./main.elf -repeats 1 -classifying SVM -clustering DBSCAN -train_data_path $DATASET2/PCA_train_data_100.csv -train_label_path $DATASET2/train_label.csv -test_data_path $DATASET2/PCA_test_data_100.csv -test_label_path $DATASET2/test_label.csv -normalize false -KNOWN_CNT 3 -UNKNOWN_CNT 2 -SVM_converge_lim 1e-7 -SVM_punishment 1 -SVM_kernel linear -SVM_kernel_gamma 2 -SVM_kernel_degree 2 -SVM_kernel_r 1 -DBSCAN_minPts 10 -DBSCAN_eps 460 -kmeans_converge_lim 1e-7 -verbose false
 echo "PCA 100, nor, linear"
