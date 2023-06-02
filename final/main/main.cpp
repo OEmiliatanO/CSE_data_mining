@@ -3,6 +3,7 @@
 #include <cmath>
 #include <chrono>
 #include <unordered_map>
+#include <fstream>
 #include "KNN.h"
 #include "Brute.h"
 #include "Annoy.h"
@@ -22,6 +23,7 @@ using ccfn = point_t<label_t>(*)(std::unordered_map<std::string, std::string>&, 
 
 point_t<label_t> KNN_predict(auto& args, const auto& dataloader, std::size_t KNOWN_CNT);
 point_t<label_t> SVMs_predict(auto& args, const auto& dataloader, std::size_t KNOWN_CNT);
+point_t<label_t> SVDD_wt_NN_predict(auto& args, const auto& dataloader, std::size_t n);
 point_t<label_t> DBSCAN_fit(auto& args, const auto& dataloader, std::size_t UNKNOWN_CNT);
 point_t<label_t> kmeans_fit(auto& args, const auto& dataloader, std::size_t k);
 
@@ -31,6 +33,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 {
     Fn["KNN"] = KNN_predict;
     Fn["SVM"] = SVMs_predict;
+    Fn["SVDD-wt-NN"] = SVDD_wt_NN_predict;
     Fn["DBSCAN"] = DBSCAN_fit;
     Fn["kmeans"] = kmeans_fit;
 
@@ -209,7 +212,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
 	macc_ /= repeats;
 
 	std::chrono::steady_clock::time_point ed = std::chrono::steady_clock::now();
-	std::cout << "acc = " << macc_ << "%(" << stand_ << ")" << std::endl;
+	std::cout << "" << macc_ << "%(" << stand_ << ")" << std::endl;
 	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(ed - st).count() / 1000000.0 / repeats;
 	std::cout << "time: " << duration << std::endl << std::endl;
 
@@ -299,6 +302,18 @@ point_t<label_t> SVMs_predict(auto& args, const auto& dataloader, std::size_t KN
         for (std::size_t j = 0; j < result_.size(); ++j)
             result[j] = (result_[j] == 1LL ? (label_t)i : 0LL);
     }
+    return result;
+}
+
+point_t<label_t> SVDD_wt_NN_predict(auto& args, [[maybe_unused]] const auto& dataloader, [[maybe_unused]] std::size_t n)
+{
+    std::fstream fs;
+    fs.open(args["-SVDD-wt-NN_result_path"], std::ios::in);
+    if (!fs.is_open()) { std::cerr << "Cannot open " << args["-SVDD-wt-NN_result_path"] << std::endl; exit(1); }
+    label_t x;
+    point_t<label_t> result;
+    while (fs >> x) result.emplace_back(x);
+    fs.close();
     return result;
 }
 
