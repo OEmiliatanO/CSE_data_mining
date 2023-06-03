@@ -10,5 +10,5 @@ RESFILE="SVDD-wt-NN_result.csv"
 echo "================== dataset: gene expression cancer ====================="
 
 echo "PCA 100"
-time python ../classifying/SVDD-wt-NN/SVDDNN.py $DATASET2/PCA_test_data_100.csv $DATASET2/test_label.csv ./$RESFILE
+time python ../classifying/SVDD-wt-NN/SVDDNN.py $DATASET2/PCA_test_data_100.csv $DATASET2/test_label.csv ./$RESFILE ../classifying/SVDD-wt-NN/model ../classifying/SVDD-wt-NN/parameter
 ./main.elf -repeats 10 -classifying SVDD-wt-NN -clustering kmeans -train_data_path $DATASET2/PCA_train_data_100.csv -train_label_path $DATASET2/train_label.csv -test_data_path $DATASET2/PCA_test_data_100.csv -test_label_path $DATASET2/test_label.csv -SVDD-wt-NN_result_path ./$RESFILE -normalize false -KNOWN_CNT 3 -UNKNOWN_CNT 2 -kmeans_converge_lim 1e-7 -verbose false
