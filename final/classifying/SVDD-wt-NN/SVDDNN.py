@@ -11,7 +11,7 @@ BATCH_SIZE = 8
 OUTPUT_DIM= 200
 DATA = "PCA100"
 
-def SVDDNN(data_path,label_path,outcome_path):
+def SVDDNN(data_path,label_path,outcome_path, model_pth, param_pth):
     test_data = pd.read_csv(data_path,header=None).to_numpy()
     test_label = pd.read_csv(label_path,header=None).to_numpy()
     tensor_test_data = torch.tensor(test_data)
@@ -23,8 +23,8 @@ def SVDDNN(data_path,label_path,outcome_path):
 
     dataloader = DataLoader(test_dataset,batch_size=BATCH_SIZE)
     SVDD_model = SVDD(len(test_dataset[0][0]),OUTPUT_DIM).to("cuda")
-    SVDD_model.load_state_dict(torch.load('./model/one-class-model-from-{}.pth'.format(DATA)))
-    c = torch.tensor(pd.read_csv("./parameter/c.txt",header=None).to_numpy()).squeeze().to(torch.float32).to("cuda")
+    SVDD_model.load_state_dict(torch.load(f"{model_pth}/one-class-model-from-{DATA}.pth"))
+    c = torch.tensor(pd.read_csv(f"{param_pth}/c.txt",header=None).to_numpy()).squeeze().to(torch.float32).to("cuda")
     arr = []
 
     st = time.time()
@@ -37,7 +37,7 @@ def SVDDNN(data_path,label_path,outcome_path):
             dist = torch.sum((outcome-c)**2,dim=1)
             arr.extend(list(zip(dist.cpu().numpy().tolist(),target.cpu().numpy().tolist())))
 
-    r = pd.read_csv("./parameter/r.txt",header = None).to_numpy()[0]
+    r = pd.read_csv(f"{param_pth}/r.txt",header = None).to_numpy()[0]
     cnt = 0
     li = []
     for dist,label in arr:
@@ -64,7 +64,7 @@ def SVDDNN(data_path,label_path,outcome_path):
 
     CANCER_OUTPUT_DIM=4
     model = DNN(len(tensor_test_data[0]),CANCER_OUTPUT_DIM).to("cuda")
-    model.load_state_dict(torch.load('./model/classifying-model-from-{}.pth'.format(DATA)))
+    model.load_state_dict(torch.load(f'{model_pth}/classifying-model-from-{DATA}.pth'))
 
 
     loss_fn = F.CrossEntropyLoss()
@@ -99,4 +99,4 @@ def SVDDNN(data_path,label_path,outcome_path):
     np.savetxt(outcome_path,arr,fmt="%i",delimiter=",")
 
     print("Time:{}s".format(et-st))
-SVDDNN(sys.argv[1],sys.argv[2],sys.argv[3])
+SVDDNN(sys.argv[1],sys.argv[2],sys.argv[3], sys.argv[4], sys.argv[5])
