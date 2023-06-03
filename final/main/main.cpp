@@ -70,6 +70,9 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
     Argparser.add("-SVM_kernel_degree");
     Argparser.add("-SVM_kernel_r");
 
+    // SVDD w.t. NN
+    Argparser.add("-SVDD-wt-NN_result_path");
+
 	// DBSCAN
 	Argparser.add("-DBSCAN_minPts");
 	Argparser.add("-DBSCAN_eps");
